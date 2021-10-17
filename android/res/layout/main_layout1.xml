@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="200dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="DRAW BUDDY"
+            android:textColor="#333"
+            android:textSize="42dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="QUICK PLAY"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="CELECT GAME MODEL"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="STARDARD"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/llyt_22"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="RUSH"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/llyt_333"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="RANDOM"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Permanent"
+        android:textColor="#333"
+        android:textStyle="bold"
+        android:paddingLeft="12dp"
+      android:layout_gravity="center_horizontal"
+        />
+    <RelativeLayout
+        android:id="@+id/llyt_33"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="PLAY"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+</LinearLayout>
