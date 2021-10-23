@@ -6,6 +6,15 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,107 +28,289 @@ public class GameScreen extends ScreenAdapter {
 
     MultipleScenes game;
     private Socket socket;
-    final float UPDATE_TIME = 1/120.0f;
+    final float UPDATE_TIME = 1/ 240.0f;
     boolean canvasUpdated = false;
+    TextButton triangle;
+    boolean triangleHover;
+    boolean squareHover;
+    boolean circleHover;
+    boolean sizeHover;
+    boolean colourHover;
+    SelectBox<String> drawSize;
+    SelectBox<String> colour;
+    TextButton circle;
+    TextButton square;
+    Stage stage;
+    Skin mySkin;
+
+    String selectedType = "circle";
+
+    Shape[] shapeArr;
 
     float timer;
-    int[] xLoc;
-    int[] yLoc;
+    float serverInfoTimer = 0.0f;
+    float timeToWait = 2.0f;
 
-    int[] xLoc2;
-    int[] yLoc2;
+    int serverSend = 0;
+    int serverReceive = 0;
 
     int capacity = 1000;
     int currentSize = 0;
     float waitTime;
     boolean readyToDraw = false;
+    boolean loadingData;
 
-    float circleX = 300;
-    float circleY = 150;
-    float circleRadius = 50;
 
-    float goalX = 100.0f;
-    float goalY = 100.0f;
-
-    float xSpeed = 4;
-    float ySpeed = 3;
 
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
 
-
-    public void create() {
-        xLoc = new int[1000];
-        yLoc = new int[1000];
-    }
-
-
     @Override
     public void show() {
-        xLoc = new int[1000];
-        yLoc = new int[1000];
+        shapeArr = new Shape[capacity];
+        for(int i = 0; i <= capacity - 1; i++){
+            shapeArr[i] = new Shape();
+        }
         connectSocket();
         configSocketEvents();
+
+        Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
+        stage = new Stage(new ScreenViewport());
+
+        drawSize = new SelectBox<String>(mySkin);
+        drawSize.setItems("5", "10", "15", "20", "25", "30");
+        drawSize.setName("Pencil Size");
+        drawSize.setBounds(390, Gdx.graphics.getHeight() - 33, 130, 33);
+        drawSize.setSelected("5");
+        stage.addActor(drawSize);
+
+        drawSize.addListener(new ClickListener() {
+
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                if(sizeHover == true){
+                    sizeHover = false;
+                }
+                else {
+                    sizeHover = true;
+                }
+            }
+        });
+
+
+        colour = new SelectBox<String>(mySkin);
+        colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
+        colour.setName("Pencil Colour");
+        colour.setBounds(520, Gdx.graphics.getHeight() - 33, 70, 33);
+        colour.setSelected("Red");
+        stage.addActor(colour);
+
+        colour.addListener(new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                if(colourHover == true){
+                    colourHover = false;
+                }
+                else {
+                    colourHover = true;
+                }
+            }
+        });
+
+        triangle = new TextButton("Triangle", mySkin, "toggle");
+        triangle.setBounds(260, Gdx.graphics.getHeight() - 33, 70, 33);
+        triangle.getLabel().setFontScale(0.6f, 0.6f);
+
+        triangle.addListener(new ClickListener(){
+
+            @Override
+            public void  enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                triangleHover = true;
+            }
+
+            @Override
+            public void  exit(InputEvent event, float x, float y, int pointer, Actor toActor){
+                triangleHover = false;
+                triangle.clearActions();
+            }
+
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                if(selectedType.matches("circle")){
+                    circle.toggle();
+                }
+                else if (selectedType.matches("square")){
+                    square.toggle();
+                }
+                selectedType = "triangle";
+                triangle.setText("Triangle Selected");
+                square.setText("Square");
+                circle.setText("Circle");
+            }
+        });
+
+
+        stage.addActor(triangle);
+
+        circle = new TextButton("Circle Selected", mySkin, "toggle");
+        circle.setBounds(0, Gdx.graphics.getHeight() - 33, 130, 33);
+        circle.getLabel().setFontScale(0.6f, 0.6f);
+        circle.toggle();
+
+        circle.addListener(new ClickListener(){
+
+            @Override
+            public void  enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                circleHover = true;
+            }
+
+            @Override
+            public void  exit(InputEvent event, float x, float y, int pointer, Actor toActor){
+                circleHover = false;
+                circle.clearActions();
+            }
+
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                if(selectedType.matches("square")){
+                    square.toggle();
+                }
+                else if (selectedType.matches("triangle")){
+                    triangle.toggle();
+                }
+                selectedType = "circle";
+                circle.setText("Circle Selected");
+                square.setText("Square");
+                triangle.setText("Triangle");
+            }
+        });
+
+
+        stage.addActor(circle);
+
+        square = new TextButton("Square", mySkin, "toggle");
+        square.setBounds(130, Gdx.graphics.getHeight() - 33, 130, 33);
+        square.getLabel().setFontScale(0.6f, 0.6f);
+
+        square.addListener(new ClickListener(){
+
+            @Override
+            public void  enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                squareHover = true;
+            }
+
+            @Override
+            public void  exit(InputEvent event, float x, float y, int pointer, Actor toActor){
+                squareHover = false;
+            }
+
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                if(selectedType.matches("circle")){
+                    circle.toggle();
+                }
+                else if (selectedType.matches("triangle")){
+                    triangle.toggle();
+                }
+                selectedType = "square";
+                square.setText("Square Selected");
+                circle.setText("Circle");
+                triangle.setText("Triangle");
+            }
+        });
+
+        stage.addActor(square);
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        serverInfoTimer += delta;
 
-        updateServer(delta);
+
+
+        if(serverInfoTimer > 3.0f){
+            System.out.println("Server receives: "+serverReceive+"\nServer sends: "+serverSend);
+            serverInfoTimer = 0.0f;
+        }
+
+
 
         waitTime += delta;
 
-        if(waitTime >= 1.0f){
+        if(waitTime >= timeToWait && readyToDraw == false){
             readyToDraw = true;
+            waitTime = 0.0f;
+            timeToWait = 0.02f;
         }
 
-        if(currentSize >= capacity - 1){
-            int[] placeHolderX = xLoc;
-            int[] placeHolderY = yLoc;
+        if(currentSize>= capacity){
+            System.out.println("updating capacity");
+            Shape[] placeholder = shapeArr;
 
             capacity += 1000;
-            xLoc = new int[capacity];
-            yLoc = new int[capacity];
+            shapeArr = new Shape[capacity];
 
-            for(int i = 0; i <= (capacity - 1001); i++){
-                xLoc[i] = placeHolderX[i];
-                yLoc[i] = placeHolderY[i];
+
+            for(int k = 0; k <= (capacity - 1001); k++){
+                shapeArr[k] = placeholder[k];
             }
         }
 
-        if(readyToDraw) {
+        if(readyToDraw && !circleHover && !squareHover && !triangleHover && Gdx.input.getY() > 50.0f) {
             if (Gdx.input.isTouched()) {
-
-                if (currentSize == 0) {
-                    canvasUpdated = true;
-                    storeMouseLoc();
-                } else if ((Gdx.input.getX() > xLoc[currentSize] || Gdx.input.getX() < xLoc[currentSize]) && (Gdx.input.getY() > xLoc[currentSize] || Gdx.input.getY() < xLoc[currentSize])) {
-                    canvasUpdated = true;
-                    storeMouseLoc();
-                }
+                    if(!sizeHover && !colourHover) {
+                        storeMouseLoc(delta);
+                        canvasUpdated = true;
+                    }
+                    else{
+                        sizeHover = false;
+                        colourHover = false;
+                    }
             }
+
         }
-
-
-        circleX = Gdx.input.getX();
-        circleY = -Gdx.input.getY() + 480.0f;
 
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        for(int i = 0; i <= currentSize - 1; i++){
-            game.shapeRenderer.setColor(0, 1, 0, 1);
-            game.shapeRenderer.circle(xLoc[i], Gdx.graphics.getHeight() - yLoc[i], 5);
+        game.shapeRenderer.setColor(1.0f, 1.0f, 1.0f, 1);
+        game.shapeRenderer.circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 10.0f);
+
+
+        if(!loadingData){
+            if(currentSize > 0) {
+                for (int i = 0; i <= currentSize - 2; i++) {
+                    game.shapeRenderer.setColor(shapeArr[i].rgb[0], shapeArr[i].rgb[1], shapeArr[i].rgb[2], 1);
+                    try {
+                        String temp = shapeArr[i].type;
+
+                        if (temp.matches("circle")) {
+
+                            game.shapeRenderer.circle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].radius);
+
+                        } else if (temp.matches("square")) {
+                            game.shapeRenderer.rect(shapeArr[i].x, shapeArr[i].y, shapeArr[i].width, shapeArr[i].height);
+
+                        } else if (temp.matches("triangle")) {
+                            game.shapeRenderer.triangle(shapeArr[i].x - 30.0f, shapeArr[i].y, shapeArr[i].x + 30.0f, shapeArr[i].y, shapeArr[i].x, shapeArr[i].y + 45.0f);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Null error drawing shapeArr[" + i + "]");
+
+                    }
+                }
+                readyToDraw = false;
+            }
         }
 
 
-        game.shapeRenderer.setColor(0, 1, 0, 1);
-        game.shapeRenderer.circle(circleX, circleY, 5);
-
-
         game.shapeRenderer.end();
+        stage.act();
+        stage.draw();
     }
 
     @Override
@@ -127,9 +318,58 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(null);
     }
 
-    public void storeMouseLoc(){
-        xLoc[currentSize] = Gdx.input.getX();
-        yLoc[currentSize] = (Gdx.input.getY());
+    public void storeMouseLoc(float delta){
+        System.out.println("storing mouse location");
+        shapeArr[currentSize] = new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+        shapeArr[currentSize].colour = colour.getSelected();
+
+        float[] temp = {0.0f, 0.2f, 0.0f};
+
+        if(colour.getSelected().matches(("Red"))){
+            shapeArr[currentSize].rgb[0] = 1.0f;
+            shapeArr[currentSize].rgb[1] = 0.0f;
+            shapeArr[currentSize].rgb[2] = 0.0f;
+        }
+        else if(colour.getSelected().matches(("Green"))) {
+            shapeArr[currentSize].rgb[0] = 0.0f;
+            shapeArr[currentSize].rgb[1] = 1.0f;
+            shapeArr[currentSize].rgb[2] = 0.0f;
+        }
+        else if(colour.getSelected().matches(("Blue"))) {
+            shapeArr[currentSize].rgb[0] = 0.0f;
+            shapeArr[currentSize].rgb[1] = 0.0f;
+            shapeArr[currentSize].rgb[2] = 1.0f;
+        }
+        else if(colour.getSelected().matches(("Yellow"))) {
+            shapeArr[currentSize].rgb[0] = 1.0f;
+            shapeArr[currentSize].rgb[1] = 1.0f;
+            shapeArr[currentSize].rgb[2] = 0.0f;
+        }
+        else if(colour.getSelected().matches(("Black"))) {
+            shapeArr[currentSize].rgb[0] = 0.0f;
+            shapeArr[currentSize].rgb[1] = 0.0f;
+            shapeArr[currentSize].rgb[2] = 0.0f;
+        }
+        else if(colour.getSelected().matches(("White"))) {
+            shapeArr[currentSize].rgb[0] = 1.0f;
+            shapeArr[currentSize].rgb[1] = 1.0f;
+            shapeArr[currentSize].rgb[2] = 1.0f;
+        }
+        shapeArr[currentSize].type = selectedType;
+
+        if(selectedType == "circle"){
+            shapeArr[currentSize].radius = Integer.valueOf(drawSize.getSelected());
+        }
+        else if(selectedType == "square"){
+            shapeArr[currentSize].width = Integer.valueOf(drawSize.getSelected());
+            shapeArr[currentSize].height = Integer.valueOf(drawSize.getSelected());
+        }
+        else{
+            System.out.println("adding triangle to arr");
+            shapeArr[currentSize].corners = Integer.valueOf(drawSize.getSelected());
+            shapeArr[currentSize].radius = Integer.valueOf(drawSize.getSelected());
+        }
+        updateServer(delta);
         currentSize++;
     }
 
@@ -174,42 +414,107 @@ public class GameScreen extends ScreenAdapter {
         }).on("updateCanvas", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-
+                loadingData = true;
+                serverReceive++;
                 JSONArray data = (JSONArray) args[0];
+                capacity = data.length() - 1;
 
-              //  if (data.length() - 1 > currentSize) {
-                    capacity = data.length() - 1;
-                    xLoc = new int[capacity];
-                    yLoc = new int[capacity];
-                    currentSize = capacity;
+               // shapeArr = new Shape[capacity];
+                Shape[] tempArr = new Shape[capacity];
 
-                    for (int i = 0; i <= capacity - 1; i++) {
+                for(int k = 0; k <= capacity - 1; k++){
+                    tempArr[k] = new Shape();
+                }
+                    currentSize = capacity - 1;
+
+                    for (int i = 0; i <= currentSize - 1; i++) {
 
                         try {
-                            xLoc[i] = data.getJSONObject((i)).getInt("x");
-                            yLoc[i] = data.getJSONObject((i)).getInt("y");
-                        } catch (JSONException e) {
+                            String colourString = data.getJSONObject((i)).getString("colour");
+                            System.out.println("Colour string = "+colourString);
+                            if(colourString.matches(("Red"))){
+                                tempArr[i].rgb[0] = 1.0f;
+                                tempArr[i].rgb[1] = 0.0f;
+                                tempArr[i].rgb[2] = 0.0f;
+                            }
+                            else if(colourString.matches(("Green"))) {
+                                tempArr[i].rgb[0] = 0.0f;
+                                tempArr[i].rgb[1] = 1.0f;
+                                tempArr[i].rgb[2] = 0.0f;
+                            }
+                            else if(colourString.matches(("Blue"))) {
+                                tempArr[i].rgb[0] = 0.0f;
+                                tempArr[i].rgb[1] = 0.0f;
+                                tempArr[i].rgb[2] = 1.0f;
+                            }
+                            else if(colourString.matches(("Yellow"))) {
+                                tempArr[i].rgb[0] = 1.0f;
+                                tempArr[i].rgb[1] = 1.0f;
+                                tempArr[i].rgb[2] = 0.0f;
+                            }
+                            else if(colourString.matches(("Black"))) {
+                                tempArr[i].rgb[0] = 0.0f;
+                                tempArr[i].rgb[1] = 0.0f;
+                                tempArr[i].rgb[2] = 0.0f;
+                            }
+                            else if(colourString.matches(("White"))) {
+                                tempArr[i].rgb[0] = 1.0f;
+                                tempArr[i].rgb[1] = 1.0f;
+                                tempArr[i].rgb[2] = 1.0f;
+                            }
+
+                            tempArr[i].type = data.getJSONObject((i)).getString("type");
+                            tempArr[i].x = data.getJSONObject((i)).getInt("x");
+                            tempArr[i].y = data.getJSONObject((i)).getInt("y");
+
+                            if(tempArr[i].type.matches("circle")){
+                                tempArr[i].radius = data.getJSONObject((i)).getInt("radius");
+                            }
+                            else if(tempArr[i].type.matches("square")) {
+                                tempArr[i].height = data.getJSONObject((i)).getInt("height");
+                                tempArr[i].width = data.getJSONObject((i)).getInt("width");
+
+                            }
+                            else if(tempArr[i].type.matches("triangle")) {
+                                tempArr[i].radius = data.getJSONObject((i)).getInt("radius");
+                                tempArr[i].corners = data.getJSONObject((i)).getInt("corners");
+                            }
+
+                            } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
+                    shapeArr = tempArr;
+                loadingData = false;
                 }
-           // }
         });
 
     }
 
     public void updateServer(float dt){
         timer+= dt;
-
+        serverSend++;
         if(timer > UPDATE_TIME && canvasUpdated && currentSize > 0){
-            System.out.println("updating server");
             timer = 0.0f;
             JSONObject data = new JSONObject();
             try{
                  for(int i = 0; i <= currentSize - 1; i++) {
-                     data.put("x", xLoc[i]);
-                     data.put("y", yLoc[i]);
+                     data.put("type", shapeArr[i].type);
+                     data.put("x", shapeArr[i].x);
+                     data.put("y", shapeArr[i].y);
+                     data.put("colour", shapeArr[i].colour);
+
+                     if(shapeArr[i].type.matches("square")){
+                         data.put("height", shapeArr[i].height);
+                         data.put("width", shapeArr[i].width);
+                     }
+                     if(shapeArr[i].type.matches("circle")){
+                         data.put("radius", shapeArr[i].radius);
+                     }
+                     if(shapeArr[i].type.matches("triangle")){
+                         data.put("radius", shapeArr[i].radius);
+                         data.put("corners",  shapeArr[i].corners);
+                     }
                  }
                 canvasUpdated = false;
                 socket.emit("sendCanvas", data);
