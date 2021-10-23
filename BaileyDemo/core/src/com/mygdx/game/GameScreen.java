@@ -30,38 +30,31 @@ public class GameScreen extends ScreenAdapter {
     private Socket socket;
     final float UPDATE_TIME = 1/ 240.0f;
     boolean canvasUpdated = false;
-    TextButton triangle;
     boolean triangleHover;
     boolean squareHover;
     boolean circleHover;
     boolean sizeHover;
     boolean colourHover;
+    boolean readyToDraw = false;
+    boolean loadingData;
     SelectBox<String> drawSize;
     SelectBox<String> colour;
+    TextButton triangle;
     TextButton circle;
     TextButton square;
     Stage stage;
     Skin mySkin;
-
     String selectedType = "circle";
-
     Shape[] shapeArr;
-
     float timer;
     float serverInfoTimer = 0.0f;
     float timeToWait = 2.0f;
-
+    float waitTime;
     int serverSend = 0;
     int serverReceive = 0;
-
     int capacity = 1000;
     int currentSize = 0;
-    float waitTime;
-    boolean readyToDraw = false;
-    boolean loadingData;
-
-
-
+    
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -97,8 +90,6 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
         });
-
-
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
         colour.setName("Pencil Colour");
@@ -149,8 +140,6 @@ public class GameScreen extends ScreenAdapter {
                 circle.setText("Circle");
             }
         });
-
-
         stage.addActor(triangle);
 
         circle = new TextButton("Circle Selected", mySkin, "toggle");
@@ -186,9 +175,7 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-
         stage.addActor(circle);
-
         square = new TextButton("Square", mySkin, "toggle");
         square.setBounds(130, Gdx.graphics.getHeight() - 33, 130, 33);
         square.getLabel().setFontScale(0.6f, 0.6f);
@@ -238,8 +225,6 @@ public class GameScreen extends ScreenAdapter {
             serverInfoTimer = 0.0f;
         }
 
-
-
         waitTime += delta;
 
         if(waitTime >= timeToWait && readyToDraw == false){
@@ -249,7 +234,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if(currentSize>= capacity){
-            System.out.println("updating capacity");
+
             Shape[] placeholder = shapeArr;
 
             capacity += 1000;
@@ -272,7 +257,6 @@ public class GameScreen extends ScreenAdapter {
                         colourHover = false;
                     }
             }
-
         }
 
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -306,8 +290,6 @@ public class GameScreen extends ScreenAdapter {
                 readyToDraw = false;
             }
         }
-
-
         game.shapeRenderer.end();
         stage.act();
         stage.draw();
@@ -319,7 +301,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void storeMouseLoc(float delta){
-        System.out.println("storing mouse location");
         shapeArr[currentSize] = new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
         shapeArr[currentSize].colour = colour.getSelected();
 
@@ -365,7 +346,6 @@ public class GameScreen extends ScreenAdapter {
             shapeArr[currentSize].height = Integer.valueOf(drawSize.getSelected());
         }
         else{
-            System.out.println("adding triangle to arr");
             shapeArr[currentSize].corners = Integer.valueOf(drawSize.getSelected());
             shapeArr[currentSize].radius = Integer.valueOf(drawSize.getSelected());
         }
@@ -431,7 +411,6 @@ public class GameScreen extends ScreenAdapter {
 
                         try {
                             String colourString = data.getJSONObject((i)).getString("colour");
-                            System.out.println("Colour string = "+colourString);
                             if(colourString.matches(("Red"))){
                                 tempArr[i].rgb[0] = 1.0f;
                                 tempArr[i].rgb[1] = 0.0f;
