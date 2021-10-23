@@ -54,7 +54,9 @@ public class GameScreen extends ScreenAdapter {
     int serverReceive = 0;
     int capacity = 1000;
     int currentSize = 0;
-    
+    int selectedSize = 5;
+    String selectedColour = "Red";
+
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -82,13 +84,9 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                if(sizeHover == true){
-                    sizeHover = false;
-                }
-                else {
                     sizeHover = true;
-                }
             }
+
         });
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
@@ -100,12 +98,7 @@ public class GameScreen extends ScreenAdapter {
         colour.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                if(colourHover == true){
-                    colourHover = false;
-                }
-                else {
                     colourHover = true;
-                }
             }
         });
 
@@ -248,14 +241,19 @@ public class GameScreen extends ScreenAdapter {
 
         if(readyToDraw && !circleHover && !squareHover && !triangleHover && Gdx.input.getY() > 50.0f) {
             if (Gdx.input.isTouched()) {
-                    if(!sizeHover && !colourHover) {
+                    if(!colourHover && !sizeHover)  {
                         storeMouseLoc(delta);
                         canvasUpdated = true;
                     }
-                    else{
-                        sizeHover = false;
+                    else if(colour.getSelected() != selectedColour || selectedSize != Integer.valueOf(drawSize.getSelected())){
+                        selectedColour = colour.getSelected();
+                        selectedSize = Integer.valueOf(drawSize.getSelected());
+                        storeMouseLoc(delta);
+                        canvasUpdated = true;
                         colourHover = false;
+                        sizeHover = false;
                     }
+
             }
         }
 
@@ -265,7 +263,6 @@ public class GameScreen extends ScreenAdapter {
         game.shapeRenderer.circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 10.0f);
 
 
-        if(!loadingData){
             if(currentSize > 0) {
                 for (int i = 0; i <= currentSize - 2; i++) {
                     game.shapeRenderer.setColor(shapeArr[i].rgb[0], shapeArr[i].rgb[1], shapeArr[i].rgb[2], 1);
@@ -289,7 +286,7 @@ public class GameScreen extends ScreenAdapter {
                 }
                 readyToDraw = false;
             }
-        }
+
         game.shapeRenderer.end();
         stage.act();
         stage.draw();
@@ -398,48 +395,43 @@ public class GameScreen extends ScreenAdapter {
                 serverReceive++;
                 JSONArray data = (JSONArray) args[0];
                 capacity = data.length() - 1;
-
-               // shapeArr = new Shape[capacity];
                 Shape[] tempArr = new Shape[capacity];
-
                 for(int k = 0; k <= capacity - 1; k++){
                     tempArr[k] = new Shape();
                 }
                     currentSize = capacity - 1;
-
                     for (int i = 0; i <= currentSize - 1; i++) {
-
                         try {
                             String colourString = data.getJSONObject((i)).getString("colour");
-                            if(colourString.matches(("Red"))){
-                                tempArr[i].rgb[0] = 1.0f;
-                                tempArr[i].rgb[1] = 0.0f;
-                                tempArr[i].rgb[2] = 0.0f;
-                            }
-                            else if(colourString.matches(("Green"))) {
-                                tempArr[i].rgb[0] = 0.0f;
-                                tempArr[i].rgb[1] = 1.0f;
-                                tempArr[i].rgb[2] = 0.0f;
-                            }
-                            else if(colourString.matches(("Blue"))) {
-                                tempArr[i].rgb[0] = 0.0f;
-                                tempArr[i].rgb[1] = 0.0f;
-                                tempArr[i].rgb[2] = 1.0f;
-                            }
-                            else if(colourString.matches(("Yellow"))) {
-                                tempArr[i].rgb[0] = 1.0f;
-                                tempArr[i].rgb[1] = 1.0f;
-                                tempArr[i].rgb[2] = 0.0f;
-                            }
-                            else if(colourString.matches(("Black"))) {
-                                tempArr[i].rgb[0] = 0.0f;
-                                tempArr[i].rgb[1] = 0.0f;
-                                tempArr[i].rgb[2] = 0.0f;
-                            }
-                            else if(colourString.matches(("White"))) {
-                                tempArr[i].rgb[0] = 1.0f;
-                                tempArr[i].rgb[1] = 1.0f;
-                                tempArr[i].rgb[2] = 1.0f;
+                            tempArr[i].rgb[0] = 1.0f;
+                            tempArr[i].rgb[1] = 0.0f;
+                            tempArr[i].rgb[2] = 0.0f;
+                            switch(colourString){
+                                case("Green"):
+                                    tempArr[i].rgb[0] = 0.0f;
+                                    tempArr[i].rgb[1] = 1.0f;
+                                    tempArr[i].rgb[2] = 0.0f;
+                                    break;
+                                case("Blue"):
+                                    tempArr[i].rgb[0] = 0.0f;
+                                    tempArr[i].rgb[1] = 0.0f;
+                                    tempArr[i].rgb[2] = 1.0f;
+                                    break;
+                                case("Yellow"):
+                                    tempArr[i].rgb[0] = 1.0f;
+                                    tempArr[i].rgb[1] = 1.0f;
+                                    tempArr[i].rgb[2] = 0.0f;
+                                    break;
+                                case("Black"):
+                                    tempArr[i].rgb[0] = 0.0f;
+                                    tempArr[i].rgb[1] = 0.0f;
+                                    tempArr[i].rgb[2] = 0.0f;
+                                    break;
+                                case("White"):
+                                    tempArr[i].rgb[0] = 1.0f;
+                                    tempArr[i].rgb[1] = 1.0f;
+                                    tempArr[i].rgb[2] = 1.0f;
+                                    break;
                             }
 
                             tempArr[i].type = data.getJSONObject((i)).getString("type");
