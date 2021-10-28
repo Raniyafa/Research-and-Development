@@ -17,6 +17,12 @@ public class MainActivity1 extends Activity {
                 Toast.makeText(MainActivity1.this, "Welcome to Draw Buddy", Toast.LENGTH_SHORT).show();
             }
         });
+        findViewById(R.id.llyt_1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity1.this, "Welcome to Draw Buddy", Toast.LENGTH_SHORT).show();
+            }
+        });
         findViewById(R.id.llyt_333).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

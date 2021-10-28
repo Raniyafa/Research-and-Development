@@ -45,16 +45,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="CELECT GAME MODEL"
+            android:text="SELECT GAME MODE"
             android:textColor="#333"
             android:textSize="22dp"
             android:textStyle="bold" />
 
     </RelativeLayout>
+
     <RelativeLayout
+        android:id="@+id/llyt_1"
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:layout_width="wrap_content"
