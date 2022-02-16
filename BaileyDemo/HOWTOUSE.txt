@@ -1,6 +1,11 @@
-Greetings, it's Bailey here, so you wanna to into the server folder in the root dir
+Greetings, it's Bailey here, so you wanna go into the server folder in the root dir
 once there, use a terminal to run node index.js, you should get a message that the server is running
 after that you need to open two game windows with Android studio, to do this click the "Run 'Desktop' with Coverage"
-first, and then click the normal play button.
+button, and then click the normal play button.
 
 The server connection only starts when the player presses the enter lobby button.
+
+express, node.js and socket.io required
+
+(npm install express)
+(npm install socket.io)
