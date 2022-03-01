@@ -3,7 +3,9 @@ package com.mygdx.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import Upskilling.MyGdxGame;
+import com.github.czyzby.websocket.GwtWebSockets;
+import com.mygdx.game.MultipleScenes;
+
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -17,6 +19,7 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new MyGdxGame();
+                GwtWebSockets.initiate();
+                return new MultipleScenes();
         }
 }

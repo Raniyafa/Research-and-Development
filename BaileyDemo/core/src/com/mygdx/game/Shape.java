@@ -42,7 +42,7 @@ public class Shape {
     }
 
     public Shape(){
-        type = "circle";
+        type = "circl";
         x = -1000;
         y = -1000;
         radius = 1;

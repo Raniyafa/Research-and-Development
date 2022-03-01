@@ -9,48 +9,127 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.czyzby.websocket.WebSocket;
+import com.github.czyzby.websocket.WebSocketAdapter;
 
 import java.awt.Button;
+
+import java.awt.event.ActionListener;
+
+import sun.awt.ExtendedKeyCodes;
 
 public class TitleScreen extends ScreenAdapter {
 
     MultipleScenes game;
-    TextButton startButton;
+    TextButton joinLobby;
+    TextButton createLobby;
     Stage stage;
     Skin mySkin;
+    public boolean moveToGame = false;
+    float timer = 0.0f;
+    boolean moveToLobby = false;
 
     public TitleScreen(MultipleScenes game) {
         this.game = game;
     }
 
+    private WebSocketAdapter getListener() {
+        return new WebSocketAdapter() {
+            @Override
+            public boolean onMessage(final WebSocket webSocket, final String packet) {
+                Gdx.app.log("WS", "Got message: " + packet);
+                if(!packet.matches("Error")){
+                    String[] clientMessage = packet.split("/");
+                    if(clientMessage[0].matches("LobbyInfo")) {
+                        game.gameLobby.lobbyCode = clientMessage[0];
+                        game.gameLobby.lobbyIndex = Integer.valueOf(clientMessage[1]);
+                        moveToLobby = true;
+                        return FULLY_HANDLED;
+                   }
+                }
+                return FULLY_HANDLED;
+            }
+        };
+    }
+
     @Override
     public void show(){
+        moveToGame = false;
+        game.listener = getListener();
+        game.getSocket().addListener(game.listener);
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
+        Gdx.graphics.setWindowedMode(360, 640);
 
+        final TextField textField = new TextField("Text field", mySkin);
+        textField.setX(Gdx.graphics.getWidth() / 2 - 100);
+        textField.setY(Gdx.graphics.getHeight() / 2 - 100);
+        textField.setWidth(200);
+        textField.setText("");
+        textField.setHeight(25);
+        textField.setVisible(false);
 
-        startButton = new TextButton("Join Lobby", mySkin, "toggle");
-        startButton.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2, 150, 50);
-        startButton.getLabel().setFontScale(0.6f, 0.6f);
-
-
-        startButton.addListener(new InputListener(){
+        textField.addListener(new InputListener(){
 
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                startButton.setText("Join Lobby");
+            public boolean keyDown (InputEvent event, int keycode) {
+                if(keycode == Input.Keys.ENTER){
+                    textField.setVisible(false);
+                    game.socket.send("LobbyMessage/JoinLobby/"+textField.getText());
+                }
+                return false;
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new GameScreen(game));
+                textField.setVisible(true);
                 return true;
             }
         });
 
-        stage.addActor(startButton);
+        joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
+        joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2, 150, 50);
+        joinLobby.getLabel().setFontScale(0.6f, 0.6f);
+
+
+        joinLobby.addListener(new InputListener(){
+
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                joinLobby.setText("Join Lobby");
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                textField.setVisible(true);
+                return true;
+            }
+        });
+
+        createLobby = new TextButton("Create Lobby", mySkin, "toggle");
+        createLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 75, 150, 50);
+        createLobby.getLabel().setFontScale(0.6f, 0.6f);
+
+
+        createLobby.addListener(new InputListener(){
+
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                createLobby.setText("Join Lobby");
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new LobbyScreen(game));
+                return true;
+            }
+        });
+
+        stage.addActor(textField);
+        stage.addActor(createLobby);
+        stage.addActor(joinLobby);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -58,15 +137,16 @@ public class TitleScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if(moveToLobby){
+            game.setScreen(new LoadingScreen(game));
+        }
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 83, Gdx.graphics.getHeight() * .70f);
-        game.font.draw(game.batch, "Click the button to join a lobby.", Gdx.graphics.getWidth() / 2 - 95, Gdx.graphics.getHeight() * .42f);
+        game.font.draw(game.batch, "Welcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() - 100);
         game.batch.end();
-
     }
 
     @Override

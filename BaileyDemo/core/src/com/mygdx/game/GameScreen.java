@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,21 +16,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+import com.github.czyzby.websocket.WebSocket;
+import com.github.czyzby.websocket.WebSocketAdapter;
+import com.github.czyzby.websocket.WebSockets;
+import com.github.czyzby.websocket.data.WebSocketCloseCode;
 
 public class GameScreen extends ScreenAdapter {
 
+    private SpriteBatch batch;
+    private BitmapFont font;
+
+    int lobbyID = 0;
+    Json json = new Json();
     MultipleScenes game;
-    private Socket socket;
-    final float UPDATE_TIME = 1/ 240.0f;
+    static Shape[] shapeArr;
+
+    final float UPDATE_TIME = 1 / 240.0f;
+
     boolean canvasUpdated = false;
     boolean triangleHover;
     boolean squareHover;
@@ -37,6 +45,7 @@ public class GameScreen extends ScreenAdapter {
     boolean colourHover;
     boolean readyToDraw = false;
     boolean loadingData;
+
     SelectBox<String> drawSize;
     SelectBox<String> colour;
     TextButton triangle;
@@ -44,31 +53,82 @@ public class GameScreen extends ScreenAdapter {
     TextButton square;
     Stage stage;
     Skin mySkin;
+
+    String selectedColour = "Red";
     String selectedType = "circle";
-    Shape[] shapeArr;
+
     float timer;
     float serverInfoTimer = 0.0f;
     float timeToWait = 2.0f;
     float waitTime;
+    float drawTimer = 0.0f;
+
     int serverSend = 0;
     int serverReceive = 0;
-    int capacity = 1000;
-    int currentSize = 0;
     int selectedSize = 5;
-    String selectedColour = "Red";
+    static int capacity = 1000;
+    static int currentSize = 0;
+
+
 
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
 
+    private static WebSocketAdapter getListener() {
+        return new WebSocketAdapter() {
+            @Override
+            public boolean onOpen(final WebSocket webSocket) {
+                Gdx.app.log("WS", "Connected!");
+                webSocket.send("Hell");
+                return FULLY_HANDLED;
+            }
+
+            @Override
+            public boolean onMessage(final WebSocket webSocket, final String packet) {
+                Gdx.app.log("WS", "Got message: " + packet);
+
+                String[] clientMessage = packet.split("/");
+                if(clientMessage[0].matches("CanvasInfo")){
+
+                    int size = shapeArr.length;
+
+                    if(shapeArr.length < Integer.valueOf(clientMessage[1])) {
+                        increaseArrSize();
+                        size = Integer.valueOf(clientMessage[1]);
+                    }
+
+                    int index = 2;
+                    Shape[] tempArr = new Shape[size];
+
+                    for (int i = 0; i <= size - 1; i++) {
+                        float[] colour = new float[3];
+                        colour[0] = 1.0f;
+                        colour[1] = 0.0f;
+                        colour[2] = 0.0f;
+
+                        shapeArr[i] = new Shape(Integer.valueOf(clientMessage[index+2]), Integer.valueOf(clientMessage[index+3]), 10, clientMessage[index], colour);
+                        index += 4;
+                    }
+                    currentSize = shapeArr.length - 1;
+                }
+
+
+                return FULLY_HANDLED;
+            }
+        };
+    }
+
     @Override
     public void show() {
+        game.getSocket().removeListener(game.listener);
+        game.listener = getListener();
+        game.getSocket().addListener(game.listener);
+
         shapeArr = new Shape[capacity];
-        for(int i = 0; i <= capacity - 1; i++){
+        for (int i = 0; i <= capacity - 1; i++) {
             shapeArr[i] = new Shape();
         }
-        connectSocket();
-        configSocketEvents();
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
@@ -83,8 +143,8 @@ public class GameScreen extends ScreenAdapter {
         drawSize.addListener(new ClickListener() {
 
             @Override
-            public void clicked (InputEvent event, float x, float y) {
-                    sizeHover = true;
+            public void clicked(InputEvent event, float x, float y) {
+                sizeHover = true;
             }
 
         });
@@ -97,8 +157,8 @@ public class GameScreen extends ScreenAdapter {
 
         colour.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
-                    colourHover = true;
+            public void clicked(InputEvent event, float x, float y) {
+                colourHover = true;
             }
         });
 
@@ -106,25 +166,24 @@ public class GameScreen extends ScreenAdapter {
         triangle.setBounds(260, Gdx.graphics.getHeight() - 33, 70, 33);
         triangle.getLabel().setFontScale(0.6f, 0.6f);
 
-        triangle.addListener(new ClickListener(){
+        triangle.addListener(new ClickListener() {
 
             @Override
-            public void  enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 triangleHover = true;
             }
 
             @Override
-            public void  exit(InputEvent event, float x, float y, int pointer, Actor toActor){
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 triangleHover = false;
                 triangle.clearActions();
             }
 
             @Override
-            public void clicked (InputEvent event, float x, float y) {
-                if(selectedType.matches("circle")){
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedType.matches("circle")) {
                     circle.toggle();
-                }
-                else if (selectedType.matches("square")){
+                } else if (selectedType.matches("square")) {
                     square.toggle();
                 }
                 selectedType = "triangle";
@@ -140,25 +199,24 @@ public class GameScreen extends ScreenAdapter {
         circle.getLabel().setFontScale(0.6f, 0.6f);
         circle.toggle();
 
-        circle.addListener(new ClickListener(){
+        circle.addListener(new ClickListener() {
 
             @Override
-            public void  enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 circleHover = true;
             }
 
             @Override
-            public void  exit(InputEvent event, float x, float y, int pointer, Actor toActor){
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 circleHover = false;
                 circle.clearActions();
             }
 
             @Override
-            public void clicked (InputEvent event, float x, float y) {
-                if(selectedType.matches("square")){
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedType.matches("square")) {
                     square.toggle();
-                }
-                else if (selectedType.matches("triangle")){
+                } else if (selectedType.matches("triangle")) {
                     triangle.toggle();
                 }
                 selectedType = "circle";
@@ -173,24 +231,23 @@ public class GameScreen extends ScreenAdapter {
         square.setBounds(130, Gdx.graphics.getHeight() - 33, 130, 33);
         square.getLabel().setFontScale(0.6f, 0.6f);
 
-        square.addListener(new ClickListener(){
+        square.addListener(new ClickListener() {
 
             @Override
-            public void  enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 squareHover = true;
             }
 
             @Override
-            public void  exit(InputEvent event, float x, float y, int pointer, Actor toActor){
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 squareHover = false;
             }
 
             @Override
-            public void clicked (InputEvent event, float x, float y) {
-                if(selectedType.matches("circle")){
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedType.matches("circle")) {
                     circle.toggle();
-                }
-                else if (selectedType.matches("triangle")){
+                } else if (selectedType.matches("triangle")) {
                     triangle.toggle();
                 }
                 selectedType = "square";
@@ -210,49 +267,45 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         serverInfoTimer += delta;
+        timer += delta;
+        if(timer > UPDATE_TIME){
+            timer = 0.0f;
+            getCanvasUpdates();
+        }
 
+        drawTimer += delta;
 
-
-        if(serverInfoTimer > 3.0f){
-            System.out.println("Server receives: "+serverReceive+"\nServer sends: "+serverSend);
+        if (serverInfoTimer > 3.0f) {
+          //  System.out.println("Server receives: " + serverReceive + "\nServer sends: " + serverSend);
             serverInfoTimer = 0.0f;
         }
 
         waitTime += delta;
 
-        if(waitTime >= timeToWait && readyToDraw == false){
+        if (waitTime >= timeToWait && readyToDraw == false) {
             readyToDraw = true;
             waitTime = 0.0f;
             timeToWait = 0.02f;
         }
 
-        if(currentSize>= capacity){
+        if (currentSize + 50 >= capacity) {
 
-            Shape[] placeholder = shapeArr;
-
-            capacity += 1000;
-            shapeArr = new Shape[capacity];
-
-
-            for(int k = 0; k <= (capacity - 1001); k++){
-                shapeArr[k] = placeholder[k];
-            }
+            increaseArrSize();
         }
 
-        if(readyToDraw && !circleHover && !squareHover && !triangleHover && Gdx.input.getY() > 50.0f) {
+        if (readyToDraw && !circleHover && !squareHover && !triangleHover && Gdx.input.getY() > 50.0f && drawTimer > 0.02f) {
             if (Gdx.input.isTouched()) {
-                    if(!colourHover && !sizeHover)  {
-                        storeMouseLoc(delta);
-                        canvasUpdated = true;
-                    }
-                    else if(colour.getSelected() != selectedColour || selectedSize != Integer.valueOf(drawSize.getSelected())){
-                        selectedColour = colour.getSelected();
-                        selectedSize = Integer.valueOf(drawSize.getSelected());
-                        storeMouseLoc(delta);
-                        canvasUpdated = true;
-                        colourHover = false;
-                        sizeHover = false;
-                    }
+                if (!colourHover && !sizeHover) {
+                    storeMouseLoc(delta);
+                    canvasUpdated = true;
+                } else if (colour.getSelected() != selectedColour || selectedSize != Integer.valueOf(drawSize.getSelected())) {
+                    selectedColour = colour.getSelected();
+                    selectedSize = Integer.valueOf(drawSize.getSelected());
+                    storeMouseLoc(delta);
+                    canvasUpdated = true;
+                    colourHover = false;
+                    sizeHover = false;
+                }
 
             }
         }
@@ -262,237 +315,111 @@ public class GameScreen extends ScreenAdapter {
         game.shapeRenderer.setColor(1.0f, 1.0f, 1.0f, 1);
         game.shapeRenderer.circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 10.0f);
 
+     //   System.out.println("size of arr on client = "+shapeArr.length);
 
-            if(currentSize > 0) {
-                for (int i = 0; i <= currentSize - 2; i++) {
-                    game.shapeRenderer.setColor(shapeArr[i].rgb[0], shapeArr[i].rgb[1], shapeArr[i].rgb[2], 1);
-                    try {
-                        String temp = shapeArr[i].type;
+            for (int i = 0; i <= shapeArr.length - 1; i++) {
 
-                        if (temp.matches("circle")) {
 
-                            game.shapeRenderer.circle(shapeArr[i].x, shapeArr[i].y, shapeArr[i].radius);
+               // game.shapeRenderer.setColor(shapeArr[i].rgb[0], shapeArr[i].rgb[1], shapeArr[i].rgb[2], 1);
+                game.shapeRenderer.setColor(1.0f, 0.0f, 0.0f, 1);
+                try {
+                    String temp = shapeArr[i].type;
 
-                        } else if (temp.matches("square")) {
-                            game.shapeRenderer.rect(shapeArr[i].x, shapeArr[i].y, shapeArr[i].width, shapeArr[i].height);
+                    if (temp.matches("circle")) {
+                      //  System.out.println("shapeArr["+i+"] has type circle, drawing now");
+                    //    System.out.println("drawing shapeArr index "+i+" type = "+shapeArr[i].type+" x = "+shapeArr[i].x+" y = "+shapeArr[i].y+"");
+                        game.shapeRenderer.circle(shapeArr[i].x, shapeArr[i].y, 10);
 
-                        } else if (temp.matches("triangle")) {
-                            game.shapeRenderer.triangle(shapeArr[i].x - 30.0f, shapeArr[i].y, shapeArr[i].x + 30.0f, shapeArr[i].y, shapeArr[i].x, shapeArr[i].y + 45.0f);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Null error drawing shapeArr[" + i + "]");
+                    } else if (temp.matches("square")) {
+                        game.shapeRenderer.rect(shapeArr[i].x, shapeArr[i].y, 10, 10);
 
+                    } else if (temp.matches("triangle")) {
+                        game.shapeRenderer.triangle(shapeArr[i].x - 30.0f, shapeArr[i].y, shapeArr[i].x + 30.0f, shapeArr[i].y, shapeArr[i].x, shapeArr[i].y + 45.0f);
                     }
+                } catch (Exception e) {
+                    System.out.println("Null error drawing shapeArr[" + i + "]");
+
                 }
-                readyToDraw = false;
             }
+            readyToDraw = false;
+
 
         game.shapeRenderer.end();
         stage.act();
         stage.draw();
     }
 
+
+
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
-    public void storeMouseLoc(float delta){
+    public void storeMouseLoc(float delta) {
         shapeArr[currentSize] = new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
         shapeArr[currentSize].colour = colour.getSelected();
 
+        drawTimer = 0.0f;
+
         float[] temp = {0.0f, 0.2f, 0.0f};
 
-        if(colour.getSelected().matches(("Red"))){
+        if (colour.getSelected().matches(("Red"))) {
             shapeArr[currentSize].rgb[0] = 1.0f;
             shapeArr[currentSize].rgb[1] = 0.0f;
             shapeArr[currentSize].rgb[2] = 0.0f;
-        }
-        else if(colour.getSelected().matches(("Green"))) {
+        } else if (colour.getSelected().matches(("Green"))) {
             shapeArr[currentSize].rgb[0] = 0.0f;
             shapeArr[currentSize].rgb[1] = 1.0f;
             shapeArr[currentSize].rgb[2] = 0.0f;
-        }
-        else if(colour.getSelected().matches(("Blue"))) {
+        } else if (colour.getSelected().matches(("Blue"))) {
             shapeArr[currentSize].rgb[0] = 0.0f;
             shapeArr[currentSize].rgb[1] = 0.0f;
             shapeArr[currentSize].rgb[2] = 1.0f;
-        }
-        else if(colour.getSelected().matches(("Yellow"))) {
+        } else if (colour.getSelected().matches(("Yellow"))) {
             shapeArr[currentSize].rgb[0] = 1.0f;
             shapeArr[currentSize].rgb[1] = 1.0f;
             shapeArr[currentSize].rgb[2] = 0.0f;
-        }
-        else if(colour.getSelected().matches(("Black"))) {
+        } else if (colour.getSelected().matches(("Black"))) {
             shapeArr[currentSize].rgb[0] = 0.0f;
             shapeArr[currentSize].rgb[1] = 0.0f;
             shapeArr[currentSize].rgb[2] = 0.0f;
-        }
-        else if(colour.getSelected().matches(("White"))) {
+        } else if (colour.getSelected().matches(("White"))) {
             shapeArr[currentSize].rgb[0] = 1.0f;
             shapeArr[currentSize].rgb[1] = 1.0f;
             shapeArr[currentSize].rgb[2] = 1.0f;
         }
         shapeArr[currentSize].type = selectedType;
 
-        if(selectedType == "circle"){
+        if (selectedType == "circle") {
             shapeArr[currentSize].radius = Integer.valueOf(drawSize.getSelected());
-        }
-        else if(selectedType == "square"){
+        } else if (selectedType == "square") {
             shapeArr[currentSize].width = Integer.valueOf(drawSize.getSelected());
             shapeArr[currentSize].height = Integer.valueOf(drawSize.getSelected());
-        }
-        else{
+        } else {
             shapeArr[currentSize].corners = Integer.valueOf(drawSize.getSelected());
             shapeArr[currentSize].radius = Integer.valueOf(drawSize.getSelected());
         }
-        updateServer(delta);
+        game.getSocket().send("GameMessage/"+"UpdateCanvas/"+String.valueOf(lobbyID)+"/"+shapeArr[currentSize].type
+        +  ":" + shapeArr[currentSize].colour + ":" +   shapeArr[currentSize].x + ":" +shapeArr[currentSize].y);
+
         currentSize++;
     }
 
-    public void connectSocket(){
-        try {
-        socket = IO.socket("http://localhost:8080");
-        socket.connect();
-
-        }catch(Exception e){
-            System.out.println(e);
-        }
+    public void getCanvasUpdates(){
+        game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/0");
     }
 
-    private void configSocketEvents() {
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Gdx.app.log("SocketIO", "Connected to server");
-            }
-        }).on("socketID", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    String id = data.getString("id");
-                    Gdx.app.log("SocketIO", "MY ID:"+ id);
-                } catch (JSONException e) {
-                    System.out.println("Error getting ID");
-                }
-            }
-        }).on("newPlayer", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    String id = data.getString("id");
-                    Gdx.app.log("SocketIO", "New Player Connected:"+ id);
-                } catch (JSONException e) {
-                    System.out.println("Error getting new Player ID");
-                }
-            }
-        }).on("updateCanvas", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                loadingData = true;
-                serverReceive++;
-                JSONArray data = (JSONArray) args[0];
-                capacity = data.length() - 1;
-                Shape[] tempArr = new Shape[capacity];
-                for(int k = 0; k <= capacity - 1; k++){
-                    tempArr[k] = new Shape();
-                }
-                    currentSize = capacity - 1;
-                    for (int i = 0; i <= currentSize - 1; i++) {
-                        try {
-                            String colourString = data.getJSONObject((i)).getString("colour");
-                            tempArr[i].rgb[0] = 1.0f;
-                            tempArr[i].rgb[1] = 0.0f;
-                            tempArr[i].rgb[2] = 0.0f;
-                            switch(colourString){
-                                case("Green"):
-                                    tempArr[i].rgb[0] = 0.0f;
-                                    tempArr[i].rgb[1] = 1.0f;
-                                    tempArr[i].rgb[2] = 0.0f;
-                                    break;
-                                case("Blue"):
-                                    tempArr[i].rgb[0] = 0.0f;
-                                    tempArr[i].rgb[1] = 0.0f;
-                                    tempArr[i].rgb[2] = 1.0f;
-                                    break;
-                                case("Yellow"):
-                                    tempArr[i].rgb[0] = 1.0f;
-                                    tempArr[i].rgb[1] = 1.0f;
-                                    tempArr[i].rgb[2] = 0.0f;
-                                    break;
-                                case("Black"):
-                                    tempArr[i].rgb[0] = 0.0f;
-                                    tempArr[i].rgb[1] = 0.0f;
-                                    tempArr[i].rgb[2] = 0.0f;
-                                    break;
-                                case("White"):
-                                    tempArr[i].rgb[0] = 1.0f;
-                                    tempArr[i].rgb[1] = 1.0f;
-                                    tempArr[i].rgb[2] = 1.0f;
-                                    break;
-                            }
+    public static void increaseArrSize(){
+        Shape[] placeholder = shapeArr;
 
-                            tempArr[i].type = data.getJSONObject((i)).getString("type");
-                            tempArr[i].x = data.getJSONObject((i)).getInt("x");
-                            tempArr[i].y = data.getJSONObject((i)).getInt("y");
+        capacity += 1000;
+        shapeArr = new Shape[capacity];
 
-                            if(tempArr[i].type.matches("circle")){
-                                tempArr[i].radius = data.getJSONObject((i)).getInt("radius");
-                            }
-                            else if(tempArr[i].type.matches("square")) {
-                                tempArr[i].height = data.getJSONObject((i)).getInt("height");
-                                tempArr[i].width = data.getJSONObject((i)).getInt("width");
 
-                            }
-                            else if(tempArr[i].type.matches("triangle")) {
-                                tempArr[i].radius = data.getJSONObject((i)).getInt("radius");
-                                tempArr[i].corners = data.getJSONObject((i)).getInt("corners");
-                            }
-
-                            } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    shapeArr = tempArr;
-                loadingData = false;
-                }
-        });
-
-    }
-
-    public void updateServer(float dt){
-        timer+= dt;
-        serverSend++;
-        if(timer > UPDATE_TIME && canvasUpdated && currentSize > 0){
-            timer = 0.0f;
-            JSONObject data = new JSONObject();
-            try{
-                 for(int i = 0; i <= currentSize - 1; i++) {
-                     data.put("type", shapeArr[i].type);
-                     data.put("x", shapeArr[i].x);
-                     data.put("y", shapeArr[i].y);
-                     data.put("colour", shapeArr[i].colour);
-
-                     if(shapeArr[i].type.matches("square")){
-                         data.put("height", shapeArr[i].height);
-                         data.put("width", shapeArr[i].width);
-                     }
-                     if(shapeArr[i].type.matches("circle")){
-                         data.put("radius", shapeArr[i].radius);
-                     }
-                     if(shapeArr[i].type.matches("triangle")){
-                         data.put("radius", shapeArr[i].radius);
-                         data.put("corners",  shapeArr[i].corners);
-                     }
-                 }
-                canvasUpdated = false;
-                socket.emit("sendCanvas", data);
-            }catch(JSONException e){
-            Gdx.app.log("SOCKET.IO", "Error sending data to server");
-            }
-
+        for (int k = 0; k <= (capacity - 1001); k++) {
+            shapeArr[k] = placeholder[k];
         }
     }
 }
+

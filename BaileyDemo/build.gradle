@@ -6,6 +6,7 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "http://clojars.org/repo" }
         google()
     }
     dependencies {
@@ -13,7 +14,6 @@ buildscript {
         classpath 'org.gretty:gretty:3.0.2'
         classpath 'com.android.tools.build:gradle:3.5.4'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
-        
 
     }
 }
@@ -39,16 +39,24 @@ allprojects {
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://jitpack.io" }
     }
 }
 
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
+        implementation "org.java-websocket:Java-WebSocket:1.5.2"
+
+        implementation "com.github.MrStahlfelge.gdx-websockets:common:1.9.10.3"
+
+        implementation ('io.socket:socket.io-client:2.0.1')
+                {
+                    exclude group: 'org.json', module: 'json'
+                }
         implementation project(":core")
-	api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+	    api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         
@@ -61,6 +69,14 @@ project(":android") {
     configurations { natives }
 
     dependencies {
+        implementation "org.java-websocket:Java-WebSocket:1.5.2"
+
+        implementation "com.github.MrStahlfelge.gdx-websockets:common:1.9.10.3"
+
+        implementation ('io.socket:socket.io-client:2.0.1')
+                {
+                    exclude group: 'org.json', module: 'json'
+                }
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -81,7 +97,12 @@ project(":ios") {
     apply plugin: "robovm"
 
 
+
     dependencies {
+        implementation "com.github.MrStahlfelge.gdx-websockets:common:1.9.10.3"
+
+        implementation "org.java-websocket:Java-WebSocket:1.5.2"
+
         implementation project(":core")
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
         api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
@@ -100,6 +121,11 @@ project(":html") {
 
 
     dependencies {
+
+        implementation "com.github.MrStahlfelge.gdx-websockets:core:1.9.10.3:sources"
+        implementation "com.github.MrStahlfelge.gdx-websockets:html:1.9.10.3"
+        implementation "com.github.MrStahlfelge.gdx-websockets:html:1.9.10.3:sources"
+
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
@@ -113,10 +139,11 @@ project(":html") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         implementation 'io.socket:socket.io-client:2.0.1'
+        implementation "com.github.MrStahlfelge.gdx-websockets:core:1.9.10.3"
+        implementation "org.java-websocket:Java-WebSocket:1.5.2"
     }
 }
