@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import com.github.czyzby.websocket.WebSocket;
-import com.github.czyzby.websocket.WebSocketAdapter;
 import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.WebSockets;
-import com.github.czyzby.websocket.data.WebSocketCloseCode;
 
 public class MultipleScenes extends Game {
 
@@ -20,6 +18,7 @@ public class MultipleScenes extends Game {
     protected WebSocket socket;
     WebSocketListener listener;
     public GameLobby gameLobby;
+    public String playerName;
 
     public WebSocket getSocket() {
         return socket;
@@ -41,7 +40,7 @@ public class MultipleScenes extends Game {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
-        setScreen(new TitleScreen(this));
+        setScreen(new LoginScreen(this));
     }
 
     @Override

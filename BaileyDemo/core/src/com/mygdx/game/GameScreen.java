@@ -91,17 +91,14 @@ public class GameScreen extends ScreenAdapter {
                 String[] clientMessage = packet.split("/");
                 if(clientMessage[0].matches("CanvasInfo")){
 
-                    int size = shapeArr.length;
+                    int index = 2;
+                    int size = currentSize + clientMessage.length - 2 / 4;
 
-                    if(shapeArr.length < Integer.valueOf(clientMessage[1])) {
+                    if(currentSize + size > capacity){
                         increaseArrSize();
-                        size = Integer.valueOf(clientMessage[1]);
                     }
 
-                    int index = 2;
-                    Shape[] tempArr = new Shape[size];
-
-                    for (int i = 0; i <= size - 1; i++) {
+                    for (int i = currentSize; i <= size; i++) {
                         float[] colour = new float[3];
                         colour[0] = 1.0f;
                         colour[1] = 0.0f;
@@ -109,11 +106,9 @@ public class GameScreen extends ScreenAdapter {
 
                         shapeArr[i] = new Shape(Integer.valueOf(clientMessage[index+2]), Integer.valueOf(clientMessage[index+3]), 10, clientMessage[index], colour);
                         index += 4;
+                        currentSize++;
                     }
-                    currentSize = shapeArr.length - 1;
                 }
-
-
                 return FULLY_HANDLED;
             }
         };
@@ -407,7 +402,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void getCanvasUpdates(){
-        game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/0");
+        game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+currentSize);
     }
 
     public static void increaseArrSize(){
