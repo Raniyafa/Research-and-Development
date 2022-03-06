@@ -25,6 +25,8 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 import com.github.czyzby.websocket.WebSockets;
 import com.github.czyzby.websocket.data.WebSocketCloseCode;
 
+import java.text.DecimalFormat;
+
 public class GameScreen extends ScreenAdapter {
 
     private SpriteBatch batch;
@@ -33,7 +35,7 @@ public class GameScreen extends ScreenAdapter {
     int lobbyID = 0;
     Json json = new Json();
     MultipleScenes game;
-    static Shape[] shapeArr;
+    Shape[] shapeArr;
 
     final float UPDATE_TIME = 1 / 240.0f;
 
@@ -59,6 +61,7 @@ public class GameScreen extends ScreenAdapter {
 
     float timer;
     float serverInfoTimer = 0.0f;
+    float turnTimer = 0.0f;
     float timeToWait = 2.0f;
     float waitTime;
     float drawTimer = 0.0f;
@@ -66,27 +69,25 @@ public class GameScreen extends ScreenAdapter {
     int serverSend = 0;
     int serverReceive = 0;
     int selectedSize = 5;
-    static int capacity = 1000;
-    static int currentSize = 0;
+    int capacity = 1000;
+    int currentSize = 0;
 
+    boolean myTurn;
+    public boolean gameFinished;
 
 
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
 
-    private static WebSocketAdapter getListener() {
+    private WebSocketAdapter getListener() {
         return new WebSocketAdapter() {
-            @Override
-            public boolean onOpen(final WebSocket webSocket) {
-                Gdx.app.log("WS", "Connected!");
-                webSocket.send("Hell");
-                return FULLY_HANDLED;
-            }
 
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
-                Gdx.app.log("WS", "Got message: " + packet);
+                if(!packet.contains("CanvasInfo")) {
+                    Gdx.app.log("WS", "Got message: " + packet);
+                }
 
                 String[] clientMessage = packet.split("/");
                 if(clientMessage[0].matches("CanvasInfo")){
@@ -109,6 +110,13 @@ public class GameScreen extends ScreenAdapter {
                         currentSize++;
                     }
                 }
+                else if(clientMessage[0].matches("YourTurn")){
+                    turnTimer = 0.0f;
+                    myTurn = true;
+                }
+                else if(clientMessage[0].matches("GameFinished")){
+                    gameFinished = true;
+                }
                 return FULLY_HANDLED;
             }
         };
@@ -116,9 +124,14 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
+        Gdx.files.internal("font/font.png"), false);
+
         game.getSocket().removeListener(game.listener);
         game.listener = getListener();
         game.getSocket().addListener(game.listener);
+
+        game.getSocket().send("Ready/"+game.gameLobby.lobbyIndex);
 
         shapeArr = new Shape[capacity];
         for (int i = 0; i <= capacity - 1; i++) {
@@ -259,8 +272,11 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        game.batch.begin();
+
         serverInfoTimer += delta;
         timer += delta;
         if(timer > UPDATE_TIME){
@@ -268,7 +284,27 @@ public class GameScreen extends ScreenAdapter {
             getCanvasUpdates();
         }
 
+        turnTimer += delta;
+
+        DecimalFormat dfrmt = new DecimalFormat("#.##");
+        if(myTurn){
+            String temp = "Your turn to draw! "+dfrmt.format(10.0f - turnTimer);
+            font.draw(game.batch, temp, Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
+            if(turnTimer >= 10.0f){
+                myTurn = false;
+                game.getSocket().send("TurnFinished/"+game.gameLobby.lobbyIndex);
+                turnTimer = 0.0f;
+            }
+        }
+        else{
+            String temp = "Your partner is drawing! "+dfrmt.format(10.0f - turnTimer);
+            font.draw(game.batch, temp, Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
+        }
+        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+
         drawTimer += delta;
+
+        game.batch.end();
 
         if (serverInfoTimer > 3.0f) {
           //  System.out.println("Server receives: " + serverReceive + "\nServer sends: " + serverSend);
@@ -288,7 +324,7 @@ public class GameScreen extends ScreenAdapter {
             increaseArrSize();
         }
 
-        if (readyToDraw && !circleHover && !squareHover && !triangleHover && Gdx.input.getY() > 50.0f && drawTimer > 0.02f) {
+        if (readyToDraw && !circleHover && !squareHover && !triangleHover && Gdx.input.getY() > 50.0f && drawTimer > 0.02f && myTurn) {
             if (Gdx.input.isTouched()) {
                 if (!colourHover && !sizeHover) {
                     storeMouseLoc(delta);
@@ -340,8 +376,13 @@ public class GameScreen extends ScreenAdapter {
 
 
         game.shapeRenderer.end();
+
         stage.act();
         stage.draw();
+
+        if(gameFinished){
+            game.setScreen(new HomeScreen(game));
+        }
     }
 
 
@@ -405,7 +446,7 @@ public class GameScreen extends ScreenAdapter {
         game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+currentSize);
     }
 
-    public static void increaseArrSize(){
+    public void increaseArrSize(){
         Shape[] placeholder = shapeArr;
 
         capacity += 1000;
