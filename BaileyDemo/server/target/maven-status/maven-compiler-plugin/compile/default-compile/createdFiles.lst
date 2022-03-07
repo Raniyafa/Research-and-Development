@@ -1,1 +1,5 @@
+ServerTypes\Shape.class
+ServerTypes\LobbyChecker.class
 com\mycompany\serverdrawbuddy\SimpleServer.class
+ServerTypes\Client.class
+ServerTypes\GameLobby.class

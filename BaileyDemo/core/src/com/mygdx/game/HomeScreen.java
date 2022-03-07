@@ -167,7 +167,7 @@ public class HomeScreen extends ScreenAdapter {
         stage.act();
         stage.draw();
         game.batch.begin();
-        font.draw(game.batch, "Welcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 150);
+        font.draw(game.batch, "Hello "+game.playerName+"!, Welcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 150);
         game.batch.end();
     }
 

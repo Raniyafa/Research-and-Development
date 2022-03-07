@@ -90,7 +90,7 @@ public class FindingMatch extends ScreenAdapter {
         stage.act();
         stage.draw();
         game.batch.begin();
-        game.font.draw(game.batch, "Searching for another player..\n", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2);
+        font.draw(game.batch, "Searching for another player..\n", Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2);
         game.batch.end();
 
     }

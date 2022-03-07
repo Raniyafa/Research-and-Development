@@ -7,12 +7,9 @@ package com.mycompany.serverdrawbuddy;
 
 import ServerTypes.Client;
 import ServerTypes.GameLobby;
-import ServerTypes.Shape;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -21,7 +18,7 @@ import org.java_websocket.server.WebSocketServer;
 public class SimpleServer extends WebSocketServer {
 
     public ArrayList<GameLobby> gameLobbies = new ArrayList<>();
-    public ArrayList<Client> gameQueue = new ArrayList<Client>();
+    public ArrayList<Client> gameQueue = new ArrayList<>();
       
     public SimpleServer(InetSocketAddress address) {
         super(address);

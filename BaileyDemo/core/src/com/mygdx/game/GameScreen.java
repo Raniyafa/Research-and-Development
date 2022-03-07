@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -85,9 +86,9 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
-                if(!packet.contains("CanvasInfo")) {
+              //  if(!packet.contains("CanvasInfo")) {
                     Gdx.app.log("WS", "Got message: " + packet);
-                }
+              //  }
 
                 String[] clientMessage = packet.split("/");
                 if(clientMessage[0].matches("CanvasInfo")){
@@ -100,10 +101,7 @@ public class GameScreen extends ScreenAdapter {
                     }
 
                     for (int i = currentSize; i <= size; i++) {
-                        float[] colour = new float[3];
-                        colour[0] = 1.0f;
-                        colour[1] = 0.0f;
-                        colour[2] = 0.0f;
+                        float[] colour = getRGB(clientMessage[index + 1]);
 
                         shapeArr[i] = new Shape(Integer.valueOf(clientMessage[index+2]), Integer.valueOf(clientMessage[index+3]), 10, clientMessage[index], colour);
                         index += 4;
@@ -126,6 +124,7 @@ public class GameScreen extends ScreenAdapter {
     public void show() {
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
         Gdx.files.internal("font/font.png"), false);
+        font.setColor(Color.BLACK);
 
         game.getSocket().removeListener(game.listener);
         game.listener = getListener();
@@ -144,7 +143,7 @@ public class GameScreen extends ScreenAdapter {
         drawSize = new SelectBox<String>(mySkin);
         drawSize.setItems("5", "10", "15", "20", "25", "30");
         drawSize.setName("Pencil Size");
-        drawSize.setBounds(390, Gdx.graphics.getHeight() - 33, 130, 33);
+        drawSize.setBounds(200, 35, 130, 33);
         drawSize.setSelected("5");
         stage.addActor(drawSize);
 
@@ -159,7 +158,7 @@ public class GameScreen extends ScreenAdapter {
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
         colour.setName("Pencil Colour");
-        colour.setBounds(520, Gdx.graphics.getHeight() - 33, 70, 33);
+        colour.setBounds(100, 35, 70, 33);
         colour.setSelected("Red");
         stage.addActor(colour);
 
@@ -272,39 +271,9 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.batch.begin();
-
-        serverInfoTimer += delta;
-        timer += delta;
-        if(timer > UPDATE_TIME){
-            timer = 0.0f;
-            getCanvasUpdates();
-        }
-
-        turnTimer += delta;
-
-        DecimalFormat dfrmt = new DecimalFormat("#.##");
-        if(myTurn){
-            String temp = "Your turn to draw! "+dfrmt.format(10.0f - turnTimer);
-            font.draw(game.batch, temp, Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
-            if(turnTimer >= 10.0f){
-                myTurn = false;
-                game.getSocket().send("TurnFinished/"+game.gameLobby.lobbyIndex);
-                turnTimer = 0.0f;
-            }
-        }
-        else{
-            String temp = "Your partner is drawing! "+dfrmt.format(10.0f - turnTimer);
-            font.draw(game.batch, temp, Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
-        }
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
-
-        drawTimer += delta;
-
-        game.batch.end();
 
         if (serverInfoTimer > 3.0f) {
           //  System.out.println("Server receives: " + serverReceive + "\nServer sends: " + serverSend);
@@ -350,10 +319,10 @@ public class GameScreen extends ScreenAdapter {
 
             for (int i = 0; i <= shapeArr.length - 1; i++) {
 
-
-               // game.shapeRenderer.setColor(shapeArr[i].rgb[0], shapeArr[i].rgb[1], shapeArr[i].rgb[2], 1);
-                game.shapeRenderer.setColor(1.0f, 0.0f, 0.0f, 1);
                 try {
+
+                game.shapeRenderer.setColor(shapeArr[i].rgb[0], shapeArr[i].rgb[1], shapeArr[i].rgb[2], 1);
+
                     String temp = shapeArr[i].type;
 
                     if (temp.matches("circle")) {
@@ -368,7 +337,7 @@ public class GameScreen extends ScreenAdapter {
                         game.shapeRenderer.triangle(shapeArr[i].x - 30.0f, shapeArr[i].y, shapeArr[i].x + 30.0f, shapeArr[i].y, shapeArr[i].x, shapeArr[i].y + 45.0f);
                     }
                 } catch (Exception e) {
-                    System.out.println("Null error drawing shapeArr[" + i + "]");
+              //      System.out.println("Null error drawing shapeArr[" + i + "]");
 
                 }
             }
@@ -376,6 +345,37 @@ public class GameScreen extends ScreenAdapter {
 
 
         game.shapeRenderer.end();
+
+        game.batch.begin();
+
+        serverInfoTimer += delta;
+        timer += delta;
+        if(timer > UPDATE_TIME){
+            timer = 0.0f;
+            getCanvasUpdates();
+        }
+
+        turnTimer += delta;
+
+        // DecimalFormat dfrmt = new DecimalFormat("#.##");
+        if(myTurn){
+            String temp = "Your turn to draw! "+(10.0f - turnTimer);
+            font.draw(game.batch, temp, Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
+            if(turnTimer >= 10.0f){
+                myTurn = false;
+                game.getSocket().send("TurnFinished/"+game.gameLobby.lobbyIndex);
+                turnTimer = 0.0f;
+            }
+        }
+        else{
+            String temp = "Your partner is drawing! "+(10.0f - turnTimer);
+            font.draw(game.batch, temp, Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
+        }
+
+
+        drawTimer += delta;
+
+        game.batch.end();
 
         stage.act();
         stage.draw();
@@ -400,31 +400,8 @@ public class GameScreen extends ScreenAdapter {
 
         float[] temp = {0.0f, 0.2f, 0.0f};
 
-        if (colour.getSelected().matches(("Red"))) {
-            shapeArr[currentSize].rgb[0] = 1.0f;
-            shapeArr[currentSize].rgb[1] = 0.0f;
-            shapeArr[currentSize].rgb[2] = 0.0f;
-        } else if (colour.getSelected().matches(("Green"))) {
-            shapeArr[currentSize].rgb[0] = 0.0f;
-            shapeArr[currentSize].rgb[1] = 1.0f;
-            shapeArr[currentSize].rgb[2] = 0.0f;
-        } else if (colour.getSelected().matches(("Blue"))) {
-            shapeArr[currentSize].rgb[0] = 0.0f;
-            shapeArr[currentSize].rgb[1] = 0.0f;
-            shapeArr[currentSize].rgb[2] = 1.0f;
-        } else if (colour.getSelected().matches(("Yellow"))) {
-            shapeArr[currentSize].rgb[0] = 1.0f;
-            shapeArr[currentSize].rgb[1] = 1.0f;
-            shapeArr[currentSize].rgb[2] = 0.0f;
-        } else if (colour.getSelected().matches(("Black"))) {
-            shapeArr[currentSize].rgb[0] = 0.0f;
-            shapeArr[currentSize].rgb[1] = 0.0f;
-            shapeArr[currentSize].rgb[2] = 0.0f;
-        } else if (colour.getSelected().matches(("White"))) {
-            shapeArr[currentSize].rgb[0] = 1.0f;
-            shapeArr[currentSize].rgb[1] = 1.0f;
-            shapeArr[currentSize].rgb[2] = 1.0f;
-        }
+        shapeArr[currentSize].rgb = getRGB(selectedColour);
+
         shapeArr[currentSize].type = selectedType;
 
         if (selectedType == "circle") {
@@ -456,6 +433,39 @@ public class GameScreen extends ScreenAdapter {
         for (int k = 0; k <= (capacity - 1001); k++) {
             shapeArr[k] = placeholder[k];
         }
+    }
+
+    public float[] getRGB(String colour){
+
+        float[] temp = {0.0f, 0.2f, 0.0f};
+
+        if (colour.matches(("Red"))) {
+            temp[0] = 1.0f;
+            temp[1] = 0.0f;
+            temp[2] = 0.0f;
+        } else if (colour.matches(("Green"))) {
+            temp[0] = 0.0f;
+            temp[1] = 1.0f;
+            temp[2] = 0.0f;
+        } else if (colour.matches(("Blue"))) {
+            temp[0] = 0.0f;
+            temp[1] = 0.0f;
+            temp[2] = 1.0f;
+        } else if (colour.matches(("Yellow"))) {
+            temp[0] = 1.0f;
+            temp[1] = 1.0f;
+            temp[2] = 0.0f;
+        } else if (colour.matches(("Black"))) {
+            temp[0] = 0.0f;
+            temp[1] = 0.0f;
+            temp[2] = 0.0f;
+        } else if (colour.matches(("White"))) {
+            temp[0] = 1.0f;
+            temp[1] = 1.0f;
+            temp[2] = 1.0f;
+        }
+
+        return temp;
     }
 }
 

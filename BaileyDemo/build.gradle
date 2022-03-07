@@ -48,13 +48,9 @@ project(":desktop") {
 
     dependencies {
         implementation "org.java-websocket:Java-WebSocket:1.5.2"
-
         implementation "com.github.MrStahlfelge.gdx-websockets:common:1.9.10.3"
 
-        implementation ('io.socket:socket.io-client:2.0.1')
-                {
-                    exclude group: 'org.json', module: 'json'
-                }
+
         implementation project(":core")
 	    api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -73,10 +69,6 @@ project(":android") {
 
         implementation "com.github.MrStahlfelge.gdx-websockets:common:1.9.10.3"
 
-        implementation ('io.socket:socket.io-client:2.0.1')
-                {
-                    exclude group: 'org.json', module: 'json'
-                }
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
