@@ -34,12 +34,10 @@ public class EndScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(.25f, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        game.batch.begin();
-        game.font.draw(game.batch, "You win!", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .75f);
-        game.font.draw(game.batch, "Press enter to restart.", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .25f);
-        game.batch.end();
-
+        game.getBatch().begin();
+        game.getFont().draw(game.getBatch(), "You win!", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .75f);
+        game.getFont().draw(game.getBatch(), "Press enter to restart.", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .25f);
+        game.getBatch().end();
     }
 
     @Override

@@ -15,12 +15,11 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 public class LobbyScreen extends ScreenAdapter {
 
-    MultipleScenes game;
-    TextButton exitLobby;
-    Stage stage;
-    Skin mySkin;
-    BitmapFont font;
-
+    private MultipleScenes game;
+    private TextButton exitLobby;
+    private Stage stage;
+    private Skin mySkin;
+    private BitmapFont font;
 
     public LobbyScreen(MultipleScenes game) {
         this.game = game;
@@ -31,10 +30,10 @@ public class LobbyScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
         Gdx.files.internal("font/font.png"), false);
 
-        game.getSocket().removeListener(game.listener);
-        game.listener = getListener();
-        game.getSocket().addListener(game.listener);
-        game.getSocket().send("LobbyMessage/CreateLobby/"+game.playerName);
+        game.getSocket().removeListener(game.getListener());
+        game.setListener(getListener());
+        game.getSocket().addListener(game.getListener());
+        game.getSocket().send("LobbyMessage/CreateLobby/"+game.getPlayerName());
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
@@ -44,8 +43,6 @@ public class LobbyScreen extends ScreenAdapter {
         exitLobby = new TextButton("Return to Main Menu", mySkin, "toggle");
         exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 200, 150, 50);
         exitLobby.getLabel().setFontScale(0.6f, 0.6f);
-
-
         exitLobby.addListener(new InputListener(){
 
             @Override
@@ -54,8 +51,10 @@ public class LobbyScreen extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new HomeScreen(game));
-                game.getSocket().send("LobbyMessage/TerminateLobby/"+game.gameLobby.lobbyIndex);
+                if(game.getSocket().isOpen()) {
+                    game.setScreen(new HomeScreen(game));
+                    game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
+                }
                 return true;
             }
         });
@@ -63,19 +62,22 @@ public class LobbyScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
-
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        game.batch.begin();
-        font.draw(game.batch, "Lobby Code: "+game.gameLobby.lobbyCode, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 100);
-        font.draw(game.batch, "Waiting for other player..\n", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 50);
-        game.batch.end();
-
+        game.getBatch().begin();
+        if(game.getSocket().isOpen()) {
+            font.draw( game.getBatch(), "Lobby Code: " + game.getGameLobby().getLobbyCode(), 0, Gdx.graphics.getHeight() / 2 - 100);
+            font.draw( game.getBatch(), "Waiting for other player..\n", 0, Gdx.graphics.getHeight() / 2 - 50);
+        }
+        else{
+            game.getSocket().connect();
+            font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+        }
+        game.getBatch().end();
     }
 
     private WebSocketAdapter getListener() {
@@ -88,21 +90,18 @@ public class LobbyScreen extends ScreenAdapter {
                 if(temp.contains("Ready")){
                     System.out.println("Match ready");
                     game.setScreen(new LoadingScreen(game));
-
                 }
                 if (packet.contains("LobbyInfo")) {
                     String[] serverMessage = packet.split("/");
                     CreateLobby(Integer.valueOf(serverMessage[1]), serverMessage[2]);
                 }
-
                 return FULLY_HANDLED;
             }
         };
     }
 
     public void CreateLobby(int id, String code){
-
-        game.gameLobby = new GameLobby(code, id);
+        game.setGameLobby(new GameLobby(code, id));
     }
 
     @Override

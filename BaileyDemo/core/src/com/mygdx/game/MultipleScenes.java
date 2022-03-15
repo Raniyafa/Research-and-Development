@@ -12,13 +12,16 @@ import com.github.czyzby.websocket.WebSockets;
 
 public class MultipleScenes extends Game {
 
-    SpriteBatch batch;
-    ShapeRenderer shapeRenderer;
-    BitmapFont font;
-    protected WebSocket socket;
-    WebSocketListener listener;
-    public GameLobby gameLobby;
-    public String playerName;
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private BitmapFont font;
+    private WebSocket socket;
+
+    private WebSocketListener listener;
+
+    private GameLobby gameLobby;
+
+    private String playerName;
 
     public WebSocket getSocket() {
         return socket;
@@ -32,7 +35,7 @@ public class MultipleScenes extends Game {
 
     @Override
     public void create () {
-        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("192.168.1.71", 8080));
+        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
         socket.setSendGracefully(true);
         socket.connect();
         gameLobby = new GameLobby();
@@ -48,5 +51,53 @@ public class MultipleScenes extends Game {
         batch.dispose();
         shapeRenderer.dispose();
         font.dispose();
+    }
+
+    public WebSocketListener getListener() {
+        return listener;
+    }
+
+    public void setListener(WebSocketListener listener) {
+        this.listener = listener;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+
+    public void setBatch(SpriteBatch batch) {
+        this.batch = batch;
+    }
+
+    public BitmapFont getFont() {
+        return font;
+    }
+
+    public void setFont(BitmapFont font) {
+        this.font = font;
+    }
+
+    public GameLobby getGameLobby() {
+        return gameLobby;
+    }
+
+    public void setGameLobby(GameLobby gameLobby) {
+        this.gameLobby = gameLobby;
+    }
+
+    public ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
+    }
+
+    public void setShapeRenderer(ShapeRenderer shapeRenderer) {
+        this.shapeRenderer = shapeRenderer;
     }
 }

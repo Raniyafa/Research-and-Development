@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class GameLobby {
 
-    public ArrayList<Shape> shapeList;
-    public String lobbyCode;
-    public int lobbyIndex;
+    private ArrayList<Shape> shapeList;
+    private String lobbyCode;
+    private int lobbyIndex;
 
     public GameLobby(){
         lobbyCode = "code";
@@ -24,4 +24,19 @@ public class GameLobby {
         return String.valueOf(lobbyIndex)+"/"+lobbyCode;
     }
 
+    public String getLobbyCode() {
+        return lobbyCode;
+    }
+
+    public void setLobbyCode(String lobbyCode) {
+        this.lobbyCode = lobbyCode;
+    }
+
+    public int getLobbyIndex() {
+        return lobbyIndex;
+    }
+
+    public void setLobbyIndex(int lobbyIndex) {
+        this.lobbyIndex = lobbyIndex;
+    }
 }

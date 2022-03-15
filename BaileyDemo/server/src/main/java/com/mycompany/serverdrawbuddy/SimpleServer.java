@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.serverdrawbuddy;
 
 import ServerTypes.Client;
@@ -34,8 +29,22 @@ public class SimpleServer extends WebSocketServer {
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println("closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
+        
+        for(GameLobby e : gameLobbies){
+            if(e.player1.equals(conn) || e.player2.equals(conn)){
+                System.out.println("removing game lobby "+gameLobbies.indexOf(e));
+                if(e.player1.isOpen()){
+                e.player1.send("GameFinished");
+                }
+                if(e.player2.isOpen()){
+                e.player2.send("GameFinished");
+                }
+                gameLobbies.remove(e);
+                System.out.println("size of gamelobby array = "+gameLobbies.size());
+            }
+        }
     }
-
+    
     @Override
     public void onMessage(WebSocket conn, String message) {
         if(!message.contains("GameMessage/RequestCanvas/")){
@@ -48,6 +57,7 @@ public class SimpleServer extends WebSocketServer {
             if(clientMessage[1].matches("UpdateCanvas")){
                 //called by either play in the lobby, updates the shared canvas that is accessed by both players
                 gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
+                gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.sendPing();
             }
             else if(clientMessage[1].matches("RequestCanvas")){
                 String canvasInfo = gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeListToString(Integer.valueOf(clientMessage[3]));
@@ -122,6 +132,7 @@ public class SimpleServer extends WebSocketServer {
     @Override
     public void onStart() {
         System.out.println("server started successfully");
+        setConnectionLostTimeout(5);
     }
 
     //Lobby server functions
@@ -174,12 +185,16 @@ public class SimpleServer extends WebSocketServer {
     
 
     public static void main(String[] args) {
-        String host = "192.168.1.71";
+        String host = "localhost";
         int port = 8080;
 
         SimpleServer server = new SimpleServer(new InetSocketAddress(host, port));
   
-        server.run();   
+        server.start();   
+        
+        while(true){
+            
+        }
     }
 }
 

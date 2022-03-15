@@ -21,8 +21,8 @@ import sun.awt.ExtendedKeyCodes;
 
     public class LoadingScreen extends ScreenAdapter {
 
-        MultipleScenes game;
-        float timer = 0.0f;
+        private MultipleScenes game;
+        private float timer = 0.0f;
 
         public LoadingScreen(MultipleScenes game) {
             this.game = game;
@@ -36,14 +36,14 @@ import sun.awt.ExtendedKeyCodes;
         @Override
         public void render(float delta) {
             timer+=delta;
-            if(timer >= 3.0f){
+            if(timer >= 2.0f){
                 game.setScreen(new GameScreen(game));
             }
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            game.batch.begin();
-            game.font.draw(game.batch, "Loading Match!\n", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-            game.batch.end();
+            game.getBatch().begin();
+            game.getFont().draw(game.getBatch(), "Loading Match!\n", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+            game.getBatch().end();
 
         }
 

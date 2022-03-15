@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		CommonWebSockets.initiate();
 
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowedMode(360, 640);
 		new Lwjgl3Application(new MultipleScenes(), config);
 	}
 }

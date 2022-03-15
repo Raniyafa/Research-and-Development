@@ -26,17 +26,17 @@ import sun.awt.ExtendedKeyCodes;
 
 public class HomeScreen extends ScreenAdapter {
 
-    MultipleScenes game;
-    TextButton joinLobby;
-    TextButton findMatch;
-    TextButton createLobby;
-    Stage stage;
-    Skin mySkin;
-    public boolean moveToGame = false;
-    float timer = 0.0f;
-    boolean moveToLobby = false;
-    boolean moveToMatchmaking = false;
-    BitmapFont font;
+    private MultipleScenes game;
+    private TextButton joinLobby;
+    private TextButton findMatch;
+    private TextButton createLobby;
+    private Stage stage;
+    private Skin mySkin;
+    private boolean moveToGame = false;
+    private float timer = 0.0f;
+    private boolean moveToLobby = false;
+    private boolean moveToMatchmaking = false;
+    private BitmapFont font;
 
     public HomeScreen(MultipleScenes game) {
         this.game = game;
@@ -51,8 +51,8 @@ public class HomeScreen extends ScreenAdapter {
                 if(!packet.matches("Error")){
                     String[] clientMessage = packet.split("/");
                     if(clientMessage[0].matches("LobbyInfo")) {
-                        game.gameLobby.lobbyCode = clientMessage[0];
-                        game.gameLobby.lobbyIndex = Integer.valueOf(clientMessage[1]);
+                        game.getGameLobby().setLobbyCode(clientMessage[0]);
+                        game.getGameLobby().setLobbyIndex(Integer.valueOf(clientMessage[1]));
                         moveToLobby = true;
                         return FULLY_HANDLED;
                    }
@@ -68,20 +68,20 @@ public class HomeScreen extends ScreenAdapter {
         Gdx.files.internal("font/font.png"), false);
 
         moveToGame = false;
-        game.getSocket().removeListener(game.listener);
-        game.listener = getListener();
-        game.getSocket().addListener(game.listener);
+        game.getSocket().removeListener(game.getListener());
+        game.setListener(getListener());
+        game.getSocket().addListener(game.getListener());
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
-        Gdx.graphics.setWindowedMode(360, 640);
 
-        final TextField textField = new TextField("Text field", mySkin);
+        final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
         textField.setY(Gdx.graphics.getHeight() / 2 - 100);
         textField.setWidth(200);
         textField.setText("");
-        textField.setHeight(25);
+        textField.setHeight(50);
         textField.setVisible(false);
+        textField.setText("Enter Lobby Code :)");
 
         textField.addListener(new InputListener(){
 
@@ -89,7 +89,7 @@ public class HomeScreen extends ScreenAdapter {
             public boolean keyDown (InputEvent event, int keycode) {
                 if(keycode == Input.Keys.ENTER){
                     textField.setVisible(false);
-                    game.socket.send("LobbyMessage/JoinLobby/"+textField.getText()+"/"+game.playerName);
+                    game.getSocket().send("LobbyMessage/JoinLobby/"+textField.getText()+"/"+game.getPlayerName());
                 }
                 return false;
             }
@@ -98,8 +98,6 @@ public class HomeScreen extends ScreenAdapter {
         joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
         joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 25, 150, 50);
         joinLobby.getLabel().setFontScale(0.6f, 0.6f);
-
-
         joinLobby.addListener(new InputListener(){
 
             @Override
@@ -116,8 +114,6 @@ public class HomeScreen extends ScreenAdapter {
         createLobby = new TextButton("Create Lobby", mySkin, "toggle");
         createLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 50, 150, 50);
         createLobby.getLabel().setFontScale(0.6f, 0.6f);
-
-
         createLobby.addListener(new InputListener(){
 
             @Override
@@ -152,23 +148,29 @@ public class HomeScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
-
-
     @Override
     public void render(float delta) {
-        if(moveToLobby){
-            game.setScreen(new LoadingScreen(game));
-        }
-        if(moveToMatchmaking){
-            game.setScreen(new FindingMatch(game));
-        }
+        game.getBatch().begin();
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        game.batch.begin();
-        font.draw(game.batch, "Hello "+game.playerName+"!, Welcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 150);
-        game.batch.end();
+
+        if(game.getSocket().isOpen()) {
+            if (moveToLobby) {
+                game.setScreen(new LoadingScreen(game));
+            }
+            if (moveToMatchmaking) {
+
+                game.setScreen(new FindingMatch(game));
+            }
+            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!\nWelcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 300);
+        }
+        else if(!game.getSocket().isConnecting()){
+            game.getSocket().connect();
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+        }
+        game.getBatch().end();
     }
 
     @Override

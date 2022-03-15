@@ -17,13 +17,12 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 public class LoginScreen extends ScreenAdapter {
 
-
-    MultipleScenes game;
-    TextButton exitLobby;
-    Stage stage;
-    Skin mySkin;
-    BitmapFont font;
-    boolean moveToHome;
+    private MultipleScenes game;
+    private TextButton exitLobby;
+    private Stage stage;
+    private Skin mySkin;
+    private BitmapFont font;
+    private boolean moveToHome;
 
     public LoginScreen(MultipleScenes game) {
         this.game = game;
@@ -33,7 +32,7 @@ public class LoginScreen extends ScreenAdapter {
     public void show(){
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
         Gdx.files.internal("font/font.png"), false);
-        game.getSocket().addListener(game.listener);
+        game.getSocket().addListener(game.getListener());
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
         Gdx.graphics.setWindowedMode(360, 640);
@@ -45,13 +44,16 @@ public class LoginScreen extends ScreenAdapter {
         textField.setText("");
         textField.setHeight(70);
         textField.setVisible(true);
-
         textField.addListener(new InputListener(){
             @Override
             public boolean keyDown (InputEvent event, int keycode) {
                 if(keycode == Input.Keys.ENTER){
+                    String name = textField.getText();
+                    if(name.contains("nigg") || name.contains("fuck") || name.contains("bitch") || name.contains("shit") || name.contains("cunt")
+                            || name.contains("Pussy") || name.contains("bitch"))
+
                     textField.setVisible(false);
-                    game.playerName = textField.getText();
+                    game.setPlayerName(textField.getText());
                     moveToHome = true;
                 }
                 return false;
@@ -71,9 +73,15 @@ public class LoginScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        game.batch.begin();
-        font.draw(game.batch, "Enter your name:\n", Gdx.graphics.getWidth() / 2 - 110, Gdx.graphics.getHeight() / 2 + 100);
-        game.batch.end();
+        game.getBatch().begin();
+        if(game.getSocket().isOpen()) {
+            font.draw(game.getBatch(), "Enter your name:\n", Gdx.graphics.getWidth() / 2 - 110, Gdx.graphics.getHeight() / 2 + 100);
+        }
+        else if(!game.getSocket().isConnecting()){
+            game.getSocket().connect();
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+        }
+        game.getBatch().end();
     }
 
     @Override
