@@ -1,10 +1,12 @@
-package com.mygdx.game;
+package Upskilling;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.mygdx.game.HomeScreen;
+import com.mygdx.game.MultipleScenes;
 
 public class EndScreen extends ScreenAdapter {
 

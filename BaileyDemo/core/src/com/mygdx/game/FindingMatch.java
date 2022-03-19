@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,6 +21,8 @@ public class FindingMatch extends ScreenAdapter {
     private BitmapFont font;
     private Stage stage;
     private boolean matchFound = false;
+
+    private SpriteBatch batch;
 
     public FindingMatch(MultipleScenes game) {
         this.game = game;
@@ -99,11 +102,11 @@ public class FindingMatch extends ScreenAdapter {
 
         //Disconnection handler
         if(game.getSocket().isOpen()) {
-            font.draw(game.getBatch(), "Searching for another player..\n", 0, Gdx.graphics.getHeight() / 2);
+            font.draw( game.getBatch(), "Searching for another player..\n", 0, Gdx.graphics.getHeight() / 2);
         }
         else if(!game.getSocket().isConnecting()){
             game.getSocket().connect();
-            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", 0,  Gdx.graphics.getHeight() / 2);
+            font.draw(batch, "CONNECTION LOST TO SERVER\n", 0,  Gdx.graphics.getHeight() / 2);
         }
         game.getBatch().end();
 

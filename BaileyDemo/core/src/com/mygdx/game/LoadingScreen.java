@@ -42,7 +42,7 @@ import sun.awt.ExtendedKeyCodes;
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             game.getBatch().begin();
-            game.getFont().draw(game.getBatch(), "Loading Match!\n", Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+            game.getFont().draw(game.getBatch(), "Loading Match!\n", Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
             game.getBatch().end();
 
         }

@@ -17,6 +17,7 @@ public class GameLobby {
     public int readyCount;
     public int turnCount;
     public int maxTurns;
+    public float turnTime;
 
     public GameLobby(String[] lobbyCodes){
        lobbyCode = generateLobbyCode(lobbyCodes);

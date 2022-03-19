@@ -12,16 +12,15 @@ import com.github.czyzby.websocket.WebSockets;
 
 public class MultipleScenes extends Game {
 
-    private SpriteBatch batch;
-    private ShapeRenderer shapeRenderer;
     private BitmapFont font;
-    private WebSocket socket;
 
+    private WebSocket socket;
     private WebSocketListener listener;
 
     private GameLobby gameLobby;
 
     private String playerName;
+    private SpriteBatch batch;
 
     public WebSocket getSocket() {
         return socket;
@@ -31,7 +30,7 @@ public class MultipleScenes extends Game {
         this.socket = socket;
     }
 
-    //need to add server connection + socket variabels to this class so it can be accessed all the time, also other shit
+    //need to add server connection + socket variables to this class so it can be accessed all the time, also other shit
 
     @Override
     public void create () {
@@ -41,15 +40,12 @@ public class MultipleScenes extends Game {
         gameLobby = new GameLobby();
 
         batch = new SpriteBatch();
-        shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
         setScreen(new LoginScreen(this));
     }
 
     @Override
     public void dispose () {
-        batch.dispose();
-        shapeRenderer.dispose();
         font.dispose();
     }
 
@@ -93,11 +89,4 @@ public class MultipleScenes extends Game {
         this.gameLobby = gameLobby;
     }
 
-    public ShapeRenderer getShapeRenderer() {
-        return shapeRenderer;
-    }
-
-    public void setShapeRenderer(ShapeRenderer shapeRenderer) {
-        this.shapeRenderer = shapeRenderer;
-    }
 }

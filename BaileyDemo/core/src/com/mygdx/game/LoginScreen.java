@@ -74,6 +74,8 @@ public class LoginScreen extends ScreenAdapter {
         stage.act();
         stage.draw();
         game.getBatch().begin();
+
+
         if(game.getSocket().isOpen()) {
             font.draw(game.getBatch(), "Enter your name:\n", Gdx.graphics.getWidth() / 2 - 110, Gdx.graphics.getHeight() / 2 + 100);
         }
