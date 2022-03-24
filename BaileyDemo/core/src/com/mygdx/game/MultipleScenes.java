@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -9,6 +10,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.WebSockets;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class MultipleScenes extends Game {
 
@@ -34,19 +38,34 @@ public class MultipleScenes extends Game {
 
     @Override
     public void create () {
-        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
+
+
+        // socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("drawbuddygame.co.vu", 3000));
+
+        socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
+
         socket.setSendGracefully(true);
-        socket.connect();
+
+
+            try {
+                socket.connect();
+            } catch (Exception e) {
+                System.out.println("Exception: " + e);
+            }
+
         gameLobby = new GameLobby();
 
         batch = new SpriteBatch();
         font = new BitmapFont();
+
         setScreen(new LoginScreen(this));
     }
 
     @Override
     public void dispose () {
         font.dispose();
+        batch.dispose();
+        Gdx.app.exit();
     }
 
     public WebSocketListener getListener() {

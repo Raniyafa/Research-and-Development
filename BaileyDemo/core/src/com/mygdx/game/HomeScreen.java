@@ -177,4 +177,12 @@ public class HomeScreen extends ScreenAdapter {
     public void hide(){
         Gdx.input.setInputProcessor(null);
     }
+
+    @Override
+    public void dispose(){
+        game.dispose();
+        stage.dispose();
+        mySkin.dispose();
+        font.dispose();
+    }
 }

@@ -2,9 +2,37 @@ package com.mycompany.serverdrawbuddy;
 
 import ServerTypes.Client;
 import ServerTypes.GameLobby;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.security.cert.Certificate;
+import java.security.KeyFactory;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
+import javax.net.SocketFactory;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -17,6 +45,8 @@ public class SimpleServer extends WebSocketServer {
       
     public SimpleServer(InetSocketAddress address) {
         super(address);
+        SSLContext sslContext = getSSLContextFromLetsEncrypt();
+        setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
 
     @Override
@@ -183,17 +213,70 @@ public class SimpleServer extends WebSocketServer {
     }
     
 
-    public static void main(String[] args) {
-        String host = "localhost";
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, KeyManagementException {
+      
+        
+        String host = "172.31.45.56";
         int port = 8080;
-
+        
         SimpleServer server = new SimpleServer(new InetSocketAddress(host, port));
-  
+    
         server.start();   
         
         while(true){
             
         }
     }
+    
+        private static SSLContext getSSLContextFromLetsEncrypt() {
+            SSLContext context;
+            String pathTo = "/etc/letsencrypt/live/drawbuddygame.co.vu";
+            String keyPassword = "";
+            try {
+                context = SSLContext.getInstance("TLS");
+
+                byte[] certBytes = parseDERFromPEM(Files.readAllBytes(new File(pathTo + File.separator + "cert.pem").toPath()), "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
+                byte[] keyBytes = parseDERFromPEM(Files.readAllBytes(new File(pathTo + File.separator + "privkey.pem").toPath()), "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
+
+                X509Certificate cert = generateCertificateFromDER(certBytes);
+                RSAPrivateKey key = generatePrivateKeyFromDER(keyBytes);
+
+                KeyStore keystore = KeyStore.getInstance("JKS");
+                keystore.load(null);
+                keystore.setCertificateEntry("cert-alias", cert);
+                keystore.setKeyEntry("key-alias", key, keyPassword.toCharArray(), new Certificate[]{cert});
+
+                KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf.init(keystore, keyPassword.toCharArray());
+
+                KeyManager[] km = kmf.getKeyManagers();
+
+                context.init(km, null, null);
+            } catch (IOException | KeyManagementException | KeyStoreException | InvalidKeySpecException | UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException e) {
+                System.out.println("caught "+e);
+                throw new IllegalArgumentException();
+            }        
+            return context;
+        }
+
+        protected static byte[] parseDERFromPEM(byte[] pem, String beginDelimiter, String endDelimiter) {
+            String data = new String(pem);               
+            String[] tokens = data.split(beginDelimiter);
+            tokens = tokens[1].split(endDelimiter);
+            tokens[0] = tokens[0].replace("\n","");
+            return Base64.getDecoder().decode(tokens[0]);
+        }
+
+        protected static RSAPrivateKey generatePrivateKeyFromDER(byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory factory = KeyFactory.getInstance("RSA");
+            return (RSAPrivateKey) factory.generatePrivate(spec);
+        }
+
+        protected static X509Certificate generateCertificateFromDER(byte[] certBytes) throws CertificateException {
+            CertificateFactory factory = CertificateFactory.getInstance("X.509");
+
+            return (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(certBytes));
+        }
 }
 

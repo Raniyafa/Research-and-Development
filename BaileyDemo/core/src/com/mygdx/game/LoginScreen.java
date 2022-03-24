@@ -89,5 +89,16 @@ public class LoginScreen extends ScreenAdapter {
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);
+        if(!moveToHome)
+        dispose();
+    }
+
+    @Override
+    public void dispose(){
+        stage.dispose();
+        mySkin.dispose();
+        font.dispose();
+        game.dispose();
+        Gdx.app.exit();
     }
 }

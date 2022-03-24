@@ -51,5 +51,10 @@ import sun.awt.ExtendedKeyCodes;
         public void hide(){
             Gdx.input.setInputProcessor(null);
         }
+
+        @Override
+        public void dispose(){
+            game.dispose();
+        }
     }
 

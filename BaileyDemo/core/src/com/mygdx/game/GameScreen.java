@@ -408,4 +408,12 @@ public class GameScreen extends ScreenAdapter {
         }
         return temp;
     }
+
+    @Override
+    public void dispose(){
+        game.dispose();
+        stage.dispose();
+        font.dispose();
+        fontLarge.dispose();
+    }
 }
