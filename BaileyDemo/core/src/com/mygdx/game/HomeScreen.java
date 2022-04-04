@@ -31,7 +31,7 @@ import sun.awt.ExtendedKeyCodes;
 
 public class HomeScreen extends ScreenAdapter {
 
-    //add TAG for img_button test
+//    add TAG for img_button test
     private static final String TAG = HomeScreen.class.getSimpleName();
 
     private MultipleScenes game;
@@ -156,19 +156,19 @@ public class HomeScreen extends ScreenAdapter {
             }
         });
 
-        findMatch = new TextButton("Find match", mySkin, "toggle");
-        findMatch.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 125, 150, 50);
-        findMatch.getLabel().setFontScale(0.6f, 0.6f);
-
-
-        findMatch.addListener(new InputListener(){
-
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                moveToMatchmaking = true;
-                return true;
-            }
-        });
+//        findMatch = new TextButton("Find match", mySkin, "toggle");
+//        findMatch.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 125, 150, 50);
+//        findMatch.getLabel().setFontScale(0.6f, 0.6f);
+//
+//
+//        findMatch.addListener(new InputListener(){
+//
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                moveToMatchmaking = true;
+//                return true;
+//            }
+//        });
 
         //Isaac-add img button for test
         tex2 = new Texture(Gdx.files.internal("button/button240_QuickPlay.png"));
@@ -178,17 +178,24 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(65,50);
+        button.setPosition(65,370);
         //button.setSize(480,480);
         stage.addActor(button);
+//        button.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                Gdx.app.log(TAG, "CLICK!!");
+//            }
+//        });
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log(TAG, "CLICK!!");
+                moveToMatchmaking = true;
+//                return true;
             }
         });
 
-        stage.addActor(findMatch);
+//        stage.addActor(findMatch);
         stage.addActor(textField);
         stage.addActor(createLobby);
         stage.addActor(joinLobby);
