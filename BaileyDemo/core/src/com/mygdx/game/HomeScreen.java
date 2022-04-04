@@ -171,7 +171,7 @@ public class HomeScreen extends ScreenAdapter {
         });
 
         //Isaac-add img button for test
-        tex2 = new Texture(Gdx.files.internal("button/button2.png"));
+        tex2 = new Texture(Gdx.files.internal("button/button240_QuickPlay.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,240,240);
         buttonUp = temp[0][0];
         buttonDown = temp[0][1];
