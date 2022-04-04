@@ -36,7 +36,8 @@ public class CreateLobbyScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton imgButton;
 
-
+    private boolean moveToLobby = false;
+    private boolean moveToMatchmaking = false;
 
     public CreateLobbyScreen(MultipleScenes game) {this.game = game;}
 

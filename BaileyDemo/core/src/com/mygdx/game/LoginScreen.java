@@ -8,9 +8,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
@@ -19,6 +22,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class LoginScreen extends ScreenAdapter {
+
+    //add TAG for img_button test
+    private static final String TAG = HomeScreen.class.getSimpleName();
 
     private MultipleScenes game;
     private TextButton exitLobby;
@@ -31,6 +37,14 @@ public class LoginScreen extends ScreenAdapter {
     private Texture tex;
     private Image image;
     private TextureRegion region;
+
+    //add image_button
+    private TextureRegionDrawable up;
+    private TextureRegionDrawable down;
+    private TextureRegion buttonUp;
+    private TextureRegion buttonDown;
+    private Texture tex2;
+    private ImageButton button;
 
     public LoginScreen(MultipleScenes game) {
         this.game = game;
@@ -72,6 +86,25 @@ public class LoginScreen extends ScreenAdapter {
                     moveToHome = true;
                 }
                 return false;
+            }
+        });
+
+        //img_button for Setting
+        tex2 = new Texture(Gdx.files.internal("button/button240_settingGear.png"));
+        TextureRegion[][] temp = TextureRegion.split(tex2,240,240);
+        buttonUp = temp[0][0];
+        buttonDown = temp[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(200,470);
+        //button.setSize(480,480);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //test
+                Gdx.app.log(TAG, "CLICK!!");
             }
         });
 
