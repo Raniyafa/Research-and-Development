@@ -26,6 +26,8 @@ public class MultipleScenes extends Game {
     private String playerName;
     private SpriteBatch batch;
 
+    public String socketException = "";
+
     public WebSocket getSocket() {
         return socket;
     }
@@ -39,17 +41,29 @@ public class MultipleScenes extends Game {
     @Override
     public void create () {
 
-
+        //non secure wss testing
         // socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("drawbuddygame.co.vu", 3000));
 
+       //pc localhost testing
+     //   socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
+
+        //aws online testing html
+
+        //this one
         socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
 
-        socket.setSendGracefully(true);
+         //aws online testing desktop
+        //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("52.62.8.106", 8080));
 
+        //android testing
+        //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("127.0.0.1", 8080));
+
+        socket.setSendGracefully(true);
 
             try {
                 socket.connect();
             } catch (Exception e) {
+                socketException = e.toString();
                 System.out.println("Exception: " + e);
             }
 

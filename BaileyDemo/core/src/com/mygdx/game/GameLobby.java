@@ -7,6 +7,7 @@ public class GameLobby {
     private ArrayList<Shape> shapeList;
     private String lobbyCode;
     private int lobbyIndex;
+    private String wordTopic;
 
     public GameLobby(){
         lobbyCode = "code";
@@ -38,5 +39,13 @@ public class GameLobby {
 
     public void setLobbyIndex(int lobbyIndex) {
         this.lobbyIndex = lobbyIndex;
+    }
+
+    public String getWordTopic() {
+        return wordTopic;
+    }
+
+    public void setWordTopic(String wordTopic) {
+        this.wordTopic = wordTopic;
     }
 }

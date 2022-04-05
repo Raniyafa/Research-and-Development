@@ -2,9 +2,13 @@ package com.mycompany.serverdrawbuddy;
 
 import ServerTypes.Client;
 import ServerTypes.GameLobby;
+import ServerTypes.Shape;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -25,6 +29,10 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.SocketFactory;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -84,13 +92,16 @@ public class SimpleServer extends WebSocketServer {
         String[] clientMessage = message.split("/");
         
         if(clientMessage[0].matches("GameMessage")){
-            if(clientMessage[1].matches("UpdateCanvas")){
-                //called by either play in the lobby, updates the shared canvas that is accessed by both players
-                gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
-            }
-            else if(clientMessage[1].matches("RequestCanvas")){
+            if(clientMessage[1].matches("RequestCanvas")){
                 String canvasInfo = gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeListToString(Integer.valueOf(clientMessage[3]));
                 conn.send(canvasInfo);
+            }
+            else if(clientMessage[1].matches("UpdateCanvas")){
+                //called by either play in the lobby, updates the shared canvas that is accessed by both players
+               // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
+               String[] clientMessage2 = clientMessage[3].split(":");
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
             }
             else if(clientMessage[1].matches("EmoteUsed")){
                 //checking which player used the emote
@@ -103,32 +114,7 @@ public class SimpleServer extends WebSocketServer {
                 }
             }
         }
-        else if(clientMessage[0].matches("LobbyMessage")){
-            if(clientMessage[1].matches("CreateLobby")){
-                //creates a lobby and send the lobby info to client
-                
-                conn.send(createLobby(conn, clientMessage[2]));
-            }
-            else if(clientMessage[1].matches("JoinLobby")){
-                conn.send(lobbyInfoToString(clientMessage[2], conn));
-                gameLobbies.get(Integer.valueOf(clientMessage[2])).p2Name = clientMessage[3];
-            }
-            else if(clientMessage[1].matches("TerminateLobby")){
-                //need to create a way on client side that checks every once in awhile if the lobby is still alive
-                gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[2])));
-            }
-        }
-        else if(clientMessage[0].matches("FindMatch")){
-            matchCreator(conn, clientMessage[1]);
-        }
-        else if(clientMessage[0].matches("Ready")){
-           gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount++;
-           if( gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount == 2){
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("YourTurn");
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("PartnerTurn");
-           }
-        }
-        else if(clientMessage[0].matches("TurnFinished")){     
+                else if(clientMessage[0].matches("TurnFinished")){     
            gameLobbies.get(Integer.valueOf(clientMessage[1])).turnCount++;
            
            if(gameLobbies.get(Integer.valueOf(clientMessage[1])).turnCount < gameLobbies.get(Integer.valueOf(clientMessage[1])).maxTurns){
@@ -145,6 +131,63 @@ public class SimpleServer extends WebSocketServer {
                gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[1])));
            }
         }
+        else if(clientMessage[0].matches("LobbyMessage")){
+            if(clientMessage[1].matches("CreateLobby")){
+                try {
+                    //creates a lobby and send the lobby info to client
+
+                    conn.send(createLobby(conn, "temp_name", clientMessage[2]));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else if(clientMessage[1].matches("JoinLobby")){
+                conn.send(lobbyInfoToString(clientMessage[2], conn));
+                gameLobbies.get(Integer.valueOf(clientMessage[2])).p2Name = clientMessage[3];
+                                gameLobbies.get(Integer.valueOf(clientMessage[2])).player2 = conn;
+            }
+            else if(clientMessage[1].matches("TerminateLobby")){
+                //need to create a way on client side that checks every once in awhile if the lobby is still alive
+                gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[2])));
+            }
+        }
+        else if(clientMessage[0].matches("FindMatch")){
+            try {
+                matchCreator(conn, clientMessage[1]);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else if(clientMessage[0].matches("Ready")){
+           gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount++;
+           if( gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount == 2){
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("YourTurn");
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("PartnerTurn");
+           }
+        }
+        else if(clientMessage[0].matches("CheckName")){    
+            try {
+                if(checkName(clientMessage[1]) == true){
+                    conn.send("Pass");
+                    System.out.println("sending back pass");
+                }
+                else{
+                    conn.send("Fail");
+                                      System.out.println("sending back fail");
+                }
+            } catch (FileNotFoundException ex) {
+                System.out.println("exception found in checkname "+ex);
+            }
+        }
+         else if(clientMessage[0].matches("ReturnToMain")){    
+             for(int i = 0; i <= gameQueue.size() - 1; i++){
+                 System.out.println("inside for loop");
+                 if(conn.equals(gameQueue.get(i).socket)){
+                     gameQueue.remove(i);
+                 }
+             }
+             System.out.println("gamequeue size after removing "+gameQueue.size());
+         }
     }
 
     @Override
@@ -166,7 +209,7 @@ public class SimpleServer extends WebSocketServer {
 
     //Lobby server functions
     
-    public String createLobby(WebSocket conn, String clientname){
+    public String createLobby(WebSocket conn, String clientname, String lobbyType) throws FileNotFoundException{
         String[] lobbyCodes = new String[gameLobbies.size()];     
         for(int i = 0; i <= gameLobbies.size() - 1; i++){
             lobbyCodes[i] += gameLobbies.get(i)+"\n";
@@ -192,9 +235,9 @@ public class SimpleServer extends WebSocketServer {
         return "Error";  
     }
     
-    public void matchCreator(WebSocket conn, String clientname){
+    public void matchCreator(WebSocket conn, String clientname) throws FileNotFoundException{
         for(int i = 0; i <= gameQueue.size() - 1; i++){
-            String lobbyInfo = createLobby(conn, clientname);
+            String lobbyInfo = createLobby(conn, clientname, "Regular");
             conn.send(lobbyInfo);         
             String[] lobbyString = lobbyInfo.split("/");    
             gameLobbies.get(Integer.valueOf(lobbyString[1])).player2 = gameQueue.get(i).socket;
@@ -217,15 +260,17 @@ public class SimpleServer extends WebSocketServer {
       
         
         String host = "172.31.45.56";
+        //String host = "localhost";
         int port = 8080;
         
         SimpleServer server = new SimpleServer(new InetSocketAddress(host, port));
     
+        System.out.println("Attemping to run server with "+host+" on port "+port);
+                
+        
         server.start();   
         
-        while(true){
-            
-        }
+     
     }
     
         private static SSLContext getSSLContextFromLetsEncrypt() {
@@ -277,6 +322,34 @@ public class SimpleServer extends WebSocketServer {
             CertificateFactory factory = CertificateFactory.getInstance("X.509");
 
             return (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(certBytes));
+        }
+       
+        private boolean checkName(String name) throws FileNotFoundException{
+
+         //   File txt = new File("C:\\Users\\ishya\\OneDrive\\Documents\\GitHub\\Research-and-Development\\BaileyDemo\\server\\src\\main\\java\\Files\\badwords.txt");
+           File txt = new File("/home/ec2-user/badwords.txt");
+           Scanner scan = new Scanner(txt);
+            ArrayList<String> data = new ArrayList<>() ;
+            while(scan.hasNextLine()){
+                data.add(scan.nextLine());
+            }
+            
+            String nameLower = name.toLowerCase();
+            
+            String[] simpleArray = data.toArray(new String[]{});
+            
+            String temp = "";
+            int counter = 0;
+           for(int i = 0; i <= simpleArray.length - 1; i++){
+               
+               temp = simpleArray[counter];
+                if(temp.contains(nameLower) || temp.matches(nameLower)){
+                    return false;
+                }
+                counter++;
+            }
+            
+            return true;
         }
 }
 

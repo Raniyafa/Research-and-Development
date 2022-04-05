@@ -4,24 +4,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+
 public class GameScreen extends ScreenAdapter {
 
     private BitmapFont font;
     private BitmapFont fontLarge;
+
+    private Texture annoyed;
+    private Texture hearteye;
+    private Texture sad;
+    private Texture laugh;
 
     private int lobbyID = 0;
     private MultipleScenes game;
@@ -40,6 +52,8 @@ public class GameScreen extends ScreenAdapter {
     private TextButton square;
     private Stage stage;
 
+    private ImageButton emojiButtons[];
+
     private String selectedColour = "Red";
     private String selectedType = "circle";
 
@@ -56,6 +70,10 @@ public class GameScreen extends ScreenAdapter {
     private boolean myTurn;
     private boolean gameFinished;
 
+    private boolean isUpdating;
+
+
+
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -66,23 +84,32 @@ public class GameScreen extends ScreenAdapter {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 //Network handler for this class, takes messages from the server and uses the information for the game
-
                 if(!packet.contains("CanvasInfo")) {
                     Gdx.app.log("WS", "Got message: " + packet);
                 }
 
                 try {
+
                     String[] clientMessage = packet.split("/");
-                    if (clientMessage[0].matches("CanvasInfo") && Integer.valueOf(clientMessage[1]) > shapeArr.size()) {
 
+                    if (clientMessage[0].matches("GameMessage2")) {
+
+                        float[] colour = getRGB(clientMessage[4]);
+                        shapeArr.add(new Shape(Integer.valueOf(clientMessage[1]), Integer.valueOf(clientMessage[2]), 10, clientMessage[3], colour));
+
+                        received++;
+
+                    }
+                    else if (clientMessage[0].matches("CanvasInfo") && Integer.valueOf(clientMessage[1]) > shapeArr.size() && !isUpdating) {
+                        isUpdating = true;
+                        int shapeArrSize = shapeArr.size();
                         int index = 2;
-                        int size = shapeArr.size() + ((clientMessage.length - 2) / 4);
+                        int size = shapeArrSize + ((clientMessage.length - 2) / 4);
 
-                        System.out.println("shapeArr size = "+shapeArr.size() +" size = "+size);
+                       // System.out.println("shapeArr size = "+shapeArr.size() +" size = "+size);
 
-                        for (int i = shapeArr.size(); i <= size - 1; i++) {
+                        for (int i = shapeArrSize; i <= size - 1; i++) {
                             float[] colour = getRGB(clientMessage[index + 1]);
-
                             shapeArr.add(new Shape(Integer.valueOf(clientMessage[index + 2]), Integer.valueOf(clientMessage[index + 3]), 10, clientMessage[index], colour));
                             index += 4;
                             received++;
@@ -97,6 +124,7 @@ public class GameScreen extends ScreenAdapter {
                 }catch(Exception e){
                     System.out.println("Exception in update from server " +e);
                 }
+                isUpdating = false;
                 return FULLY_HANDLED;
             }
         };
@@ -108,24 +136,91 @@ public class GameScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
         Gdx.files.internal("smallfont/smallfont.png"), false);
         font.setColor(Color.BLACK);
-
-        fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"),
-        Gdx.files.internal("font/font.png"), false);
+        fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
 
-        shapeRenderer = new ShapeRenderer();
+        stage = new Stage(new ScreenViewport());
 
-        //Attach the network listener for this class to the WebSocket
         game.getSocket().removeListener(game.getListener());
         game.setListener(getListener());
         game.getSocket().addListener(game.getListener());
+
+        shapeRenderer = new ShapeRenderer();
+
+        emojiButtons = new ImageButton[4];
+
+       // emojiButtons[0] = new ImageButton();
+        annoyed = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
+        TextureRegion myTextureRegion = new TextureRegion(annoyed);
+        TextureRegionDrawable myTexRegionAnnoyed = new TextureRegionDrawable(myTextureRegion);
+        emojiButtons[0] = new ImageButton(myTexRegionAnnoyed); //Set the button up
+        emojiButtons[0].setBounds(200, 50, 50, 50);
+
+        emojiButtons[0].addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
+
+        stage.addActor(emojiButtons[0]);
+
+        hearteye = new Texture(Gdx.files.internal("emojis/hearteye.jpg"));
+        TextureRegion myTextureRegionHeart = new TextureRegion(hearteye);
+        TextureRegionDrawable myTexRegionHeart = new TextureRegionDrawable(myTextureRegionHeart);
+        emojiButtons[1] = new ImageButton(myTexRegionHeart); //Set the button up
+        emojiButtons[1].setBounds(260, 50, 50, 50);
+
+        emojiButtons[1].addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
+
+        stage.addActor(emojiButtons[1]);
+
+        laugh = new Texture(Gdx.files.internal("emojis/laugh.jpg"));
+        TextureRegion myTextureRegionLaugh = new TextureRegion(laugh);
+        TextureRegionDrawable myTexRegionLaugh = new TextureRegionDrawable(myTextureRegion);
+        emojiButtons[2] = new ImageButton(myTexRegionLaugh); //Set the button up
+        emojiButtons[2].setBounds(320, 50, 50, 50);
+
+        emojiButtons[2].addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
+
+        stage.addActor(emojiButtons[2]);
+
+        sad = new Texture(Gdx.files.internal("emojis/sad.jpg"));
+        TextureRegion myTextureRegionSad = new TextureRegion(sad);
+        TextureRegionDrawable myTexRegionSad = new TextureRegionDrawable(myTextureRegionSad);
+        emojiButtons[3] = new ImageButton(myTexRegionSad); //Set the button up
+        emojiButtons[3].setBounds(380, 50, 50, 50);
+
+        emojiButtons[3].addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                  //  game.getSocket().send("")
+            }
+        });
+
+        stage.addActor(emojiButtons[3]);
+
+        //Attach the network listener for this class to the WebSocket
 
         game.getSocket().send("Ready/"+game.getGameLobby().getLobbyIndex());
         shapeArr = new ArrayList<>(5000);
 
         //Skin created for buttons and UI elements, stage set for this class
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-        stage = new Stage(new ScreenViewport());
 
         //All the buttons and listeners for the buttons are added below
         drawSize = new SelectBox<String>(mySkin);
@@ -133,12 +228,12 @@ public class GameScreen extends ScreenAdapter {
         drawSize.setName("Pencil Size");
         drawSize.setBounds(200, 35, 130, 33);
         drawSize.setSelected("5");
-        stage.addActor(drawSize);
+       // stage.addActor(drawSize);
 
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
         colour.setName("Pencil Colour");
-        colour.setBounds(100, 35, 70, 33);
+        colour.setBounds(100, 50, 70, 33);
         colour.setSelected("Red");
         stage.addActor(colour);
 
@@ -162,7 +257,7 @@ public class GameScreen extends ScreenAdapter {
                 circle.setText("Circle");
             }
         });
-        stage.addActor(triangle);
+      //  stage.addActor(triangle);
 
         circle = new TextButton("Circle Selected", mySkin, "toggle");
         circle.setBounds(0, Gdx.graphics.getHeight() - 33, 130, 33);
@@ -185,7 +280,8 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-        stage.addActor(circle);
+       // stage.addActor(circle);
+
         square = new TextButton("Square", mySkin, "toggle");
         square.setBounds(130, Gdx.graphics.getHeight() - 33, 130, 33);
         square.getLabel().setFontScale(0.6f, 0.6f);
@@ -206,7 +302,7 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-        stage.addActor(square);
+       // stage.addActor(square);
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -231,7 +327,7 @@ public class GameScreen extends ScreenAdapter {
 
         turnTimer += delta;
 
-        if(drawTimer >= 0.0166f) {
+        if(drawTimer >= 0.01f) {
         drawTimer = 0.0f;
 
             Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
@@ -242,8 +338,8 @@ public class GameScreen extends ScreenAdapter {
 
                 //If the requirements are met then the current mouse location is captured and a shape is created corresponding to the selected
                 //shape, colour and size
-                if(myTurn && Gdx.input.isTouched()) {
-                    if (Gdx.input.getY() > 50.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 50.0f) {
+                if(myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
+                    if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f) {
                         storeMouseLoc(delta);
                     }
                 }
@@ -288,9 +384,10 @@ public class GameScreen extends ScreenAdapter {
                 //shapes are being drawn to the screen.
 
                 if (myTurn) {
-                    String temp = "Your turn to draw! " + (Math.round(10.0f - turnTimer));
+
+                    String temp = game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, 0, Gdx.graphics.getHeight() / 2 + 280);
+                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
                     font.draw(game.getBatch(), temp2, 0, 200);
                     if (turnTimer >= 10.0f) {
                         myTurn = false;
@@ -298,9 +395,9 @@ public class GameScreen extends ScreenAdapter {
                         turnTimer = 0.0f;
                     }
                 } else {
-                    String temp = "Your partner is drawing! " + (Math.round(10.0f - turnTimer));
+                    String temp = game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, 0, Gdx.graphics.getHeight() / 2 + 280);
+                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
                     font.draw(game.getBatch(), temp2, 0, 200);
                 }
 
@@ -373,7 +470,7 @@ public class GameScreen extends ScreenAdapter {
 
     public void getCanvasUpdates(){
         //Gets the new shapes from the server that has been added to the shared canvas since the last update call from the client
-        game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+shapeArr.size());
+       // game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+shapeArr.size());
     }
 
     public float[] getRGB(String colour){

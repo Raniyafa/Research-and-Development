@@ -34,9 +34,10 @@ public class HomeScreen extends ScreenAdapter {
     private Skin mySkin;
     private boolean moveToGame = false;
     private float timer = 0.0f;
-    private boolean moveToLobby = false;
+    public boolean moveToLobby = false;
     private boolean moveToMatchmaking = false;
     private BitmapFont font;
+    private boolean moveToCreateLobby = false;
 
     public HomeScreen(MultipleScenes game) {
         this.game = game;
@@ -47,16 +48,15 @@ public class HomeScreen extends ScreenAdapter {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 Gdx.app.log("WS", "Got message: " + packet);
-                System.out.println("called from homescreen");
-                if(!packet.matches("Error")){
+
                     String[] clientMessage = packet.split("/");
+                System.out.println("clientmessage[0] = "+clientMessage[0]);
                     if(clientMessage[0].matches("LobbyInfo")) {
-                        game.getGameLobby().setLobbyCode(clientMessage[0]);
-                        game.getGameLobby().setLobbyIndex(Integer.valueOf(clientMessage[1]));
+                        game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
+                        game.getGameLobby().setWordTopic(clientMessage[3]);
                         moveToLobby = true;
-                        return FULLY_HANDLED;
                    }
-                }
+
                 return FULLY_HANDLED;
             }
         };
@@ -81,7 +81,7 @@ public class HomeScreen extends ScreenAdapter {
         textField.setText("");
         textField.setHeight(50);
         textField.setVisible(false);
-        textField.setText("Enter Lobby Code :)");
+        textField.setText("");
 
         textField.addListener(new InputListener(){
 
@@ -106,7 +106,13 @@ public class HomeScreen extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                textField.setVisible(true);
+                if(!textField.isVisible()){
+                    textField.setVisible(true);
+                }
+                else{
+                    textField.setVisible(false);
+                    textField.setText("");
+                }
                 return true;
             }
         });
@@ -122,7 +128,7 @@ public class HomeScreen extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LobbyScreen(game));
+                moveToCreateLobby = true;
                 return true;
             }
         });
@@ -150,6 +156,13 @@ public class HomeScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if(moveToCreateLobby){
+            game.setScreen(new CreateLobby(game));
+        }
+        if (moveToLobby) {
+            System.out.println("Changing to loading screen");
+            game.setScreen(new LoadingScreen(game));
+        }
         game.getBatch().begin();
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -157,11 +170,7 @@ public class HomeScreen extends ScreenAdapter {
         stage.draw();
 
         if(game.getSocket().isOpen()) {
-            if (moveToLobby) {
-                game.setScreen(new LoadingScreen(game));
-            }
             if (moveToMatchmaking) {
-
                 game.setScreen(new FindingMatch(game));
             }
             font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!\nWelcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 300);

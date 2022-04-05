@@ -41,8 +41,9 @@ public class FindingMatch extends ScreenAdapter {
                 if(clientMessage[0].matches("LobbyInfo")) {
                     System.out.println("joining match");
                     game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
-                    matchFound = true;
+                    game.getGameLobby().setWordTopic(clientMessage[3]);
                     game.getSocket().send("joining match");
+                    matchFound = true;
                 }
                 return FULLY_HANDLED;
             }
@@ -77,8 +78,14 @@ public class FindingMatch extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                if(game.getGameLobby().getLobbyIndex() != -1) {
+                    game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
+                }
+                else{
+                    game.getSocket().send("ReturnToMain");
+                }
+
                 game.setScreen(new HomeScreen(game));
-                game.getSocket().send("LobbyMessage/TerminateLobby/"+game.getGameLobby().getLobbyIndex());
                 return true;
             }
         });

@@ -1,8 +1,11 @@
 package ServerTypes;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import org.java_websocket.WebSocket;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class GameLobby {
     
@@ -18,9 +21,12 @@ public class GameLobby {
     public int turnCount;
     public int maxTurns;
     public float turnTime;
+    public String wordTopic;
+    public String lobbyType;
 
-    public GameLobby(String[] lobbyCodes){
+    public GameLobby(String[] lobbyCodes) throws FileNotFoundException{
        lobbyCode = generateLobbyCode(lobbyCodes);
+       wordTopic = generateWord();
        shapeList = new ArrayList<>();
        client1pinged = true;
        client2pinged = false;
@@ -42,7 +48,7 @@ public class GameLobby {
     }
     
     public String lobbyToString(){
-        return String.valueOf(lobbyIndex)+"/"+lobbyCode;
+        return String.valueOf(lobbyIndex)+"/"+lobbyCode+"/"+wordTopic;
     }
 
     public String generateLobbyCode(String[] lobbyCodes){
@@ -66,6 +72,22 @@ public class GameLobby {
         }
         
         return code;
+    }
+    
+    public String generateWord() throws FileNotFoundException{
+        String temp = "";
+        
+         //  File txt = new File("C:\\Users\\ishya\\OneDrive\\Documents\\GitHub\\Research-and-Development\\BaileyDemo\\server\\src\\main\\java\\Files\\topicwords.txt");
+           File txt = new File("/home/ec2-user/topicwords.txt");
+           Scanner scan = new Scanner(txt);
+            ArrayList<String> data = new ArrayList<>() ;
+            while(scan.hasNextLine()){
+                data.add(scan.nextLine());
+            }
+            
+            String[] simpleArray = data.toArray(new String[]{});    
+            Random rand = new Random();      
+            return simpleArray[rand.nextInt(simpleArray.length)];
     }
 }
 
