@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -35,15 +37,20 @@ public class GameScreen extends ScreenAdapter {
     private Texture sad;
     private Texture laugh;
 
+    private Texture activeEmote;
+
     private int lobbyID = 0;
     private MultipleScenes game;
     private ArrayList<Shape> shapeArr;
 
     private ShapeRenderer shapeRenderer;
 
+    private Sprite emote;
+
     final private float UPDATE_TIME = 1 / 30.0f;
 
     private boolean readyToDraw = false;
+    private boolean emoteActive = false;
 
     private SelectBox<String> drawSize;
     private SelectBox<String> colour;
@@ -62,10 +69,13 @@ public class GameScreen extends ScreenAdapter {
     private float waitTime;
     private float drawTimer = 0.0f;
     private float disconnectedTimer = 0.0f;
+    private float emoteOpacity = 1.0f;
 
     private int selectedSize = 5;
     private int received = 0;
     private int sent = 0;
+
+    private float emoteY = 75;
 
     private boolean myTurn;
     private boolean gameFinished;
@@ -121,6 +131,26 @@ public class GameScreen extends ScreenAdapter {
                         game.setGameLobby(new GameLobby());
                         gameFinished = true;
                     }
+                    else if(clientMessage[0].matches("Emote")) {
+                        emoteActive = true;
+
+
+                        if(clientMessage[1].matches("Annoyed")){
+                            emote = new Sprite(annoyed);
+                        }
+                        else if(clientMessage[1].matches("Laugh")){
+                            emote = new Sprite(laugh);
+                        }
+                        else if(clientMessage[1].matches("Hearteye")){
+                            emote = new Sprite(hearteye);
+                        }
+                        else if(clientMessage[1].matches("Sad")){
+                            emote = new Sprite(sad);
+                        }
+
+                        emote.setPosition(195, emoteY);
+                        emote.setScale(0.75f);
+                    }
                 }catch(Exception e){
                     System.out.println("Exception in update from server " +e);
                 }
@@ -151,64 +181,72 @@ public class GameScreen extends ScreenAdapter {
 
        // emojiButtons[0] = new ImageButton();
         annoyed = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
-        TextureRegion myTextureRegion = new TextureRegion(annoyed);
+        Texture annoyedButton = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
+        TextureRegion myTextureRegion = new TextureRegion(annoyedButton);
         TextureRegionDrawable myTexRegionAnnoyed = new TextureRegionDrawable(myTextureRegion);
         emojiButtons[0] = new ImageButton(myTexRegionAnnoyed); //Set the button up
-        emojiButtons[0].setBounds(200, 50, 50, 50);
+        emojiButtons[0].setBounds(120, 50, 35, 35);
 
         emojiButtons[0].addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                if(!emoteActive)
+                game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Annoyed");
             }
         });
 
         stage.addActor(emojiButtons[0]);
 
         hearteye = new Texture(Gdx.files.internal("emojis/hearteye.jpg"));
-        TextureRegion myTextureRegionHeart = new TextureRegion(hearteye);
+        Texture hearteyeButton = new Texture(Gdx.files.internal("emojis/hearteye.jpg"));
+        TextureRegion myTextureRegionHeart = new TextureRegion(hearteyeButton);
         TextureRegionDrawable myTexRegionHeart = new TextureRegionDrawable(myTextureRegionHeart);
         emojiButtons[1] = new ImageButton(myTexRegionHeart); //Set the button up
-        emojiButtons[1].setBounds(260, 50, 50, 50);
+        emojiButtons[1].setBounds(170, 50, 35, 35);
 
         emojiButtons[1].addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                if(!emoteActive)
+                game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Hearteye");
             }
         });
 
         stage.addActor(emojiButtons[1]);
 
         laugh = new Texture(Gdx.files.internal("emojis/laugh.jpg"));
-        TextureRegion myTextureRegionLaugh = new TextureRegion(laugh);
-        TextureRegionDrawable myTexRegionLaugh = new TextureRegionDrawable(myTextureRegion);
+        Texture laughButton = new Texture(Gdx.files.internal("emojis/laugh.jpg"));
+        TextureRegion myTextureRegionLaugh = new TextureRegion(laughButton);
+        TextureRegionDrawable myTexRegionLaugh = new TextureRegionDrawable(myTextureRegionLaugh);
         emojiButtons[2] = new ImageButton(myTexRegionLaugh); //Set the button up
-        emojiButtons[2].setBounds(320, 50, 50, 50);
+        emojiButtons[2].setBounds(220, 50, 35, 35);
 
         emojiButtons[2].addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                if(!emoteActive)
+                game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Laugh");
             }
         });
 
         stage.addActor(emojiButtons[2]);
 
         sad = new Texture(Gdx.files.internal("emojis/sad.jpg"));
+        Texture sadButton = new Texture(Gdx.files.internal("emojis/sad.jpg"));
         TextureRegion myTextureRegionSad = new TextureRegion(sad);
         TextureRegionDrawable myTexRegionSad = new TextureRegionDrawable(myTextureRegionSad);
         emojiButtons[3] = new ImageButton(myTexRegionSad); //Set the button up
-        emojiButtons[3].setBounds(380, 50, 50, 50);
+        emojiButtons[3].setBounds(270, 50, 35, 35);
 
         emojiButtons[3].addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                  //  game.getSocket().send("")
+                if(!emoteActive)
+                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Sad");
             }
         });
 
@@ -226,14 +264,14 @@ public class GameScreen extends ScreenAdapter {
         drawSize = new SelectBox<String>(mySkin);
         drawSize.setItems("5", "10", "15", "20", "25", "30");
         drawSize.setName("Pencil Size");
-        drawSize.setBounds(200, 35, 130, 33);
+        drawSize.setBounds(50, 35, 75, 33);
         drawSize.setSelected("5");
        // stage.addActor(drawSize);
 
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
         colour.setName("Pencil Colour");
-        colour.setBounds(100, 50, 70, 33);
+        colour.setBounds(35, 50, 70, 33);
         colour.setSelected("Red");
         stage.addActor(colour);
 
@@ -378,6 +416,21 @@ public class GameScreen extends ScreenAdapter {
 
                 game.getBatch().begin();
 
+                if(emoteActive){
+                    emote.draw(game.getBatch());
+                    emoteY+= 1.0f;
+                    emote.setPosition(195, emoteY);
+                    if(emoteY >= 150){
+                        emoteOpacity =- 0.1f;
+                        emote.setAlpha(emoteOpacity);
+                        if(emoteY >= 200) {
+                            emoteActive = false;
+                            emoteY = 95.0f;
+                            emoteOpacity = 1.0f;
+                            activeEmote = null;
+                        }
+                    }
+                }
 
 
                 //In game information displayed here, such as whos turn it is and how many shapes have been sent/received by the client, and how many
@@ -385,20 +438,20 @@ public class GameScreen extends ScreenAdapter {
 
                 if (myTurn) {
 
-                    String temp = game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
+                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
-                    font.draw(game.getBatch(), temp2, 0, 200);
+                  //  font.draw(game.getBatch(), temp2, 0, 200);
                     if (turnTimer >= 10.0f) {
                         myTurn = false;
                         game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                         turnTimer = 0.0f;
                     }
                 } else {
-                    String temp = game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
+                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
-                    font.draw(game.getBatch(), temp2, 0, 200);
+                 //   font.draw(game.getBatch(), temp2, 0, 200);
                 }
 
             }

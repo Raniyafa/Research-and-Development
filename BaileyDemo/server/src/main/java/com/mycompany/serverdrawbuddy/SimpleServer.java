@@ -103,15 +103,9 @@ public class SimpleServer extends WebSocketServer {
                gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
                gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
             }
-            else if(clientMessage[1].matches("EmoteUsed")){
-                //checking which player used the emote
-                if(conn == gameLobbies.get(Integer.valueOf(clientMessage[2])).player1){
-                    //sending emote message as string to player 2
-                    gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send(clientMessage[3]);
-                }
-                else{
-                    gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send(clientMessage[3]);
-                }
+            else if(clientMessage[1].matches("Emote")){
+                    gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("Emote/"+clientMessage[3]); 
+                    gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("Emote/"+clientMessage[3]); 
             }
         }
                 else if(clientMessage[0].matches("TurnFinished")){     
