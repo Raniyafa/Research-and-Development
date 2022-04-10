@@ -135,7 +135,7 @@ public class LoginScreen extends ScreenAdapter {
         font.draw(game.getBatch(), "If playing on phone,\nuse random name button", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 220);
 
         if(passTimer > 0.0f){
-            font.draw(game.getBatch(), "Innapropriate name detected\n please try again.\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
+            font.draw(game.getBatch(), "Inappropriate name detected,\n please try again.\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
             passTimer -= delta;
         }
 
