@@ -1,6 +1,4 @@
 package com.mygdx.game;
-
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -27,6 +25,10 @@ public class MultipleScenes extends Game {
     private SpriteBatch batch;
 
     public String socketException = "";
+
+    ShapeRenderer shapeRenderer;
+    BitmapFont font;
+    public String playerName;
 
     public WebSocket getSocket() {
         return socket;

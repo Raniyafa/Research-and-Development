@@ -14,6 +14,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -81,8 +86,6 @@ public class GameScreen extends ScreenAdapter {
     private boolean gameFinished;
 
     private boolean isUpdating;
-
-
 
     public GameScreen(MultipleScenes game) {
         this.game = game;
@@ -170,7 +173,10 @@ public class GameScreen extends ScreenAdapter {
         fontLarge.setColor(Color.BLACK);
 
         stage = new Stage(new ScreenViewport());
+        
+        shapeRenderer = new ShapeRenderer();
 
+        //Attach the network listener for this class to the WebSocket
         game.getSocket().removeListener(game.getListener());
         game.setListener(getListener());
         game.getSocket().addListener(game.getListener());
@@ -259,6 +265,7 @@ public class GameScreen extends ScreenAdapter {
 
         //Skin created for buttons and UI elements, stage set for this class
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
+        stage = new Stage(new ScreenViewport());
 
         //All the buttons and listeners for the buttons are added below
         drawSize = new SelectBox<String>(mySkin);
