@@ -14,18 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
-
-public class LoginScreen extends ScreenAdapter {
-
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.czyzby.websocket.WebSocket;
-import com.github.czyzby.websocket.WebSocketAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -45,6 +36,18 @@ public class LoginScreen extends ScreenAdapter {
     private String name;
     private float passTimer = 0.0f;
     private TextButton randomName;
+    //add IMG Background
+    private Texture tex;
+    private Image image;
+    private TextureRegion region;
+
+    //add image_button
+    private TextureRegionDrawable up;
+    private TextureRegionDrawable down;
+    private TextureRegion buttonUp;
+    private TextureRegion buttonDown;
+    private Texture tex2;
+    private ImageButton button;
 
     public LoginScreen(MultipleScenes game) {
         this.game = game;
@@ -66,19 +69,7 @@ public class LoginScreen extends ScreenAdapter {
                 return FULLY_HANDLED;
             }
         };
-
-    //add IMG Background
-    private Texture tex;
-    private Image image;
-    private TextureRegion region;
-
-    //add image_button
-    private TextureRegionDrawable up;
-    private TextureRegionDrawable down;
-    private TextureRegion buttonUp;
-    private TextureRegion buttonDown;
-    private Texture tex2;
-    private ImageButton button;
+    }
 
     @Override
     public void show(){

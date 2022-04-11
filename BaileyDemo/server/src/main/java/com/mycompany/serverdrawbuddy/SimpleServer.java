@@ -53,8 +53,8 @@ public class SimpleServer extends WebSocketServer {
       
     public SimpleServer(InetSocketAddress address) {
         super(address);
-        SSLContext sslContext = getSSLContextFromLetsEncrypt();
-        setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+        //SSLContext sslContext = getSSLContextFromLetsEncrypt();
+        //setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
 
     @Override
@@ -253,8 +253,8 @@ public class SimpleServer extends WebSocketServer {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, KeyManagementException {
       
         
-        String host = "172.31.45.56";
-        //String host = "localhost";
+        //String host = "172.31.45.56";
+        String host = "localhost";
         int port = 8080;
         
         SimpleServer server = new SimpleServer(new InetSocketAddress(host, port));

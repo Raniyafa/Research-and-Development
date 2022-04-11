@@ -98,7 +98,7 @@ public class CreateLobby extends ScreenAdapter {
     @Override
     public void render(float delta) {
         if(moveToLobby){
-            game.setScreen(new LobbyScreen(game));
+        //    game.setScreen(new LobbyScreen(game));
         }
 
 

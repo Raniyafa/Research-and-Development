@@ -49,8 +49,6 @@ public class HomeScreen extends ScreenAdapter {
     private boolean moveToMatchmaking = false;
     private BitmapFont font;
     private boolean moveToCreateLobby = false;
-    private boolean moveToLobby = false;
-    private BitmapFont font;
 
     //add IMG Background
     private Texture tex;
@@ -111,7 +109,7 @@ public class HomeScreen extends ScreenAdapter {
         image.setSize(360,640);
         stage.addActor(image);
 
-        final TextField textField = new TextField("Lobby Code:", mySkin);
+       // final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
 //        textField.setY(Gdx.graphics.getHeight() / 2 - 100);
         textField.setY(70);
@@ -185,10 +183,10 @@ public class HomeScreen extends ScreenAdapter {
             }
         });
 
-        stage.addActor(findMatch);
+     //   stage.addActor(findMatch);
         stage.addActor(textField);
-        stage.addActor(createLobby);
-        stage.addActor(joinLobby);
+        //stage.addActor(createLobby);
+      //  stage.addActor(joinLobby);
 //        joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
 //        joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 25, 150, 50);
 //        joinLobby.getLabel().setFontScale(0.6f, 0.6f);
@@ -276,7 +274,7 @@ public class HomeScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new LobbyScreen(game));
+                moveToCreateLobby = true;
             }
         });
 
@@ -295,7 +293,13 @@ public class HomeScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                textField.setVisible(true);
+                if(!textField.isVisible()) {
+                    textField.setVisible(true);
+                }
+                else{
+                    textField.setVisible(false);
+                    textField.setText("");
+                }
             }
         });
 

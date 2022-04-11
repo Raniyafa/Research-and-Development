@@ -27,8 +27,6 @@ public class MultipleScenes extends Game {
     public String socketException = "";
 
     ShapeRenderer shapeRenderer;
-    BitmapFont font;
-    public String playerName;
 
     public WebSocket getSocket() {
         return socket;
@@ -47,12 +45,12 @@ public class MultipleScenes extends Game {
         // socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("drawbuddygame.co.vu", 3000));
 
        //pc localhost testing
-     //   socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
+        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
 
         //aws online testing html
 
         //this one
-        socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
+       // socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
 
          //aws online testing desktop
         //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("52.62.8.106", 8080));

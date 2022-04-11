@@ -77,8 +77,8 @@ public class GameLobby {
     public String generateWord() throws FileNotFoundException{
         String temp = "";
         
-         //  File txt = new File("C:\\Users\\ishya\\OneDrive\\Documents\\GitHub\\Research-and-Development\\BaileyDemo\\server\\src\\main\\java\\Files\\topicwords.txt");
-           File txt = new File("/home/ec2-user/topicwords.txt");
+           File txt = new File("C:\\Users\\ishya\\OneDrive\\Documents\\GitHub\\Research-and-Development\\BaileyDemo\\server\\src\\main\\java\\Files\\topicwords.txt");
+           //File txt = new File("/home/ec2-user/topicwords.txt");
            Scanner scan = new Scanner(txt);
             ArrayList<String> data = new ArrayList<>() ;
             while(scan.hasNextLine()){
