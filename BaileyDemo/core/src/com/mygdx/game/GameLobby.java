@@ -8,9 +8,11 @@ public class GameLobby {
     private String lobbyCode;
     private int lobbyIndex;
     private String wordTopic;
+//    private String lobbyType;
 
     public GameLobby(){
         lobbyCode = "code";
+//        lobbyType = "mode";
         lobbyIndex = -1;
         shapeList = new ArrayList<>();
     }

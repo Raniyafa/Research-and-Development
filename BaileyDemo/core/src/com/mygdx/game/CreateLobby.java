@@ -85,7 +85,7 @@ public class CreateLobby extends ScreenAdapter {
         stage.addActor(createLobby);
 
         lobbyType = new SelectBox<String>(mySkin);
-        lobbyType.setItems("Regular", "Rush", "Test");
+        lobbyType.setItems("Standard", "Single", "Test");
         lobbyType.setName("Lobby Type:");
         lobbyType.setBounds((Gdx.graphics.getWidth() / 2 - 50), Gdx.graphics.getHeight() / 2, 200, 60);
         lobbyType.setColor(0.0f, 0.0f, 0.0f, 1.0f);

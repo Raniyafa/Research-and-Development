@@ -82,6 +82,7 @@ public class GameScreen extends ScreenAdapter {
 
     private boolean isUpdating;
 
+    //private boolean isStandardMode;
 
 
     public GameScreen(MultipleScenes game) {
@@ -438,17 +439,17 @@ public class GameScreen extends ScreenAdapter {
 
                 if (myTurn) {
 
-                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
+                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(4.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
                   //  font.draw(game.getBatch(), temp2, 0, 200);
-                    if (turnTimer >= 10.0f) {
+                    if (turnTimer >= 4.0f) {
                         myTurn = false;
                         game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                         turnTimer = 0.0f;
                     }
                 } else {
-                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
+                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(4.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
