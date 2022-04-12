@@ -36,9 +36,7 @@ public class CreateLobby extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
                 Gdx.files.internal("font/font.png"), false);
 
-        game.getSocket().removeListener(game.getListener());
         game.setListener(getListener());
-        game.getSocket().addListener(game.getListener());
         shapeRenderer = new ShapeRenderer();
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
@@ -132,9 +130,9 @@ public class CreateLobby extends ScreenAdapter {
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 String temp = packet;
                 Gdx.app.log("WS", "Got message: " + packet);
+                String[] serverMessage = packet.split("/");
 
-                if (packet.contains("LobbyInfo")) {
-                    String[] serverMessage = packet.split("/");
+                if (serverMessage[0].matches("LobbyInfo")) {
                     CreateLobby(Integer.valueOf(serverMessage[1]), serverMessage[2]);
                     game.getGameLobby().setWordTopic(serverMessage[3]);
                     moveToLobby = true;

@@ -77,12 +77,11 @@ public class GameScreen extends ScreenAdapter {
 
     private float emoteY = 75;
 
-    private boolean myTurn;
+    private boolean myTurn = false;
     private boolean gameFinished;
 
     private boolean isUpdating;
 
-    //private boolean isStandardMode;
 
 
     public GameScreen(MultipleScenes game) {
@@ -96,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 //Network handler for this class, takes messages from the server and uses the information for the game
                 if(!packet.contains("CanvasInfo")) {
-                    Gdx.app.log("WS", "Got message: " + packet);
+                    Gdx.app.log("WS GameScreen", "Got message: " + packet);
                 }
 
                 try {
@@ -117,7 +116,7 @@ public class GameScreen extends ScreenAdapter {
                         int index = 2;
                         int size = shapeArrSize + ((clientMessage.length - 2) / 4);
 
-                       // System.out.println("shapeArr size = "+shapeArr.size() +" size = "+size);
+                        // System.out.println("shapeArr size = "+shapeArr.size() +" size = "+size);
 
                         for (int i = shapeArrSize; i <= size - 1; i++) {
                             float[] colour = getRGB(clientMessage[index + 1]);
@@ -163,24 +162,22 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        game.setListener(getListener());
+
         //Font creations
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
-        Gdx.files.internal("smallfont/smallfont.png"), false);
+                Gdx.files.internal("smallfont/smallfont.png"), false);
         font.setColor(Color.BLACK);
         fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
 
         stage = new Stage(new ScreenViewport());
 
-        game.getSocket().removeListener(game.getListener());
-        game.setListener(getListener());
-        game.getSocket().addListener(game.getListener());
-
         shapeRenderer = new ShapeRenderer();
 
         emojiButtons = new ImageButton[4];
 
-       // emojiButtons[0] = new ImageButton();
+        // emojiButtons[0] = new ImageButton();
         annoyed = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
         Texture annoyedButton = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
         TextureRegion myTextureRegion = new TextureRegion(annoyedButton);
@@ -193,7 +190,7 @@ public class GameScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(!emoteActive)
-                game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Annoyed");
+                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Annoyed");
             }
         });
 
@@ -211,7 +208,7 @@ public class GameScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(!emoteActive)
-                game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Hearteye");
+                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Hearteye");
             }
         });
 
@@ -229,7 +226,7 @@ public class GameScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(!emoteActive)
-                game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Laugh");
+                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Laugh");
             }
         });
 
@@ -267,7 +264,7 @@ public class GameScreen extends ScreenAdapter {
         drawSize.setName("Pencil Size");
         drawSize.setBounds(50, 35, 75, 33);
         drawSize.setSelected("5");
-       // stage.addActor(drawSize);
+        // stage.addActor(drawSize);
 
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
@@ -296,7 +293,7 @@ public class GameScreen extends ScreenAdapter {
                 circle.setText("Circle");
             }
         });
-      //  stage.addActor(triangle);
+        //  stage.addActor(triangle);
 
         circle = new TextButton("Circle Selected", mySkin, "toggle");
         circle.setBounds(0, Gdx.graphics.getHeight() - 33, 130, 33);
@@ -319,7 +316,7 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-       // stage.addActor(circle);
+        // stage.addActor(circle);
 
         square = new TextButton("Square", mySkin, "toggle");
         square.setBounds(130, Gdx.graphics.getHeight() - 33, 130, 33);
@@ -341,13 +338,16 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-       // stage.addActor(square);
+        // stage.addActor(square);
 
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
+
+
+
         drawTimer += delta;
 
         waitTime += delta;
@@ -360,17 +360,17 @@ public class GameScreen extends ScreenAdapter {
 
         //If enough time has passed since the last server update, then request a server update
         if (timer > UPDATE_TIME && !myTurn) {
-            timer = 0.0f;
-            getCanvasUpdates();
+       //     timer = 0.0f;
+        //    getCanvasUpdates();
         }
 
         turnTimer += delta;
 
-        if(drawTimer >= 0.01f) {
-        drawTimer = 0.0f;
-
+       // if(drawTimer >= 0.01f) {
+        //    drawTimer = 0.0f;
             Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
             //If the WebSocket is open (connected) then process the game controller logic
             if (game.getSocket().isOpen()) {
@@ -442,7 +442,7 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(4.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
-                  //  font.draw(game.getBatch(), temp2, 0, 200);
+                    //  font.draw(game.getBatch(), temp2, 0, 200);
                     if (turnTimer >= 4.0f) {
                         myTurn = false;
                         game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
@@ -452,7 +452,7 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(4.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
-                 //   font.draw(game.getBatch(), temp2, 0, 200);
+                    //   font.draw(game.getBatch(), temp2, 0, 200);
                 }
 
             }
@@ -484,7 +484,7 @@ public class GameScreen extends ScreenAdapter {
             if (gameFinished) {
                 game.setScreen(new HomeScreen(game));
             }
-        }
+      //  }
     }
 
     @Override
@@ -524,7 +524,7 @@ public class GameScreen extends ScreenAdapter {
 
     public void getCanvasUpdates(){
         //Gets the new shapes from the server that has been added to the shared canvas since the last update call from the client
-       // game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+shapeArr.size());
+        // game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+shapeArr.size());
     }
 
     public float[] getRGB(String colour){

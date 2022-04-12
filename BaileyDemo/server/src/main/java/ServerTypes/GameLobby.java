@@ -24,7 +24,7 @@ public class GameLobby {
     public String wordTopic;
     public String lobbyType;
 
-    public GameLobby(String[] lobbyCodes) throws FileNotFoundException{
+    public GameLobby(String[] lobbyCodes, String gameMode) throws FileNotFoundException{
        lobbyCode = generateLobbyCode(lobbyCodes);
        wordTopic = generateWord();
        shapeList = new ArrayList<>();
@@ -32,6 +32,7 @@ public class GameLobby {
        client2pinged = false;
        readyCount = 0;
        maxTurns = 4;
+       lobbyType = gameMode;
     }
     
     public void stringToShapeList(String shape){
@@ -77,8 +78,8 @@ public class GameLobby {
     public String generateWord() throws FileNotFoundException{
         String temp = "";
         
-         //  File txt = new File("C:\\Users\\ishya\\OneDrive\\Documents\\GitHub\\Research-and-Development\\BaileyDemo\\server\\src\\main\\java\\Files\\topicwords.txt");
-           File txt = new File("/home/ec2-user/topicwords.txt");
+            File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
+           //File txt = new File("/home/ec2-user/topicwords.txt");
            Scanner scan = new Scanner(txt);
             ArrayList<String> data = new ArrayList<>() ;
             while(scan.hasNextLine()){
