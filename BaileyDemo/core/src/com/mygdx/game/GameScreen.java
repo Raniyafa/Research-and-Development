@@ -77,7 +77,7 @@ public class GameScreen extends ScreenAdapter {
 
     private float emoteY = 75;
 
-    private boolean myTurn;
+    private boolean myTurn = false;
     private boolean gameFinished;
 
     private boolean isUpdating;
@@ -95,7 +95,7 @@ public class GameScreen extends ScreenAdapter {
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 //Network handler for this class, takes messages from the server and uses the information for the game
                 if(!packet.contains("CanvasInfo")) {
-                    Gdx.app.log("WS", "Got message: " + packet);
+                    Gdx.app.log("WS GameScreen", "Got message: " + packet);
                 }
 
                 try {
@@ -162,6 +162,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        game.setListener(getListener());
+
         //Font creations
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
                 Gdx.files.internal("smallfont/smallfont.png"), false);
@@ -170,10 +172,6 @@ public class GameScreen extends ScreenAdapter {
         fontLarge.setColor(Color.BLACK);
 
         stage = new Stage(new ScreenViewport());
-
-        game.getSocket().removeListener(game.getListener());
-        game.setListener(getListener());
-        game.getSocket().addListener(game.getListener());
 
         shapeRenderer = new ShapeRenderer();
 

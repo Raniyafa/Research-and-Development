@@ -32,7 +32,7 @@ public class FindingMatch extends ScreenAdapter {
         return new WebSocketAdapter() {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
-                Gdx.app.log("WS", "Got message: " + packet);
+                Gdx.app.log("WS Finding match", "Got message: " + packet);
 
                 //String received from server split by each '/'
                 String[] clientMessage = packet.split("/");
@@ -57,9 +57,7 @@ public class FindingMatch extends ScreenAdapter {
         Gdx.files.internal("font/font.png"), false);
 
         //Adding WebSocket listener for this class
-        game.getSocket().removeListener(game.getListener());
         game.setListener(getListener());
-        game.getSocket().addListener(game.getListener());
         game.getSocket().send("FindMatch/"+game.getPlayerName());
 
         //Creating stage and setting the skin for the UI

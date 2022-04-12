@@ -57,7 +57,7 @@ public class LoginScreen extends ScreenAdapter {
         return new WebSocketAdapter() {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
-                Gdx.app.log("WS", "Got message: " + packet);
+                Gdx.app.log("WS Loginscreen", "Got message: " + packet);
 
                 if(packet.matches("Pass")){
                       game.setPlayerName(name);
@@ -75,7 +75,9 @@ public class LoginScreen extends ScreenAdapter {
     public void show(){
         font = new BitmapFont(Gdx.files.internal("font/title3.fnt"),
         Gdx.files.internal("font/title3.png"), false);
-        game.getSocket().addListener(game.getListener());
+
+        game.setListener(getListener());
+
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
         Gdx.graphics.setWindowedMode(360, 640);

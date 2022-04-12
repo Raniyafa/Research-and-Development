@@ -87,7 +87,9 @@ public class MultipleScenes extends Game {
     }
 
     public void setListener(WebSocketListener listener) {
+        socket.removeListener(this.listener);
         this.listener = listener;
+        socket.addListener(listener);
     }
 
     public String getPlayerName() {

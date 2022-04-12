@@ -29,9 +29,7 @@ public class LobbyScreen extends ScreenAdapter {
     public void show(){
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
 
-        game.getSocket().removeListener(game.getListener());
         game.setListener(getListener());
-        game.getSocket().addListener(game.getListener());
        // game.getSocket().send("LobbyMessage/CreateLobby/"+game.getPlayerName());
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
@@ -84,7 +82,7 @@ public class LobbyScreen extends ScreenAdapter {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 String temp = packet;
-                Gdx.app.log("WS", "Got message: " + packet);
+                Gdx.app.log("WS Lobbyscreen", "Got message: " + packet);
 
                 if(temp.contains("Ready")){
                     System.out.println("Match ready");

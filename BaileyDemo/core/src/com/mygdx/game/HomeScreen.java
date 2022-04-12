@@ -71,7 +71,7 @@ public class HomeScreen extends ScreenAdapter {
         return new WebSocketAdapter() {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
-                Gdx.app.log("WS", "Got message: " + packet);
+                Gdx.app.log("WS Homescreen", "Got message: " + packet);
 
                     String[] clientMessage = packet.split("/");
                 System.out.println("clientmessage[0] = "+clientMessage[0]);
@@ -92,9 +92,7 @@ public class HomeScreen extends ScreenAdapter {
         Gdx.files.internal("font/font.png"), false);
 
         moveToGame = false;
-        game.getSocket().removeListener(game.getListener());
         game.setListener(getListener());
-        game.getSocket().addListener(game.getListener());
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
 
