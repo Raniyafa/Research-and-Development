@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,10 +21,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 import java.util.ArrayList;
+import java.util.zip.Deflater;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -482,6 +486,10 @@ public class GameScreen extends ScreenAdapter {
 
             //When the game is finished (The server sends a message to the clients to say so) then the client will exit to the main menu
             if (gameFinished) {
+
+                Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 100, Gdx.graphics.getWidth(), 450);
+                PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+                pixmap.dispose();
                 game.setScreen(new HomeScreen(game));
             }
       //  }
