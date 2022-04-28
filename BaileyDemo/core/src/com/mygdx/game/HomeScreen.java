@@ -181,55 +181,7 @@ public class HomeScreen extends ScreenAdapter {
             }
         });
 
-     //   stage.addActor(findMatch);
         stage.addActor(textField);
-        //stage.addActor(createLobby);
-      //  stage.addActor(joinLobby);
-//        joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
-//        joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 25, 150, 50);
-//        joinLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        joinLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                joinLobby.setText("Join Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                textField.setVisible(true);
-//                return true;
-//            }
-//        });
-
-//        createLobby = new TextButton("Create Lobby", mySkin, "toggle");
-//        createLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 50, 150, 50);
-//        createLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        createLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                createLobby.setText("Join Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                game.setScreen(new LobbyScreen(game));
-//                return true;
-//            }
-//        });
-
-//        findMatch = new TextButton("Find match", mySkin, "toggle");
-//        findMatch.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 125, 150, 50);
-//        findMatch.getLabel().setFontScale(0.6f, 0.6f);
-//
-//
-//        findMatch.addListener(new InputListener(){
-//
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                moveToMatchmaking = true;
-//                return true;
-//            }
-//        });
 
         //Isaac-add img button for test
         //img_button for Quick Play
@@ -241,19 +193,13 @@ public class HomeScreen extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(65,370);
-        //button.setSize(480,480);
         stage.addActor(button);
-//        button.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                Gdx.app.log(TAG, "CLICK!!");
-//            }
-//        });
+
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 moveToMatchmaking = true;
-//                return true;
+
             }
         });
 

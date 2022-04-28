@@ -99,7 +99,6 @@ public class CreateLobby extends ScreenAdapter {
             game.setScreen(new LobbyScreen(game));
         }
 
-
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -109,17 +108,13 @@ public class CreateLobby extends ScreenAdapter {
         shapeRenderer.end();
         stage.act();
 
-
-
         stage.draw();
         game.getBatch().begin();
-
 
         if(game.getSocket().isClosed() && !game.getSocket().isConnecting()){
             game.getSocket().connect();
             font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
-
 
         game.getBatch().end();
     }

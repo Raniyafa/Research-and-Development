@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -25,6 +26,14 @@ import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
+
+import org.java_websocket.util.Base64;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.zip.Deflater;
 
@@ -103,14 +112,12 @@ public class GameScreen extends ScreenAdapter {
                 }
 
                 try {
-
                     String[] clientMessage = packet.split("/");
 
                     if (clientMessage[0].matches("GameMessage2")) {
 
                         float[] colour = getRGB(clientMessage[4]);
                         shapeArr.add(new Shape(Integer.valueOf(clientMessage[1]), Integer.valueOf(clientMessage[2]), 10, clientMessage[3], colour));
-
                         received++;
 
                     }
@@ -119,8 +126,6 @@ public class GameScreen extends ScreenAdapter {
                         int shapeArrSize = shapeArr.size();
                         int index = 2;
                         int size = shapeArrSize + ((clientMessage.length - 2) / 4);
-
-                        // System.out.println("shapeArr size = "+shapeArr.size() +" size = "+size);
 
                         for (int i = shapeArrSize; i <= size - 1; i++) {
                             float[] colour = getRGB(clientMessage[index + 1]);
@@ -137,7 +142,6 @@ public class GameScreen extends ScreenAdapter {
                     }
                     else if(clientMessage[0].matches("Emote")) {
                         emoteActive = true;
-
 
                         if(clientMessage[1].matches("Annoyed")){
                             emote = new Sprite(annoyed);
@@ -350,10 +354,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
-
-
         drawTimer += delta;
-
         waitTime += delta;
 
         if (waitTime >= 2.0f) {
@@ -362,137 +363,141 @@ public class GameScreen extends ScreenAdapter {
 
         timer += delta;
 
-        //If enough time has passed since the last server update, then request a server update
-        if (timer > UPDATE_TIME && !myTurn) {
-       //     timer = 0.0f;
-        //    getCanvasUpdates();
-        }
-
         turnTimer += delta;
 
-       // if(drawTimer >= 0.01f) {
-        //    drawTimer = 0.0f;
-            Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
-            //If the WebSocket is open (connected) then process the game controller logic
-            if (game.getSocket().isOpen()) {
+        //If the WebSocket is open (connected) then process the game controller logic
+        if (game.getSocket().isOpen()) {
 
-                //If the requirements are met then the current mouse location is captured and a shape is created corresponding to the selected
-                //shape, colour and size
-                if(myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
-                    if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f) {
-                        storeMouseLoc(delta);
+            //If the requirements are met then the current mouse location is captured and a shape is created corresponding to the selected
+            //shape, colour and size
+            if(myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
+                if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f) {
+                    storeMouseLoc(delta);
+                }
+            }
+
+            int drawnAmount = 0;
+
+            //Start the shape renderer with shapes being colour filled
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+            //Draw a cursor to show the current position of the mouse/finger
+            shapeRenderer.circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 10.0f);
+
+            //For loop which iterates through the shape array and draws each shape individually
+            for (int i = 0; i <= shapeArr.size() - 1; i++) {
+                drawnAmount++;
+                try {
+                    Shape drawShape = shapeArr.get(i);
+                    shapeRenderer.setColor(drawShape.rgb[0], drawShape.rgb[1], drawShape.rgb[2], 1);
+                    String temp = drawShape.type;
+
+                    if (temp.matches("circle")) {
+                        shapeRenderer.circle(drawShape.x, drawShape.y, 10);
+
+                    } else if (temp.matches("square")) {
+                        shapeRenderer.rect(drawShape.x, drawShape.y, 10, 10);
+
+                    } else {
+                        shapeRenderer.triangle(drawShape.x - 30.0f, drawShape.y, drawShape.x + 30.0f, drawShape.y, drawShape.x, drawShape.y + 45.0f);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Null error drawing shapeArr[" + i + "]");
+                }
+            }
+
+            shapeRenderer.end();
+
+            game.getBatch().begin();
+
+            if(emoteActive){
+                emote.draw(game.getBatch());
+                emoteY+= 1.0f;
+                emote.setPosition(195, emoteY);
+                if(emoteY >= 150){
+                    emoteOpacity =- 0.1f;
+                    emote.setAlpha(emoteOpacity);
+                    if(emoteY >= 200) {
+                        emoteActive = false;
+                        emoteY = 95.0f;
+                        emoteOpacity = 1.0f;
+                        activeEmote = null;
                     }
                 }
-
-                int drawnAmount = 0;
-
-                //Start the shape renderer with shapes being colour filled
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-                //Draw a cursor to show the current position of the mouse/finger
-                shapeRenderer.circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 10.0f);
-
-                //For loop which iterates through the shape array and draws each shape individually
-                for (int i = 0; i <= shapeArr.size() - 1; i++) {
-                    drawnAmount++;
-                    try {
-                        Shape drawShape = shapeArr.get(i);
-                        shapeRenderer.setColor(drawShape.rgb[0], drawShape.rgb[1], drawShape.rgb[2], 1);
-                        String temp = drawShape.type;
-
-                        if (temp.matches("circle")) {
-                            shapeRenderer.circle(drawShape.x, drawShape.y, 10);
-
-                        } else if (temp.matches("square")) {
-                            shapeRenderer.rect(drawShape.x, drawShape.y, 10, 10);
-
-                        } else {
-                            shapeRenderer.triangle(drawShape.x - 30.0f, drawShape.y, drawShape.x + 30.0f, drawShape.y, drawShape.x, drawShape.y + 45.0f);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Null error drawing shapeArr[" + i + "]");
-                    }
-                }
-
-                shapeRenderer.end();
-
-                game.getBatch().begin();
-
-                if(emoteActive){
-                    emote.draw(game.getBatch());
-                    emoteY+= 1.0f;
-                    emote.setPosition(195, emoteY);
-                    if(emoteY >= 150){
-                        emoteOpacity =- 0.1f;
-                        emote.setAlpha(emoteOpacity);
-                        if(emoteY >= 200) {
-                            emoteActive = false;
-                            emoteY = 95.0f;
-                            emoteOpacity = 1.0f;
-                            activeEmote = null;
-                        }
-                    }
-                }
-
-
-                //In game information displayed here, such as whos turn it is and how many shapes have been sent/received by the client, and how many
-                //shapes are being drawn to the screen.
-
-                if (myTurn) {
-
-                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
-                    String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
-                    //  font.draw(game.getBatch(), temp2, 0, 200);
-                    if (turnTimer >= 10.0f) {
-                        myTurn = false;
-                        game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
-                        turnTimer = 0.0f;
-                    }
-                } else {
-                    String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
-                    String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
-                    //   font.draw(game.getBatch(), temp2, 0, 200);
-                }
-
             }
 
 
-            //If game socket is closed and not connecting, attempt to connect
-            else if (!game.getSocket().isConnecting()) {
-                game.getSocket().connect();
-            }
+            //In game information displayed here, such as whos turn it is and how many shapes have been sent/received by the client, and how many
+            //shapes are being drawn to the screen.
 
-            //If game socket is closed then display that information to the user and attempt to re-connect, also keep track of the time spent disconnecting
-            //If this time is longer than 5 seconds the client will exit to the main menu
-            if (game.getSocket().isClosed()) {
-                disconnectedTimer += delta;
-                font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
-                if (disconnectedTimer >= 5.0f) {
-                    game.setScreen(new HomeScreen(game));
+            if (myTurn) {
+
+                String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
+                String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+                fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
+                //  font.draw(game.getBatch(), temp2, 0, 200);
+                if (turnTimer >= 10.0f) {
+                    myTurn = false;
+                    game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
+                    turnTimer = 0.0f;
                 }
-            } else if (disconnectedTimer > 0.0f && !game.getSocket().isConnecting()) {
-                disconnectedTimer = 0.0f;
+            } else {
+                String temp = "Drawing Topic: "+game.getGameLobby().getWordTopic()+"\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
+                String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+                fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
+                //   font.draw(game.getBatch(), temp2, 0, 200);
             }
 
-            game.getBatch().end();
+        }
 
-            stage.act();
-            stage.draw();
 
-            //When the game is finished (The server sends a message to the clients to say so) then the client will exit to the main menu
-            if (gameFinished) {
+        //If game socket is closed and not connecting, attempt to connect
+        else if (!game.getSocket().isConnecting()) {
+            game.getSocket().connect();
+        }
 
-                Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 100, Gdx.graphics.getWidth(), 450);
-                PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
-                pixmap.dispose();
+        //If game socket is closed then display that information to the user and attempt to re-connect, also keep track of the time spent disconnecting
+        //If this time is longer than 5 seconds the client will exit to the main menu
+        if (game.getSocket().isClosed()) {
+            disconnectedTimer += delta;
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            if (disconnectedTimer >= 5.0f) {
                 game.setScreen(new HomeScreen(game));
             }
-      //  }
+        } else if (disconnectedTimer > 0.0f && !game.getSocket().isConnecting()) {
+            disconnectedTimer = 0.0f;
+        }
+
+        game.getBatch().end();
+
+        stage.act();
+        stage.draw();
+
+        //When the game is finished (The server sends a message to the clients to say so) then the client will exit to the main menu
+        if (gameFinished) {
+
+            Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 100, Gdx.graphics.getWidth(), 450);
+
+            PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+
+            FileHandle file =  Gdx.files.external("mypixmap.png");
+
+
+            String encodedfile = null;
+
+            byte[] bytes = file.readBytes();
+            encodedfile = Base64.encodeBytes(bytes).toString();
+            game.getGameLobby().setImageString(encodedfile);
+            pixmap.dispose();
+
+            game.getSocket().send(encodedfile);
+
+            game.setScreen(new PostGame(game));
+        }
     }
 
     @Override
