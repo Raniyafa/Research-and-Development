@@ -100,9 +100,12 @@ public class SimpleServer extends WebSocketServer {
                 //called by either play in the lobby, updates the shared canvas that is accessed by both players
                // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
                String[] clientMessage2 = clientMessage[3].split(":");
-                System.out.println("sending canvas info to both clients");
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
+               if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+               }
+               else{
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+               }   
             }
             else if(clientMessage[1].matches("Emote")){
                     gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("Emote/"+clientMessage[3]); 
@@ -187,7 +190,7 @@ public class SimpleServer extends WebSocketServer {
 
     @Override
     public void onMessage( WebSocket conn, ByteBuffer message ) {
-        System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress());
+        System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress() + "message = " + message);
     }
     
 

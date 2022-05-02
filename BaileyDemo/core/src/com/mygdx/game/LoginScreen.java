@@ -75,7 +75,6 @@ public class LoginScreen extends ScreenAdapter {
     public void show(){
         font = new BitmapFont(Gdx.files.internal("font/title3.fnt"),
         Gdx.files.internal("font/title3.png"), false);
-
         game.setListener(getListener());
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
@@ -169,6 +168,7 @@ public class LoginScreen extends ScreenAdapter {
 
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.act();
         stage.draw();
         game.getBatch().begin();
@@ -187,7 +187,6 @@ public class LoginScreen extends ScreenAdapter {
             if(!game.getSocket().isConnecting()) {
                 game.getSocket().connect();
                 font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString(), Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
-
             }
             //font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
             font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);

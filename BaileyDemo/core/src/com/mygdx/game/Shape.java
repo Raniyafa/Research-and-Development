@@ -6,8 +6,9 @@ public class Shape {
     float[] rgb;
     String type;
     String colour;
+    int lineNo;
 
-    public Shape(int x, int y, int width, int height, String type, float[] color){
+    public Shape(int x, int y, int width, int height, String type, float[] color, int lineNo){
         rgb = new float[3];
         rgb[0] = color[0];
         rgb[1] = color[1];
@@ -17,9 +18,10 @@ public class Shape {
         this.width = width;
         this.height = height;
         this.type = type;
+        this.lineNo = lineNo;
     }
 
-    public Shape(int x, int y, int radius, String type, float[] color){
+    public Shape(int x, int y, int radius, String type, float[] color, int lineNo){
         rgb = new float[3];
         rgb[0] = color[0];
         rgb[1] = color[1];
@@ -28,6 +30,7 @@ public class Shape {
         this.y = y;
         this.radius = radius;
         this.type = type;
+        this.lineNo = lineNo;
     }
 
     public Shape(int x, int y){
@@ -47,6 +50,7 @@ public class Shape {
         y = -1000;
         radius = 1;
         rgb = new float[3];
+        lineNo = -1;
     }
 
 }
