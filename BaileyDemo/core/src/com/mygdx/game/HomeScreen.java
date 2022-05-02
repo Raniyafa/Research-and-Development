@@ -104,7 +104,7 @@ public class HomeScreen extends ScreenAdapter {
         region = new TextureRegion(tex,0,0,512,512);
         image = new Image(region);
         image.setPosition(0,0);
-        image.setSize(360,640);
+        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
        // final TextField textField = new TextField("Lobby Code:", mySkin);
@@ -192,7 +192,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(65,370);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,370);
         stage.addActor(button);
 
         button.addListener(new ClickListener() {
@@ -212,7 +212,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(65,240);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,240);
         //button.setSize(480,480);
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -231,7 +231,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(65,110);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,110);
         //button.setSize(480,480);
         stage.addActor(button);
         button.addListener(new ClickListener() {

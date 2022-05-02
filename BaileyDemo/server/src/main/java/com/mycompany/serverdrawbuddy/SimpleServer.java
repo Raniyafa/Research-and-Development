@@ -147,6 +147,11 @@ public class SimpleServer extends WebSocketServer {
             else if(clientMessage[1].matches("TerminateLobby")){
                 //need to create a way on client side that checks every once in awhile if the lobby is still alive
                 gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[2])));
+                for(Client e : gameQueue){
+                    if(e.socket.equals(conn)){
+                        gameQueue.remove(e);
+                    }
+                }
             }
         }
         else if(clientMessage[0].matches("FindMatch")){

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -79,13 +80,14 @@ public class LoginScreen extends ScreenAdapter {
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
-        Gdx.graphics.setWindowedMode(360, 640);
+        //Gdx.graphics.setWindowedMode(360, 640);
 
         tex = new Texture(Gdx.files.internal("image/titleDraft2.png"));
-        region = new TextureRegion(tex,0,0,360,640);
+
+        region = new TextureRegion(tex,0,0, 360, 640);
         image = new Image(region);
-        image.setPosition(0,0);
-        //image.setSize(360,640);
+        image.setPosition(0, 0);
+        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
         final TextField textField = new TextField("Text field", mySkin);
@@ -145,7 +147,7 @@ public class LoginScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(200,470);
+        button.setPosition(Gdx.graphics.getWidth() - 200,Gdx.graphics.getHeight() - 200);
         //button.setSize(480,480);
         stage.addActor(button);
         button.addListener(new ClickListener() {

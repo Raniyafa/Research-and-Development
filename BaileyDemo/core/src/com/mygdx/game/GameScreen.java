@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -26,6 +27,7 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 import com.badlogic.gdx.utils.Base64Coder;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -172,15 +174,17 @@ public class GameScreen extends ScreenAdapter {
         fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
 
+        game.getSocket().send("after font");
+
         stage = new Stage(new ScreenViewport());
 
         shapeRenderer = new ShapeRenderer();
 
+
         emojiButtons = new ImageButton[4];
 
-        // emojiButtons[0] = new ImageButton();
-        annoyed = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
-        Texture annoyedButton = new Texture(Gdx.files.internal("emojis/annoyed.jpg"));
+        annoyed = new Texture(Gdx.files.internal("button/emoji/annoyed.png"));
+        Texture annoyedButton = new Texture(Gdx.files.internal("button/emoji/annoyed.png"));
         TextureRegion myTextureRegion = new TextureRegion(annoyedButton);
         TextureRegionDrawable myTexRegionAnnoyed = new TextureRegionDrawable(myTextureRegion);
         emojiButtons[0] = new ImageButton(myTexRegionAnnoyed); //Set the button up
@@ -197,8 +201,9 @@ public class GameScreen extends ScreenAdapter {
 
         stage.addActor(emojiButtons[0]);
 
-        hearteye = new Texture(Gdx.files.internal("emojis/hearteye.jpg"));
-        Texture hearteyeButton = new Texture(Gdx.files.internal("emojis/hearteye.jpg"));
+
+        hearteye = new Texture(Gdx.files.internal("button/emoji/hearteye.png"));
+        Texture hearteyeButton = new Texture(Gdx.files.internal("button/emoji/hearteye.png"));
         TextureRegion myTextureRegionHeart = new TextureRegion(hearteyeButton);
         TextureRegionDrawable myTexRegionHeart = new TextureRegionDrawable(myTextureRegionHeart);
         emojiButtons[1] = new ImageButton(myTexRegionHeart); //Set the button up
@@ -212,11 +217,10 @@ public class GameScreen extends ScreenAdapter {
                     game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Hearteye");
             }
         });
-
         stage.addActor(emojiButtons[1]);
 
-        laugh = new Texture(Gdx.files.internal("emojis/laugh.jpg"));
-        Texture laughButton = new Texture(Gdx.files.internal("emojis/laugh.jpg"));
+        laugh = new Texture(Gdx.files.internal("button/emoji/laugh.png"));
+        Texture laughButton = new Texture(Gdx.files.internal("button/emoji/laugh.png"));
         TextureRegion myTextureRegionLaugh = new TextureRegion(laughButton);
         TextureRegionDrawable myTexRegionLaugh = new TextureRegionDrawable(myTextureRegionLaugh);
         emojiButtons[2] = new ImageButton(myTexRegionLaugh); //Set the button up
@@ -233,8 +237,8 @@ public class GameScreen extends ScreenAdapter {
 
         stage.addActor(emojiButtons[2]);
 
-        sad = new Texture(Gdx.files.internal("emojis/sad.jpg"));
-        Texture sadButton = new Texture(Gdx.files.internal("emojis/sad.jpg"));
+        sad = new Texture(Gdx.files.internal("button/emoji/sad.png"));
+        Texture sadButton = new Texture(Gdx.files.internal("button/emoji/sad.png"));
         TextureRegion myTextureRegionSad = new TextureRegion(sad);
         TextureRegionDrawable myTexRegionSad = new TextureRegionDrawable(myTextureRegionSad);
         emojiButtons[3] = new ImageButton(myTexRegionSad); //Set the button up
@@ -346,7 +350,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-
 
         drawTimer += delta;
         waitTime += delta;
