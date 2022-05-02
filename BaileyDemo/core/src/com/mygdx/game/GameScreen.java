@@ -167,6 +167,9 @@ public class GameScreen extends ScreenAdapter {
     public void show() {
         game.setListener(getListener());
 
+        float widthSlice = Gdx.graphics.getWidth() / 20;
+
+
         //Font creations
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
                 Gdx.files.internal("smallfont/smallfont.png"), false);
@@ -188,8 +191,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegion = new TextureRegion(annoyedButton);
         TextureRegionDrawable myTexRegionAnnoyed = new TextureRegionDrawable(myTextureRegion);
         emojiButtons[0] = new ImageButton(myTexRegionAnnoyed); //Set the button up
-        emojiButtons[0].setBounds(120, 50, 35, 35);
-
+        emojiButtons[0].setBounds(widthSlice * 10, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
         emojiButtons[0].addListener(new ClickListener() {
 
             @Override
@@ -207,7 +209,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionHeart = new TextureRegion(hearteyeButton);
         TextureRegionDrawable myTexRegionHeart = new TextureRegionDrawable(myTextureRegionHeart);
         emojiButtons[1] = new ImageButton(myTexRegionHeart); //Set the button up
-        emojiButtons[1].setBounds(170, 50, 35, 35);
+        emojiButtons[1].setBounds(widthSlice * 12 , 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[1].addListener(new ClickListener() {
 
@@ -224,7 +226,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionLaugh = new TextureRegion(laughButton);
         TextureRegionDrawable myTexRegionLaugh = new TextureRegionDrawable(myTextureRegionLaugh);
         emojiButtons[2] = new ImageButton(myTexRegionLaugh); //Set the button up
-        emojiButtons[2].setBounds(220, 50, 35, 35);
+        emojiButtons[2].setBounds(widthSlice * 14, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[2].addListener(new ClickListener() {
 
@@ -242,7 +244,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionSad = new TextureRegion(sad);
         TextureRegionDrawable myTexRegionSad = new TextureRegionDrawable(myTextureRegionSad);
         emojiButtons[3] = new ImageButton(myTexRegionSad); //Set the button up
-        emojiButtons[3].setBounds(270, 50, 35, 35);
+        emojiButtons[3].setBounds(widthSlice * 16, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[3].addListener(new ClickListener() {
 
@@ -267,17 +269,16 @@ public class GameScreen extends ScreenAdapter {
         drawSize = new SelectBox<String>(mySkin);
         drawSize.setItems("5", "10", "15", "20", "25", "30");
         drawSize.setName("Pencil Size");
-        drawSize.setBounds(50, 35, 75, 33);
+        drawSize.setSize(1.0f * (Gdx.graphics.getWidth() / 360), 1.0f * (Gdx.graphics.getHeight() / 640));
+        drawSize.setBounds(widthSlice * 5, 35, 75, 33);
         drawSize.setSelected("5");
         // stage.addActor(drawSize);
 
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Red", "Green", "Blue", "Yellow", "Black", "White");
         colour.setName("Pencil Colour");
-        colour.setBounds(35, 50, 70, 33);
-        colour.setSelected("Red");
+        colour.setBounds(35, 50, 70 * (Gdx.graphics.getWidth() / 360), 33 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(colour);
-
 
         triangle = new TextButton("Triangle", mySkin, "toggle");
         triangle.setBounds(260, Gdx.graphics.getHeight() - 33, 70, 33);
@@ -451,7 +452,7 @@ public class GameScreen extends ScreenAdapter {
 
                     String temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 120, Gdx.graphics.getHeight() / 2 + 300);
+                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 25);
                     //  font.draw(game.getBatch(), temp2, 0, 200);
                     if (turnTimer >= 10.0f) {
                         myTurn = false;
@@ -461,7 +462,7 @@ public class GameScreen extends ScreenAdapter {
                 } else {
                     String temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() / 2 + 300);
+                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 25);
                     //   font.draw(game.getBatch(), temp2, 0, 200);
                 }
             }

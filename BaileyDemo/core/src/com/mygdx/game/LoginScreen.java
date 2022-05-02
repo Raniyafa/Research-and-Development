@@ -87,7 +87,7 @@ public class LoginScreen extends ScreenAdapter {
         region = new TextureRegion(tex,0,0, 360, 640);
         image = new Image(region);
         image.setPosition(0, 0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        image.setSize(360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
         final TextField textField = new TextField("Text field", mySkin);
