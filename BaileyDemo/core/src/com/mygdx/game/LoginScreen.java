@@ -168,30 +168,36 @@ public class LoginScreen extends ScreenAdapter {
             game.setScreen(new HomeScreen(game));
         }
 
-        Gdx.gl.glClearColor(0, 0, 0.25f, 1);
+        if(game.getSocket().isOpen()) {
+            Gdx.gl.glClearColor(0, 0, 0.25f, 1);
+        }
+        else{
+            Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.act();
-        stage.draw();
+
         game.getBatch().begin();
 
-        font.draw(game.getBatch(), "If playing on phone,\nuse random name button", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 220);
+        //font.draw(game.getBatch(), "If playing on phone,\nuse random name button", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 220);
 
         if(passTimer > 0.0f){
-            font.draw(game.getBatch(), "Innapropriate name detected\n please try again.\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
+            font.draw(game.getBatch(), "Inappropriate name detected\n please try again.\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
             passTimer -= delta;
         }
 
         if(game.getSocket().isOpen()) {
+            stage.act();
+            stage.draw();
             font.draw(game.getBatch(), "Enter your name:\n", Gdx.graphics.getWidth() / 2 - 110, Gdx.graphics.getHeight() / 2 + 100);
         }
-        else if(!game.getSocket().isOpen()){
+        else {
             if(!game.getSocket().isConnecting()) {
                 game.getSocket().connect();
-                font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString(), Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
             }
+            font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
             //font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
-            font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
+            font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
         game.getBatch().end();
     }

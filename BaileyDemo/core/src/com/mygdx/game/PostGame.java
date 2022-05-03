@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,6 +16,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 
+import java.util.ArrayList;
+
 public class PostGame extends ScreenAdapter {
 
     private MultipleScenes game;
@@ -27,17 +30,22 @@ public class PostGame extends ScreenAdapter {
     private Stage stage;
     private Skin mySkin;
     private BitmapFont font;
+    private BitmapFont fontLarge;
     private boolean moveToMain = false;
     private ShapeRenderer shapeRenderer;
+    private ArrayList<Shape> shapeArr;
 
-    public PostGame(MultipleScenes game) {
+    public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray) {
+        shapeArr = shapeArray;
         this.game = game;
     }
 
     @Override
     public void show(){
+
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
                 Gdx.files.internal("font/font.png"), false);
+        font.setColor(Color.BLACK);
 
         game.setListener(getListener());
         shapeRenderer = new ShapeRenderer();
@@ -45,10 +53,11 @@ public class PostGame extends ScreenAdapter {
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
 
-        Gdx.graphics.setWindowedMode(360, 640);
+        float widthSlice = Gdx.graphics.getWidth() / 20;
 
-        facebookPost = new TextButton("Share to FaceBook", mySkin, "toggle");
-        facebookPost.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 200, 150, 50);
+
+        facebookPost = new TextButton("Facebook", mySkin, "toggle");
+        facebookPost.setBounds(widthSlice, Gdx.graphics.getHeight() - 40, 80, 40);
         facebookPost.getLabel().setFontScale(0.6f, 0.6f);
         facebookPost.addListener(new InputListener(){
 
@@ -64,8 +73,8 @@ public class PostGame extends ScreenAdapter {
         });
         stage.addActor(facebookPost);
 
-        twitterPost = new TextButton("Share to Twitter", mySkin, "toggle");
-        twitterPost.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 100, 150, 50);
+        twitterPost = new TextButton("Twitter", mySkin, "toggle");
+        twitterPost.setBounds(widthSlice * 6, Gdx.graphics.getHeight() - 40, 80, 40);
         twitterPost.getLabel().setFontScale(0.6f, 0.6f);
         twitterPost.addListener(new InputListener(){
 
@@ -81,8 +90,8 @@ public class PostGame extends ScreenAdapter {
         });
         stage.addActor(twitterPost);
 
-        exitToMenu = new TextButton("Return to Home", mySkin, "toggle");
-        exitToMenu.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 100, 150, 50);
+        exitToMenu = new TextButton("Home", mySkin, "toggle");
+        exitToMenu.setBounds(widthSlice * 16, Gdx.graphics.getHeight() - 40, 80, 40);
         exitToMenu.getLabel().setFontScale(0.6f, 0.6f);
         exitToMenu.addListener(new InputListener(){
 
@@ -92,14 +101,15 @@ public class PostGame extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                game.setGameLobby(new GameLobby());
                 moveToMain = true;
                 return true;
             }
         });
         stage.addActor(exitToMenu);
 
-        instagramPost = new TextButton("Share to Instagram", mySkin, "toggle");
-        instagramPost.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2, 150, 50);
+        instagramPost = new TextButton("Instagram", mySkin, "toggle");
+        instagramPost.setBounds(widthSlice * 11, Gdx.graphics.getHeight() - 40, 80, 40);
         instagramPost.getLabel().setFontScale(0.6f, 0.6f);
         instagramPost.addListener(new InputListener(){
 
@@ -125,15 +135,51 @@ public class PostGame extends ScreenAdapter {
         if(moveToMain){
             game.setScreen(new HomeScreen(game));
         }
-
-        Gdx.gl.glClearColor(0, 0, 0.25f, 1);
+        game.getBatch().begin();
+        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
         stage.draw();
-        game.getBatch().begin();
+
+        String postGameMsg = "Artwork created by:\n"+game.getPlayerName()+" & "+game.getGameLobby().getPartnerName();
+        font.draw(game.getBatch(), postGameMsg, Gdx.graphics.getWidth() / 2 - 165, 75);
 
         game.getBatch().end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        Shape tempShape = new Shape();
+        //For loop which iterates through the shape array and draws each shape individually
+        for (int i = 0; i <= shapeArr.size() - 1; i++) {
+            try {
+                Shape drawShape = shapeArr.get(i);
+                shapeRenderer.setColor(drawShape.rgb[0], drawShape.rgb[1], drawShape.rgb[2], 1);
+                String temp = drawShape.type;
+
+                if (drawShape.lineNo == tempShape.lineNo) {
+                    if ((!(drawShape.x >= tempShape.x - 5 && drawShape.x <= tempShape.x + 5)) || (!(drawShape.y >= tempShape.y - 5 && drawShape.y <= tempShape.y + 5))) {
+                        shapeRenderer.rectLine(tempShape.x, tempShape.y, drawShape.x, drawShape.y, 20);
+                    }
+                }
+                if (temp.matches("circle")) {
+                    shapeRenderer.circle(drawShape.x, drawShape.y, 10);
+
+                } else if (temp.matches("square")) {
+                    shapeRenderer.rect(drawShape.x, drawShape.y, 10, 10);
+
+                } else {
+                    shapeRenderer.triangle(drawShape.x - 30.0f, drawShape.y, drawShape.x + 30.0f, drawShape.y, drawShape.x, drawShape.y + 45.0f);
+                }
+
+                tempShape = drawShape;
+            } catch (Exception e) {
+                System.out.println("Null error drawing shapeArr[" + i + "]");
+            }
+        }
+
+
+        shapeRenderer.end();
     }
 
     private WebSocketAdapter getListener() {

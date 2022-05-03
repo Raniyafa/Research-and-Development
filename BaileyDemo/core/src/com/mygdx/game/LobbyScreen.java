@@ -71,8 +71,7 @@ public class LobbyScreen extends ScreenAdapter {
             font.draw( game.getBatch(), "Waiting for other player..\n", 0, Gdx.graphics.getHeight() / 2 - 50);
         }
         else{
-            game.getSocket().connect();
-            font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            game.setScreen(new HomeScreen(game));
         }
         game.getBatch().end();
     }

@@ -279,9 +279,9 @@ public class HomeScreen extends ScreenAdapter {
             }
             font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!\nWelcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 300);
         }
-        else if(!game.getSocket().isConnecting()){
+        else {
             game.getSocket().connect();
-            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\nATTEMPTING TO RECONNECT..", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
         game.getBatch().end();
     }

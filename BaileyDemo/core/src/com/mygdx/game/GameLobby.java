@@ -9,11 +9,13 @@ public class GameLobby {
     private int lobbyIndex;
     private String wordTopic;
     private String imageString;
+    private String partnerName;
 
     public GameLobby(){
         lobbyCode = "code";
         lobbyIndex = -1;
         shapeList = new ArrayList<>();
+        partnerName = "";
     }
 
     public GameLobby(String code, int index){
@@ -22,6 +24,7 @@ public class GameLobby {
         shapeList = new ArrayList<>();
         imageString = "";
         wordTopic = "";
+        partnerName = "";
     }
 
     public String lobbyToString(){
@@ -58,5 +61,14 @@ public class GameLobby {
 
     public void setImageString(String imageString) {
         this.imageString = imageString;
+    }
+
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 }
