@@ -70,15 +70,24 @@ public class SimpleServer extends WebSocketServer {
         
         for(GameLobby e : gameLobbies){
             if(e.player1.equals(conn) || e.player2.equals(conn)){
-                System.out.println("removing game lobby "+gameLobbies.indexOf(e));
+                System.out.println("removing game " +gameLobbies.indexOf(e) +"lobby due to");
                 if(e.player1.isOpen()){
+                System.out.println("player 2 disconnecting");
                 e.player1.send("GameFinished");
                 }
                 if(e.player2.isOpen()){
+                System.out.println("player 1 disconnecting");
                 e.player2.send("GameFinished");
                 }
                 gameLobbies.remove(e);
                 System.out.println("size of gamelobby array = "+gameLobbies.size());
+            }
+        }
+        
+        for(Client e : gameQueue){
+            if(e.socket.equals(conn)){
+                System.out.println("removing player from queue due to disconnect:"+conn.toString());
+                gameQueue.remove(e);
             }
         }
     }
@@ -100,9 +109,12 @@ public class SimpleServer extends WebSocketServer {
                 //called by either play in the lobby, updates the shared canvas that is accessed by both players
                // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
                String[] clientMessage2 = clientMessage[3].split(":");
-                System.out.println("sending canvas info to both clients");
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]);
+            //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+           //    }
+            //   else{
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+             //  }   
             }
             else if(clientMessage[1].matches("Emote")){
                     gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("Emote/"+clientMessage[3]); 
@@ -144,6 +156,11 @@ public class SimpleServer extends WebSocketServer {
             else if(clientMessage[1].matches("TerminateLobby")){
                 //need to create a way on client side that checks every once in awhile if the lobby is still alive
                 gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[2])));
+                for(Client e : gameQueue){
+                    if(e.socket.equals(conn)){
+                        gameQueue.remove(e);
+                    }
+                }
             }
         }
         else if(clientMessage[0].matches("FindMatch")){
@@ -156,8 +173,8 @@ public class SimpleServer extends WebSocketServer {
         else if(clientMessage[0].matches("Ready")){
            gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount++;
            if( gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount == 2){
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("YourTurn");
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("PartnerTurn");
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("YourTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).p2Name);
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("PartnerTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).p1Name);
            }
         }
         else if(clientMessage[0].matches("CheckName")){    
@@ -187,7 +204,7 @@ public class SimpleServer extends WebSocketServer {
 
     @Override
     public void onMessage( WebSocket conn, ByteBuffer message ) {
-        System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress());
+        System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress() + "message = " + message);
     }
     
 

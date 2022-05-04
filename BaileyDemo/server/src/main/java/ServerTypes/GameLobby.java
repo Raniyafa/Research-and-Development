@@ -31,7 +31,7 @@ public class GameLobby {
        client1pinged = true;
        client2pinged = false;
        readyCount = 0;
-       maxTurns = 4;
+       maxTurns = 2;
        lobbyType = gameMode;
     }
     

@@ -35,8 +35,12 @@ import sun.awt.ExtendedKeyCodes;
 
         @Override
         public void render(float delta) {
+            if(!game.getSocket().isOpen()){
+                game.setScreen(new HomeScreen(game));
+            }
+
             timer+=delta;
-            if(timer >= 4.0f){
+            if(timer >= 0.5f){
                 game.setScreen(new GameScreen(game));
             }
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);
@@ -44,6 +48,7 @@ import sun.awt.ExtendedKeyCodes;
             game.getBatch().begin();
             game.getFont().draw(game.getBatch(), "Loading Match!\nWord Topic: "+game.getGameLobby().getWordTopic(), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
             game.getBatch().end();
+
 
         }
 

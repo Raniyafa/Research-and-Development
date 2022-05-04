@@ -21,7 +21,7 @@ public class FindingMatch extends ScreenAdapter {
     private BitmapFont font;
     private Stage stage;
     private boolean matchFound = false;
-
+    private float disconnectionTimer = 0.0f;
     private SpriteBatch batch;
 
     public FindingMatch(MultipleScenes game) {
@@ -94,6 +94,7 @@ public class FindingMatch extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
+
         //If a match is found then switch to the loading screen
         if(matchFound){
             game.setScreen(new LoadingScreen(game));
@@ -110,8 +111,8 @@ public class FindingMatch extends ScreenAdapter {
             font.draw( game.getBatch(), "Searching for another player..\n", 0, Gdx.graphics.getHeight() / 2);
         }
         else if(!game.getSocket().isConnecting()){
-            game.getSocket().connect();
-            font.draw(batch, "CONNECTION LOST TO SERVER\n", 0,  Gdx.graphics.getHeight() / 2);
+            game.setScreen(new HomeScreen(game));
+            //add server code that remove person from queue if dc
         }
         game.getBatch().end();
 

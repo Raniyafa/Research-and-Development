@@ -8,19 +8,23 @@ public class GameLobby {
     private String lobbyCode;
     private int lobbyIndex;
     private String wordTopic;
-//    private String lobbyType;
+    private String imageString;
+    private String partnerName;
 
     public GameLobby(){
         lobbyCode = "code";
-//        lobbyType = "mode";
         lobbyIndex = -1;
         shapeList = new ArrayList<>();
+        partnerName = "";
     }
 
     public GameLobby(String code, int index){
         lobbyCode = code;
         lobbyIndex = index;
         shapeList = new ArrayList<>();
+        imageString = "";
+        wordTopic = "";
+        partnerName = "";
     }
 
     public String lobbyToString(){
@@ -49,5 +53,22 @@ public class GameLobby {
 
     public void setWordTopic(String wordTopic) {
         this.wordTopic = wordTopic;
+    }
+
+    public String getImageString() {
+        return imageString;
+    }
+
+    public void setImageString(String imageString) {
+        this.imageString = imageString;
+    }
+
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 }

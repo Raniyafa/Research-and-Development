@@ -50,7 +50,7 @@ public class MultipleScenes extends Game {
         //aws online testing html
 
         //this one
-       // socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
+      //  socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
 
          //aws online testing desktop
         //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("52.62.8.106", 8080));
