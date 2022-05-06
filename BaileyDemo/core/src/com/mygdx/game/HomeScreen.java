@@ -229,7 +229,7 @@ public class HomeScreen extends ScreenAdapter {
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 50);
         stage.addActor(button);
-
+//        button.setSize(240,70);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
