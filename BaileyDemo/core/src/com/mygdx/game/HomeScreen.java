@@ -129,62 +129,97 @@ public class HomeScreen extends ScreenAdapter {
             }
         });
 
-        joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
-        joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 25, 150, 50);
-        joinLobby.getLabel().setFontScale(0.6f, 0.6f);
-        joinLobby.addListener(new InputListener(){
+//        joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
+//        joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 25, 150, 50);
+//        joinLobby.getLabel().setFontScale(0.6f, 0.6f);
+//        joinLobby.addListener(new InputListener(){
+//
+//            @Override
+//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+//                joinLobby.setText("Join Lobby");
+//            }
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                if(!textField.isVisible()){
+//                    textField.setVisible(true);
+//                }
+//                else{
+//                    textField.setVisible(false);
+//                    textField.setText("");
+//                }
+//                return true;
+//            }
+//        });
+//
+//        createLobby = new TextButton("Create Lobby", mySkin, "toggle");
+//        createLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 50, 150, 50);
+//        createLobby.getLabel().setFontScale(0.6f, 0.6f);
+//        createLobby.addListener(new InputListener(){
+//
+//            @Override
+//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+//                createLobby.setText("Join Lobby");
+//            }
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                moveToCreateLobby = true;
+//                return true;
+//            }
+//        });
+//
+//        findMatch = new TextButton("Find match", mySkin, "toggle");
+//        findMatch.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 125, 150, 50);
+//        findMatch.getLabel().setFontScale(0.6f, 0.6f);
+//
+//
+//        findMatch.addListener(new InputListener(){
+//
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                moveToMatchmaking = true;
+//                return true;
+//            }
+//        });
+//
+//        stage.addActor(textField);
 
+        //Setting Icon
+        tex2 = new Texture(Gdx.files.internal("button/button240_settingGear.png"));
+        TextureRegion[][] temp = TextureRegion.split(tex2,240,240);
+        buttonUp = temp[0][0];
+        buttonDown = temp[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth() / 2 + 80,Gdx.graphics.getHeight() / 2 + 200);
+        button.setSize(120,120);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                joinLobby.setText("Join Lobby");
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                if(!textField.isVisible()){
-                    textField.setVisible(true);
-                }
-                else{
-                    textField.setVisible(false);
-                    textField.setText("");
-                }
-                return true;
+            public void clicked(InputEvent event, float x, float y) {
+                //Open Setting menu
             }
         });
 
-        createLobby = new TextButton("Create Lobby", mySkin, "toggle");
-        createLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 50, 150, 50);
-        createLobby.getLabel().setFontScale(0.6f, 0.6f);
-        createLobby.addListener(new InputListener(){
-
+        //Back Icon
+        tex2 = new Texture(Gdx.files.internal("button/button240_BackTest.png"));
+        TextureRegion[][] temp_0 = TextureRegion.split(tex2,240,240);
+        buttonUp = temp_0[0][0];
+        buttonDown = temp_0[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth()/2 - 170,Gdx.graphics.getHeight() / 2 + 200);
+        button.setSize(120,120);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                createLobby.setText("Join Lobby");
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                moveToCreateLobby = true;
-                return true;
-            }
-        });
-
-        findMatch = new TextButton("Find match", mySkin, "toggle");
-        findMatch.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 125, 150, 50);
-        findMatch.getLabel().setFontScale(0.6f, 0.6f);
-
-
-        findMatch.addListener(new InputListener(){
-
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                moveToMatchmaking = true;
-                return true;
+            public void clicked(InputEvent event, float x, float y) {
+                //Back to Title page
             }
         });
 
-        stage.addActor(textField);
-
-        //Isaac-add img button for test
-        //img_button for Quick Play
+        //Quick Play Button
         tex2 = new Texture(Gdx.files.internal("button/button240_QuickPlay.png"));
         TextureRegion[][] temp_1 = TextureRegion.split(tex2,240,240);
         buttonUp = temp_1[0][0];
@@ -192,9 +227,9 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,370);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 50);
         stage.addActor(button);
-
+//        button.setSize(240,70);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -204,7 +239,7 @@ public class HomeScreen extends ScreenAdapter {
         });
 
 
-        //img_button for Create Lobby
+        //Create Lobby Button
         tex2 = new Texture(Gdx.files.internal("button/button240_CreateLobby.png"));
         TextureRegion[][] temp_2 = TextureRegion.split(tex2,240,240);
         buttonUp = temp_2[0][0];
@@ -212,7 +247,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,240);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 180);
         //button.setSize(480,480);
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -223,7 +258,7 @@ public class HomeScreen extends ScreenAdapter {
         });
 
 
-        //img_button for Game PIN
+        //Game PIN Button
         tex2 = new Texture(Gdx.files.internal("button/button240_GamePIN.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,240,240);
         buttonUp = temp_3[0][0];
@@ -231,7 +266,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,110);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 310);
         //button.setSize(480,480);
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -277,7 +312,7 @@ public class HomeScreen extends ScreenAdapter {
 
                 game.setScreen(new FindingMatch(game));
             }
-            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!\nWelcome to Draw Buddy\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 300);
+            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
         }
         else {
             game.getSocket().connect();
