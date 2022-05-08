@@ -36,8 +36,8 @@ public class GameLobby {
     }
     
     public void stringToShapeList(String shape){
-        String[] clientMessage = shape.split(":");
-        shapeList.add(new Shape(Integer.valueOf(clientMessage[2]), Integer.valueOf(clientMessage[3]), clientMessage[0], clientMessage[1]));
+    //    String[] clientMessage = shape.split(":");
+    //    shapeList.add(new Shape(Integer.valueOf(clientMessage[2]), Integer.valueOf(clientMessage[3]), clientMessage[0], clientMessage[1]));
     }
     
     public String shapeListToString(int index){
