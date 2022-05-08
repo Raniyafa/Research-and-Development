@@ -70,17 +70,16 @@ public class LoginScreen extends ScreenAdapter {
 
     @Override
     public void show(){
-        font = new BitmapFont(Gdx.files.internal("font/title3.fnt"),
-        Gdx.files.internal("font/title3.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+        Gdx.files.internal("font/dbfont.png"), false);
         game.setListener(getListener());
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
         //Gdx.graphics.setWindowedMode(360, 640);
 
-        tex = new Texture(Gdx.files.internal("image/titleDraft2.png"));
-
-        region = new TextureRegion(tex,0,0, 360, 640);
+        tex = new Texture(Gdx.files.internal("image/HomePage.png"));
+        region = new TextureRegion(tex,0,0, 750, 1334);
         image = new Image(region);
         image.setPosition(0, 0);
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
@@ -119,37 +118,59 @@ public class LoginScreen extends ScreenAdapter {
             }
         });
 
-        randomName = new TextButton("Random Name", mySkin, "toggle");
-        randomName.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 200, 150, 50);
-        randomName.getLabel().setFontScale(0.6f, 0.6f);
-        randomName.addListener(new InputListener(){
+//        randomName = new TextButton("Random Name", mySkin, "toggle");
+//        randomName.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 200, 150, 50);
+//        randomName.getLabel().setFontScale(0.6f, 0.6f);
+//        randomName.addListener(new InputListener(){
+//
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                game.getSocket().send("CheckName/Bob");
+//                name = "Bob";
+//                game.setPlayerName("Bob");
+//                moveToHome = true;
+//                return true;
+//            }
+//        });
+//
+//        stage.addActor(randomName);
 
+        //Start Button
+        tex2 = new Texture(Gdx.files.internal("button/StartButton.png"));
+        TextureRegion[][] temp_1 = TextureRegion.split(tex2,480,140);
+        buttonUp = temp_1[0][0];
+        buttonDown = temp_1[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 115, Gdx.graphics.getHeight() / 2 - 200);
+        button.setSize(240,70);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.getSocket().send("CheckName/Bob");
                 name = "Bob";
                 game.setPlayerName("Bob");
                 moveToHome = true;
-                return true;
+                //return true;
             }
         });
-
-        stage.addActor(randomName);
         //Setting Icon
-        tex2 = new Texture(Gdx.files.internal("button/button240_settingGear.png"));
-        TextureRegion[][] temp = TextureRegion.split(tex2,240,240);
+        tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
+        TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
         buttonUp = temp[0][0];
         buttonDown = temp[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + 80,Gdx.graphics.getHeight() / 2 + 200);
-        button.setSize(120,120);
+        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight() / 2 + 250);
+        button.setSize(30,30);
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-              //Open Setting Menu
+                //game.setScreen(new SettingMenu(game));
             }
         });
 
@@ -184,7 +205,7 @@ public class LoginScreen extends ScreenAdapter {
         if(game.getSocket().isOpen()) {
             stage.act();
             stage.draw();
-            font.draw(game.getBatch(), "Enter your name:\n", Gdx.graphics.getWidth() / 2 - 110, Gdx.graphics.getHeight() / 2 + 100);
+            //font.draw(game.getBatch(), "Enter your name:\n", Gdx.graphics.getWidth() / 2 - 110, Gdx.graphics.getHeight() / 2 + 100);
         }
         else {
             if(!game.getSocket().isConnecting()) {

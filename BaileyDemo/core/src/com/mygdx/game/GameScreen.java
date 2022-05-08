@@ -382,20 +382,27 @@ public class GameScreen extends ScreenAdapter {
         //If the WebSocket is open (connected) then process the game controller logic
         if (game.getSocket().isOpen()) {
 
+            String gameMode = game.getGameLobby().getGameMode();
+
             //If the requirements are met then the current mouse location is captured and a shape is created corresponding to the selected
             //shape, colour and size
-            if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
-                if (!isDrawing) {
-                    isDrawing = true;
-                    lineNo++;
-                }
-                if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
-                    storeMouseLoc(delta);
+            if(gameMode.matches("Regular")) {
+                if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
+                    if (!isDrawing) {
+                        isDrawing = true;
+                        lineNo++;
+                    }
+                    if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
+                        storeMouseLoc(delta);
+                        drawTimer = 0.0f;
+                    }
+                } else if (isDrawing) {
+                    isDrawing = false;
                     drawTimer = 0.0f;
                 }
-            } else if (isDrawing) {
-                isDrawing = false;
-                drawTimer = 0.0f;
+            }
+            else if (gameMode.matches("One Line")){
+
             }
 
             int drawnAmount = 0;

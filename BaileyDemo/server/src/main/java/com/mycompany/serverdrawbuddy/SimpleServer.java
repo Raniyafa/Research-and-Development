@@ -352,14 +352,13 @@ public class SimpleServer extends WebSocketServer {
             String[] simpleArray = data.toArray(new String[]{});
             
             String temp = "";
-            int counter = 0;
-           for(int i = 0; i <= simpleArray.length - 1; i++){
+            for(int i = 0; i <= simpleArray.length - 1; i++){
                
-               temp = simpleArray[counter];
-                if(temp.contains(nameLower) || temp.matches(nameLower)){
+                temp = simpleArray[i].toLowerCase();
+                if(nameLower.contains(temp) || temp.matches(nameLower)){
                     return false;
                 }
-                counter++;
+  
             }
             
             return true;

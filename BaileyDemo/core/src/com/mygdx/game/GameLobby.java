@@ -11,6 +11,8 @@ public class GameLobby {
     private String imageString;
     private String partnerName;
 
+    private String gameMode;
+
     public GameLobby(){
         lobbyCode = "code";
         lobbyIndex = -1;
@@ -70,5 +72,13 @@ public class GameLobby {
 
     public void setPartnerName(String partnerName) {
         this.partnerName = partnerName;
+    }
+
+    public String getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(String gameMode) {
+        this.gameMode = gameMode;
     }
 }
