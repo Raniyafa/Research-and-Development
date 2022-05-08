@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import org.robovm.apple.foundation.NSAutoreleasePool;
+import org.robovm.apple.glkit.GLKViewDrawableMultisample;
 import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
@@ -11,6 +12,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
+        config.multisample = GLKViewDrawableMultisample._4X;
         return new IOSApplication(new MyGdxGame(), config);
     }
 

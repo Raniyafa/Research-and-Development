@@ -42,6 +42,7 @@ public class FindingMatch extends ScreenAdapter {
                     System.out.println("joining match");
                     game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
                     game.getGameLobby().setWordTopic(clientMessage[3]);
+                    game.getGameLobby().setGameMode(clientMessage[4]);
                     game.getSocket().send("joining match");
                     matchFound = true;
                 }

@@ -78,6 +78,7 @@ public class HomeScreen extends ScreenAdapter {
                     if(clientMessage[0].matches("LobbyInfo")) {
                         game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
                         game.getGameLobby().setWordTopic(clientMessage[3]);
+                        game.getGameLobby().setGameMode(clientMessage[4]);
                         moveToLobby = true;
                    }
 
