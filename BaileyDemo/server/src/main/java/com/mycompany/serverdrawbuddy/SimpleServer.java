@@ -104,11 +104,13 @@ public class SimpleServer extends WebSocketServer {
             if(clientMessage[1].matches("RequestCanvas")){
                 String canvasInfo = gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeListToString(Integer.valueOf(clientMessage[3]));
                 conn.send(canvasInfo);
+         
             }
             else if(clientMessage[1].matches("UpdateCanvas")){
                 //called by either play in the lobby, updates the shared canvas that is accessed by both players
                // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
                String[] clientMessage2 = clientMessage[3].split(":");
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeList.add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
             //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
                gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
            //    }
