@@ -73,6 +73,9 @@ public class SettingMenu extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //back to last activity
+
+                //set back to HomePage for test
+                game.setScreen(new LoginScreen(game));
             }
         });
 

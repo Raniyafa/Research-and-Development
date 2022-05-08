@@ -221,8 +221,10 @@ public class LoginScreen extends ScreenAdapter {
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);
-        if(!moveToHome)
-        dispose();
+
+        //comment for setting button test
+//        if(!moveToHome)
+//        dispose();
     }
 
     @Override
