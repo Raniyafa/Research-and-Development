@@ -195,7 +195,7 @@ public class HomeScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //Open Setting menu
+                game.setScreen(new SettingMenu(game));
             }
         });
 

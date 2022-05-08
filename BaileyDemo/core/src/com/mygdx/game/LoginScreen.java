@@ -170,7 +170,7 @@ public class LoginScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(new SettingMenu(game));
+                game.setScreen(new SettingMenu(game));
             }
         });
 

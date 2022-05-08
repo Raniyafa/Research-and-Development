@@ -49,6 +49,9 @@ public class SettingMenu extends ScreenAdapter{
 
     @Override
     public void show(){
+
+        stage = new Stage(new ScreenViewport());
+
         tex = new Texture(Gdx.files.internal("image/setting.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
@@ -72,6 +75,8 @@ public class SettingMenu extends ScreenAdapter{
                 //back to last activity
             }
         });
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -81,6 +86,12 @@ public class SettingMenu extends ScreenAdapter{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+        game.getBatch().end();
+    }
+
+    @Override
+    public void hide(){
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
