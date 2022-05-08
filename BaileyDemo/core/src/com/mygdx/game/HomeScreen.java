@@ -34,9 +34,6 @@ import sun.awt.ExtendedKeyCodes;
 
 public class HomeScreen extends ScreenAdapter {
 
-//    add TAG for img_button test
-    private static final String TAG = HomeScreen.class.getSimpleName();
-
     private MultipleScenes game;
     private TextButton joinLobby;
     private TextButton findMatch;
@@ -216,7 +213,7 @@ public class HomeScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //Back to Title page
+                game.setScreen(new LoginScreen(game));
             }
         });
 
