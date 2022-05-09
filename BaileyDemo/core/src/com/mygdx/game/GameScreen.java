@@ -202,12 +202,12 @@ public class GameScreen extends ScreenAdapter {
         stage = new Stage(new ScreenViewport());
 
         //Adding Background IMG
-        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
-        region = new TextureRegion(tex,0,0,750,1334);
-        image = new Image(region);
-        image.setPosition(0,0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
-        stage.addActor(image);
+//        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
+//        region = new TextureRegion(tex,0,0,750,1334);
+//        image = new Image(region);
+//        image.setPosition(0,0);
+//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+//        stage.addActor(image);
 
         shapeRenderer = new ShapeRenderer();
 

@@ -71,8 +71,8 @@ public class FindingMatch extends ScreenAdapter {
     @Override
     public void show(){
         //Creating the font
-        font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
-        Gdx.files.internal("font/font.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+        Gdx.files.internal("font/dbfont.png"), false);
 
         //Adding WebSocket listener for this class
         game.setListener(getListener());
@@ -83,7 +83,7 @@ public class FindingMatch extends ScreenAdapter {
         stage = new Stage(new ScreenViewport());
 
         //Adding Background Img
-        tex = new Texture(Gdx.files.internal("image/waiting.png"));
+        tex = new Texture(Gdx.files.internal("image/waiting2.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
         image.setPosition(0,0);
