@@ -85,6 +85,13 @@ public class LoginScreen extends ScreenAdapter {
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Background music
+        SoundManager.create();
+        SoundManager.background.setLooping(true);
+        SoundManager.background.setVolume(0.1f);
+
+        SoundManager.background.play();
+
         final TextField textField = new TextField("Text field", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 125);
         textField.setY(Gdx.graphics.getHeight() / 2 - 50);
@@ -234,5 +241,6 @@ public class LoginScreen extends ScreenAdapter {
         font.dispose();
         game.dispose();
         Gdx.app.exit();
+        SoundManager.dispose();
     }
 }

@@ -44,6 +44,8 @@ public class CreateLobby extends ScreenAdapter {
 
         Gdx.graphics.setWindowedMode(360, 640);
 
+        SoundManager.button.play();
+
         exitLobby = new TextButton("Go Back", mySkin, "toggle");
         exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2 - 150, 150, 50);
         exitLobby.getLabel().setFontScale(0.6f, 0.6f);

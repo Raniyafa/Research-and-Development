@@ -6,14 +6,18 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
@@ -31,6 +35,8 @@ public class SettingMenu extends ScreenAdapter{
 
     private MultipleScenes game;
     private Stage stage;
+    private Skin skin;
+
 
     private Texture tex;
     private Image image;
@@ -43,6 +49,8 @@ public class SettingMenu extends ScreenAdapter{
     private Texture tex2;
     private ImageButton button;
 
+    private Slider slider;
+
     public SettingMenu(MultipleScenes game) {
         this.game = game;
     }
@@ -51,6 +59,20 @@ public class SettingMenu extends ScreenAdapter{
     public void show(){
 
         stage = new Stage(new ScreenViewport());
+        skin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
+
+        SoundManager.button.play();
+
+        slider = new Slider(0, 100, 1, false, skin);
+        slider.setSize(30, 100);
+        slider.setPosition(100, 100);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+            }
+        });
+        stage.addActor(slider);
 
         tex = new Texture(Gdx.files.internal("image/setting.png"));
         region = new TextureRegion(tex,0,0,750,1334);

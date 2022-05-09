@@ -181,6 +181,8 @@ public class HomeScreen extends ScreenAdapter {
 //
 //        stage.addActor(textField);
 
+        SoundManager.button.play();
+
         //Setting Icon
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);

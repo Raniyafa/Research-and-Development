@@ -43,8 +43,8 @@ public class PostGame extends ScreenAdapter {
     @Override
     public void show(){
 
-        font = new BitmapFont(Gdx.files.internal("font/font.fnt"),
-                Gdx.files.internal("font/font.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+                Gdx.files.internal("font/dbfont.png"), false);
         font.setColor(Color.BLACK);
 
         game.setListener(getListener());
