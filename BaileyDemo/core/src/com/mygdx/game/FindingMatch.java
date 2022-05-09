@@ -82,8 +82,6 @@ public class FindingMatch extends ScreenAdapter {
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
 
-        SoundManager.button.play();
-
         //Adding Background Img
         tex = new Texture(Gdx.files.internal("image/waiting.png"));
         region = new TextureRegion(tex,0,0,750,1334);
@@ -102,7 +100,6 @@ public class FindingMatch extends ScreenAdapter {
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 200);
         button.setSize(240,70);
-        stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -112,10 +109,11 @@ public class FindingMatch extends ScreenAdapter {
                 else{
                     game.getSocket().send("ReturnToMain");
                 }
-
+                SoundManager.button.play();
                 game.setScreen(new HomeScreen(game));
             }
         });
+        stage.addActor(button);
 
         //Create the exit to main screen button, also adding the listener which controls what happens when you interact with the button
 //        exitLobby = new TextButton("Stop searching", mySkin, "toggle");

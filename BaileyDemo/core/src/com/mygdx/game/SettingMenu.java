@@ -61,7 +61,6 @@ public class SettingMenu extends ScreenAdapter{
         stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
 
-        SoundManager.button.play();
 
         slider = new Slider(0, 100, 1, false, skin);
         slider.setSize(30, 100);
@@ -95,7 +94,7 @@ public class SettingMenu extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //back to last activity
-
+                SoundManager.button.play();
                 //set back to HomePage for test
                 game.setScreen(new LoginScreen(game));
             }

@@ -181,7 +181,6 @@ public class HomeScreen extends ScreenAdapter {
 //
 //        stage.addActor(textField);
 
-        SoundManager.button.play();
 
         //Setting Icon
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
@@ -198,6 +197,7 @@ public class HomeScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingMenu(game));
+                SoundManager.button.play();
             }
         });
 
@@ -216,6 +216,7 @@ public class HomeScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new LoginScreen(game));
+                SoundManager.button.play();
             }
         });
 
@@ -234,7 +235,7 @@ public class HomeScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 moveToMatchmaking = true;
-
+                SoundManager.button.play();
             }
         });
 
@@ -254,6 +255,7 @@ public class HomeScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 moveToCreateLobby = true;
+                SoundManager.button.play();
             }
         });
 
@@ -272,6 +274,7 @@ public class HomeScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                SoundManager.button.play();
                 if(!textField.isVisible()) {
                     textField.setVisible(true);
                 }

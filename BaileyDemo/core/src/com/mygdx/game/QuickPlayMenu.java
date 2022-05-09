@@ -78,6 +78,7 @@ public class QuickPlayMenu extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingMenu(game));
+                SoundManager.button.play();
             }
         });
 
@@ -96,6 +97,7 @@ public class QuickPlayMenu extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new HomeScreen(game));
+                SoundManager.button.play();
             }
         });
 
@@ -113,7 +115,7 @@ public class QuickPlayMenu extends ScreenAdapter{
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //
+                SoundManager.button.play();
             }
         });
 
@@ -132,7 +134,7 @@ public class QuickPlayMenu extends ScreenAdapter{
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //
+                SoundManager.button.play();
             }
         });
 

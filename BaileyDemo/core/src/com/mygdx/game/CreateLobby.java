@@ -44,8 +44,6 @@ public class CreateLobby extends ScreenAdapter {
 
         Gdx.graphics.setWindowedMode(360, 640);
 
-        SoundManager.button.play();
-
         exitLobby = new TextButton("Go Back", mySkin, "toggle");
         exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2 - 150, 150, 50);
         exitLobby.getLabel().setFontScale(0.6f, 0.6f);
@@ -57,6 +55,7 @@ public class CreateLobby extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                SoundManager.button.play();
                 if(game.getSocket().isOpen()) {
                     game.setScreen(new HomeScreen(game));
                 }
@@ -76,6 +75,7 @@ public class CreateLobby extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                SoundManager.button.play();
                 if(game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
                     game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected());
                 }

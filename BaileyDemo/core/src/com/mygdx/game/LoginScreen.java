@@ -90,7 +90,7 @@ public class LoginScreen extends ScreenAdapter {
         SoundManager.background.setLooping(true);
         SoundManager.background.setVolume(0.1f);
 
-        SoundManager.background.play();
+        //SoundManager.background.play();
 
         final TextField textField = new TextField("Text field", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 125);
@@ -161,6 +161,7 @@ public class LoginScreen extends ScreenAdapter {
                 game.setPlayerName("Bob");
                 moveToHome = true;
                 //return true;
+                SoundManager.button.play();
             }
         });
         //Setting Icon
@@ -178,6 +179,7 @@ public class LoginScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingMenu(game));
+                SoundManager.button.play();
             }
         });
 
