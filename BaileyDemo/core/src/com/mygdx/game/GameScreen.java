@@ -75,6 +75,7 @@ public class GameScreen extends ScreenAdapter {
 
     private String selectedColour = "Red";
     private String selectedType = "circle";
+    private String gameMode = "";
 
     private float renderTimer;
     private float turnTimer = 0.0f;
@@ -102,6 +103,7 @@ public class GameScreen extends ScreenAdapter {
     private boolean menuOpen = false;
     private boolean emoteActive = false;
     private boolean readyToDraw = false;
+    private boolean oneLineDrawing = false;
 
     private Texture tex;
     private Image image;
@@ -186,6 +188,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        gameMode = game.getGameLobby().getGameMode();
+        System.out.println("gamemode = "+gameMode);
         game.setListener(getListener());
 
         float widthSlice = Gdx.graphics.getWidth() / 20;
@@ -397,7 +401,7 @@ public class GameScreen extends ScreenAdapter {
         //If the WebSocket is open (connected) then process the game controller logic
         if (game.getSocket().isOpen()) {
 
-            String gameMode = game.getGameLobby().getGameMode();
+
 
             //If the requirements are met then the current mouse location is captured and a shape is created corresponding to the selected
             //shape, colour and size
@@ -416,7 +420,18 @@ public class GameScreen extends ScreenAdapter {
                     drawTimer = 0.0f;
                 }
             } else if (gameMode.matches("One Line")) {
-
+                if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
+                    if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
+                        oneLineDrawing = true;
+                        storeMouseLoc(delta);
+                        drawTimer = 0.0f;
+                    }
+                }
+                else if(oneLineDrawing && !Gdx.input.isTouched()){
+                    oneLineDrawing = false;
+                    game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
+                    myTurn = false;
+                }
             }
 
             int drawnAmount = 0;
@@ -489,21 +504,33 @@ public class GameScreen extends ScreenAdapter {
             //shapes are being drawn to the screen.
             if (!gameFinished) {
                 if (myTurn) {
-
-                    String temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
+                    String temp = "";
+                    if(gameMode.matches("Regular")) {
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
+                    }
+                    else{
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
+                    }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 25);
-                      font.draw(game.getBatch(), temp2, 0, 200);
+                 //   font.draw(game.getBatch(), temp2, 0, 200);
                     if (turnTimer >= 10.0f) {
                         myTurn = false;
                         game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                         turnTimer = 0.0f;
                     }
                 } else {
-                    String temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing! " + (Math.round(10.0f - turnTimer));
+                    String temp = "";
+
+                    if(gameMode.matches("Regular")) {
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!" + (Math.round(10.0f - turnTimer));
+                    }
+                    else{
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
+                    }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 25);
-                       font.draw(game.getBatch(), temp2, 0, 200);
+                    // font.draw(game.getBatch(), temp2, 0, 200);
                 }
             }
         }

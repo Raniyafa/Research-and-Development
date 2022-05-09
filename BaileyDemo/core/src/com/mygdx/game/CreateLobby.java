@@ -197,6 +197,7 @@ public class CreateLobby extends ScreenAdapter {
                 if (serverMessage[0].matches("LobbyInfo")) {
                     CreateLobby(Integer.valueOf(serverMessage[1]), serverMessage[2]);
                     game.getGameLobby().setWordTopic(serverMessage[3]);
+                    game.getGameLobby().setGameMode(serverMessage[4]);
                     moveToLobby = true;
                 }
                 return FULLY_HANDLED;

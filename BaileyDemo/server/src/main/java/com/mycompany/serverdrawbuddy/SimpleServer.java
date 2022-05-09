@@ -53,8 +53,8 @@ public class SimpleServer extends WebSocketServer {
       
     public SimpleServer(InetSocketAddress address) {
         super(address);
-        //SSLContext sslContext = getSSLContextFromLetsEncrypt();
-        //setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+       // SSLContext sslContext = getSSLContextFromLetsEncrypt();
+      // setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
 
     @Override
@@ -340,7 +340,7 @@ public class SimpleServer extends WebSocketServer {
        
         private boolean checkName(String name) throws FileNotFoundException{
          //  File txt = new File("/home/ec2-user/badwords.txt");
-            System.out.println("badword dir = "+System.getProperty("user.dir"));
+           // System.out.println("badword dir = "+System.getProperty("user.dir"));
          
          File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\badwords.txt");
            Scanner scan = new Scanner(txt);

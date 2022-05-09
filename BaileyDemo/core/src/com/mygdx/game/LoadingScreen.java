@@ -38,14 +38,14 @@ import sun.awt.ExtendedKeyCodes;
 
         @Override
         public void show(){
-            stage = new Stage(new ScreenViewport());
+           // stage = new Stage(new ScreenViewport());
 
-            tex = new Texture(Gdx.files.internal("image/loading.png"));
-            region = new TextureRegion(tex,0,0,750,1334);
-            image = new Image(region);
-            image.setPosition(0,0);
-            image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
-            stage.addActor(image);
+           // tex = new Texture(Gdx.files.internal("image/loading.png"));
+           // region = new TextureRegion(tex,0,0,750,1334);
+           // image = new Image(region);
+           // image.setPosition(0,0);
+           // image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+           // stage.addActor(image);
         }
 
         @Override
@@ -67,8 +67,8 @@ import sun.awt.ExtendedKeyCodes;
             game.getBatch().begin();
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            stage.act();
-            stage.draw();
+          //  stage.act();
+          //  stage.draw();
             game.getBatch().end();
 
 
