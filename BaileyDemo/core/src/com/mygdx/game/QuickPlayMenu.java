@@ -35,6 +35,7 @@ public class QuickPlayMenu extends ScreenAdapter{
 
     public boolean moveToLobby = false;
     private boolean moveToMatchmaking = false;
+    private BitmapFont font;
 
     private Texture tex;
     private Image image;

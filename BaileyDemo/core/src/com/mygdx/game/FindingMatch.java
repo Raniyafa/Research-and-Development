@@ -3,13 +3,19 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
@@ -23,6 +29,17 @@ public class FindingMatch extends ScreenAdapter {
     private boolean matchFound = false;
     private float disconnectionTimer = 0.0f;
     private SpriteBatch batch;
+
+    private Texture tex;
+    private Image image;
+    private TextureRegion region;
+
+    private TextureRegionDrawable up;
+    private TextureRegionDrawable down;
+    private TextureRegion buttonUp;
+    private TextureRegion buttonDown;
+    private Texture tex2;
+    private ImageButton button;
 
     public FindingMatch(MultipleScenes game) {
         this.game = game;
@@ -65,18 +82,28 @@ public class FindingMatch extends ScreenAdapter {
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
 
-        //Create the exit to main screen button, also adding the listener which controls what happens when you interact with the button
-        exitLobby = new TextButton("Stop searching", mySkin, "toggle");
-        exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 200, 150, 50);
-        exitLobby.getLabel().setFontScale(0.6f, 0.6f);
-        exitLobby.addListener(new InputListener(){
+        //Adding Background Img
+        tex = new Texture(Gdx.files.internal("image/waiting.png"));
+        region = new TextureRegion(tex,0,0,750,1334);
+        image = new Image(region);
+        image.setPosition(0,0);
+        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        stage.addActor(image);
 
+        //Adding Cancel Button to replace ExitButton below
+        tex2 = new Texture(Gdx.files.internal("button/CancelButton.png"));
+        TextureRegion[][] temp = TextureRegion.split(tex2,480,140);
+        buttonUp = temp[0][0];
+        buttonDown = temp[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 200);
+        button.setSize(240,70);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                exitLobby.setText("Join Lobby");
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public void clicked(InputEvent event, float x, float y) {
                 if(game.getGameLobby().getLobbyIndex() != -1) {
                     game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
                 }
@@ -85,10 +112,33 @@ public class FindingMatch extends ScreenAdapter {
                 }
 
                 game.setScreen(new HomeScreen(game));
-                return true;
             }
         });
-        stage.addActor(exitLobby);
+
+        //Create the exit to main screen button, also adding the listener which controls what happens when you interact with the button
+//        exitLobby = new TextButton("Stop searching", mySkin, "toggle");
+//        exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 200, 150, 50);
+//        exitLobby.getLabel().setFontScale(0.6f, 0.6f);
+//        exitLobby.addListener(new InputListener(){
+//
+//            @Override
+//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+//                exitLobby.setText("Join Lobby");
+//            }
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                if(game.getGameLobby().getLobbyIndex() != -1) {
+//                    game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
+//                }
+//                else{
+//                    game.getSocket().send("ReturnToMain");
+//                }
+//
+//                game.setScreen(new HomeScreen(game));
+//                return true;
+//            }
+//        });
+//        stage.addActor(exitLobby);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -109,7 +159,7 @@ public class FindingMatch extends ScreenAdapter {
 
         //Disconnection handler
         if(game.getSocket().isOpen()) {
-            font.draw( game.getBatch(), "Searching for another player..\n", 0, Gdx.graphics.getHeight() / 2);
+            //font.draw( game.getBatch(), "Searching for another player..\n", 0, Gdx.graphics.getHeight() / 2);
         }
         else if(!game.getSocket().isConnecting()){
             game.setScreen(new HomeScreen(game));
