@@ -89,8 +89,7 @@ public class LoginScreen extends ScreenAdapter {
         SoundManager.create();
         SoundManager.background.setLooping(true);
         SoundManager.background.setVolume(0.1f);
-
-        //SoundManager.background.play();
+        SoundManager.background.play();
 
         final TextField textField = new TextField("Text field", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 125);
@@ -164,6 +163,7 @@ public class LoginScreen extends ScreenAdapter {
                 SoundManager.button.play();
             }
         });
+
         //Setting Icon
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);

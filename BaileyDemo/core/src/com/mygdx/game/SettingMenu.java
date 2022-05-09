@@ -106,6 +106,7 @@ public class SettingMenu extends ScreenAdapter{
                 SoundManager.button.play();
                 //set back to HomePage for test
                 game.setScreen(new LoginScreen(game));
+                SoundManager.background.dispose();
             }
         });
 
