@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -102,7 +103,9 @@ public class GameScreen extends ScreenAdapter {
     private boolean emoteActive = false;
     private boolean readyToDraw = false;
 
-
+    private Texture tex;
+    private Image image;
+    private TextureRegion region;
 
     public GameScreen(MultipleScenes game) {
         this.game = game;
@@ -197,6 +200,14 @@ public class GameScreen extends ScreenAdapter {
         fontLarge.setColor(Color.BLACK);
 
         stage = new Stage(new ScreenViewport());
+
+        //Adding Background IMG
+        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
+        region = new TextureRegion(tex,0,0,750,1334);
+        image = new Image(region);
+        image.setPosition(0,0);
+        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        stage.addActor(image);
 
         shapeRenderer = new ShapeRenderer();
 
