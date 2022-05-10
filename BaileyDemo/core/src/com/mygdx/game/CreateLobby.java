@@ -30,6 +30,9 @@ public class CreateLobby extends ScreenAdapter {
     private Skin mySkin;
     private BitmapFont font;
     private SelectBox<String> lobbyType;
+    private SelectBox<String> time;
+    private SelectBox<String> round;
+    private SelectBox<String> topicType;
     private boolean moveToLobby = false;
     private ShapeRenderer shapeRenderer;
 
@@ -149,13 +152,52 @@ public class CreateLobby extends ScreenAdapter {
 //        });
 //        stage.addActor(createLobby);
 
+        tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
+        TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
+        buttonUp = temp_3[0][0];
+        buttonDown = temp_3[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight()/2 + 195);
+        button.setSize(30,30);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SoundManager.button.play();
+                game.setScreen(new modeIntroScreen(game));
+            }
+        });
+
         lobbyType = new SelectBox<String>(mySkin);
         lobbyType.setItems("Regular", "One Line", "Test");
-        lobbyType.setName("Lobby Type:");
-        lobbyType.setBounds((Gdx.graphics.getWidth() / 2 - 50), Gdx.graphics.getHeight() / 2, 200, 60);
+        //lobbyType.setName("Lobby Type:");
+        lobbyType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 180, 100, 60);
         lobbyType.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         lobbyType.setSelected("5");
         stage.addActor(lobbyType);
+
+        topicType = new SelectBox<String>(mySkin);
+        topicType.setItems("Test 1", "Test 2", "Test 3");
+        topicType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 70, 100, 60);
+        topicType.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+        topicType.setSelected("5");
+        stage.addActor(topicType);
+
+        time = new SelectBox<String>(mySkin);
+        time.setItems("10 sec", "15 sec", "20 sec", "30 sec", "1 min");
+        time.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 - 35, 100, 60);
+        time.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+        time.setSelected("5");
+        stage.addActor(time);
+
+        round = new SelectBox<String>(mySkin);
+        round.setItems("2", "4", "6", "8", "10");
+        round.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 - 140, 100, 60);
+        round.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+        round.setSelected("5");
+        stage.addActor(round);
 
         Gdx.input.setInputProcessor(stage);
     }
