@@ -4,9 +4,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -24,13 +27,25 @@ import sun.awt.ExtendedKeyCodes;
         private MultipleScenes game;
         private float timer = 0.0f;
 
+        private Stage stage;
+        private Texture tex;
+        private Image image;
+        private TextureRegion region;
+
         public LoadingScreen(MultipleScenes game) {
             this.game = game;
         }
 
         @Override
         public void show(){
+           // stage = new Stage(new ScreenViewport());
 
+           // tex = new Texture(Gdx.files.internal("image/loading.png"));
+           // region = new TextureRegion(tex,0,0,750,1334);
+           // image = new Image(region);
+           // image.setPosition(0,0);
+           // image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+           // stage.addActor(image);
         }
 
         @Override
@@ -43,10 +58,17 @@ import sun.awt.ExtendedKeyCodes;
             if(timer >= 0.5f){
                 game.setScreen(new GameScreen(game));
             }
+//            Gdx.gl.glClearColor(0, 0, 0.25f, 1);
+//            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//            game.getBatch().begin();
+//            //game.getFont().draw(game.getBatch(), "Loading Match!\nWord Topic: "+game.getGameLobby().getWordTopic(), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
+//            game.getBatch().end();
+
+            game.getBatch().begin();
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            game.getBatch().begin();
-            game.getFont().draw(game.getBatch(), "Loading Match!\nWord Topic: "+game.getGameLobby().getWordTopic(), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
+          //  stage.act();
+          //  stage.draw();
             game.getBatch().end();
 
 
@@ -60,6 +82,7 @@ import sun.awt.ExtendedKeyCodes;
         @Override
         public void dispose(){
             game.dispose();
+            stage.dispose();
         }
     }
 

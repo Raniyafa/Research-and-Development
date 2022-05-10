@@ -31,13 +31,13 @@ public class GameLobby {
        client1pinged = true;
        client2pinged = false;
        readyCount = 0;
-       maxTurns = 2;
+       maxTurns = 6;
        lobbyType = gameMode;
     }
     
     public void stringToShapeList(String shape){
-        String[] clientMessage = shape.split(":");
-        shapeList.add(new Shape(Integer.valueOf(clientMessage[2]), Integer.valueOf(clientMessage[3]), clientMessage[0], clientMessage[1]));
+    //    String[] clientMessage = shape.split(":");
+    //    shapeList.add(new Shape(Integer.valueOf(clientMessage[2]), Integer.valueOf(clientMessage[3]), clientMessage[0], clientMessage[1]));
     }
     
     public String shapeListToString(int index){
@@ -79,7 +79,7 @@ public class GameLobby {
         String temp = "";
         
             File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
-           //File txt = new File("/home/ec2-user/topicwords.txt");
+          // File txt = new File("/home/ec2-user/topicwords.txt");
            Scanner scan = new Scanner(txt);
             ArrayList<String> data = new ArrayList<>() ;
             while(scan.hasNextLine()){

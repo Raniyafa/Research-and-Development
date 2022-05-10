@@ -85,6 +85,12 @@ public class LoginScreen extends ScreenAdapter {
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Background music
+        SoundManager.create();
+        SoundManager.background.setLooping(true);
+        SoundManager.background.setVolume(0.1f);
+        SoundManager.background.play();
+
         final TextField textField = new TextField("Text field", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 125);
         textField.setY(Gdx.graphics.getHeight() / 2 - 50);
@@ -154,8 +160,10 @@ public class LoginScreen extends ScreenAdapter {
                 game.setPlayerName("Bob");
                 moveToHome = true;
                 //return true;
+                SoundManager.button.play();
             }
         });
+
         //Setting Icon
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
@@ -170,7 +178,8 @@ public class LoginScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(new SettingMenu(game));
+                game.setScreen(new SettingMenu(game));
+                SoundManager.button.play();
             }
         });
 
@@ -221,8 +230,10 @@ public class LoginScreen extends ScreenAdapter {
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);
-        if(!moveToHome)
-        dispose();
+
+        //comment for setting button test
+//        if(!moveToHome)
+//        dispose();
     }
 
     @Override
@@ -232,5 +243,6 @@ public class LoginScreen extends ScreenAdapter {
         font.dispose();
         game.dispose();
         Gdx.app.exit();
+        SoundManager.dispose();
     }
 }

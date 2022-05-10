@@ -53,8 +53,8 @@ public class SimpleServer extends WebSocketServer {
       
     public SimpleServer(InetSocketAddress address) {
         super(address);
-        //SSLContext sslContext = getSSLContextFromLetsEncrypt();
-        //setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+       // SSLContext sslContext = getSSLContextFromLetsEncrypt();
+      // setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
 
     @Override
@@ -104,11 +104,13 @@ public class SimpleServer extends WebSocketServer {
             if(clientMessage[1].matches("RequestCanvas")){
                 String canvasInfo = gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeListToString(Integer.valueOf(clientMessage[3]));
                 conn.send(canvasInfo);
+         
             }
             else if(clientMessage[1].matches("UpdateCanvas")){
                 //called by either play in the lobby, updates the shared canvas that is accessed by both players
                // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
                String[] clientMessage2 = clientMessage[3].split(":");
+               gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeList.add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
             //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
                gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
            //    }
@@ -338,7 +340,7 @@ public class SimpleServer extends WebSocketServer {
        
         private boolean checkName(String name) throws FileNotFoundException{
          //  File txt = new File("/home/ec2-user/badwords.txt");
-            System.out.println("badword dir = "+System.getProperty("user.dir"));
+           // System.out.println("badword dir = "+System.getProperty("user.dir"));
          
          File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\badwords.txt");
            Scanner scan = new Scanner(txt);
