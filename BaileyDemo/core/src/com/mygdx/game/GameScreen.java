@@ -514,10 +514,12 @@ public class GameScreen extends ScreenAdapter {
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 25);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
-                    if (turnTimer >= 10.0f) {
-                        myTurn = false;
-                        game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
-                        turnTimer = 0.0f;
+                    if(gameMode.matches("Regular")) {
+                        if (turnTimer >= 10.0f) {
+                            myTurn = false;
+                            game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
+                            turnTimer = 0.0f;
+                        }
                     }
                 } else {
                     String temp = "";
