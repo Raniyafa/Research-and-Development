@@ -114,6 +114,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private WebSocketAdapter getListener() {
+
         return new WebSocketAdapter() {
 
             @Override
@@ -188,6 +189,16 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+
+        stage = new Stage(new ScreenViewport());
+        //Adding Background IMG
+//        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
+//        region = new TextureRegion(tex,0,0,750,1334);
+//        image = new Image(region);
+//        image.setPosition(0,0);
+//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+//        stage.addActor(image);
+
         gameMode = game.getGameLobby().getGameMode();
         System.out.println("gamemode = "+gameMode);
         game.setListener(getListener());
@@ -203,15 +214,6 @@ public class GameScreen extends ScreenAdapter {
         fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
 
-        stage = new Stage(new ScreenViewport());
-
-        //Adding Background IMG
-//        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
-//        region = new TextureRegion(tex,0,0,750,1334);
-//        image = new Image(region);
-//        image.setPosition(0,0);
-//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
-//        stage.addActor(image);
 
         shapeRenderer = new ShapeRenderer();
 
