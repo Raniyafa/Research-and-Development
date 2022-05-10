@@ -203,24 +203,24 @@ public class HomeScreen extends ScreenAdapter {
         });
 
         //Back Icon
-        tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
-        TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
-        buttonUp = temp_0[0][0];
-        buttonDown = temp_0[0][1];
-        up = new TextureRegionDrawable(buttonUp);
-        down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth()/2 - 180,Gdx.graphics.getHeight() / 2 + 270);
-        button.setSize(105,30);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new LoginScreen(game));
-                SoundManager.button.play();
-                SoundManager.background.dispose();
-            }
-        });
+//        tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
+//        TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
+//        buttonUp = temp_0[0][0];
+//        buttonDown = temp_0[0][1];
+//        up = new TextureRegionDrawable(buttonUp);
+//        down = new TextureRegionDrawable(buttonDown);
+//        button = new ImageButton(up,down);
+//        button.setPosition(Gdx.graphics.getWidth()/2 - 180,Gdx.graphics.getHeight() / 2 + 270);
+//        button.setSize(105,30);
+//        stage.addActor(button);
+//        button.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                game.setScreen(new LoginScreen(game));
+//                SoundManager.button.play();
+//                SoundManager.background.dispose();
+//            }
+//        });
 
         //Quick Play Button
         tex2 = new Texture(Gdx.files.internal("button/QuickPlayButton.png"));

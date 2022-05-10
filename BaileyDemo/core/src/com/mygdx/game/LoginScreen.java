@@ -165,23 +165,23 @@ public class LoginScreen extends ScreenAdapter {
         });
 
         //Setting Icon
-        tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
-        TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
-        buttonUp = temp[0][0];
-        buttonDown = temp[0][1];
-        up = new TextureRegionDrawable(buttonUp);
-        down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight() / 2 + 250);
-        button.setSize(30,30);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SettingMenu(game));
-                SoundManager.button.play();
-            }
-        });
+//        tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
+//        TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
+//        buttonUp = temp[0][0];
+//        buttonDown = temp[0][1];
+//        up = new TextureRegionDrawable(buttonUp);
+//        down = new TextureRegionDrawable(buttonDown);
+//        button = new ImageButton(up,down);
+//        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight() / 2 + 250);
+//        button.setSize(30,30);
+//        stage.addActor(button);
+//        button.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                game.setScreen(new SettingMenu(game));
+//                SoundManager.button.play();
+//            }
+//        });
 
         stage.addActor(textField);
         Gdx.input.setInputProcessor(stage);
