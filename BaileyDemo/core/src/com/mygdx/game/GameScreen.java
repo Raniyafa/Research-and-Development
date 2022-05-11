@@ -423,6 +423,10 @@ public class GameScreen extends ScreenAdapter {
                 }
             } else if (gameMode.matches("One Line")) {
                 if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
+                    if (!isDrawing) {
+                        isDrawing = true;
+                        lineNo++;
+                    }
                     if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
                         oneLineDrawing = true;
                         storeMouseLoc(delta);
@@ -433,6 +437,7 @@ public class GameScreen extends ScreenAdapter {
                     oneLineDrawing = false;
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                     myTurn = false;
+                    isDrawing = false;
                 }
             }
 
