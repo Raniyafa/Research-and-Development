@@ -192,7 +192,7 @@ public class GameScreen extends ScreenAdapter {
 
         stage = new Stage(new ScreenViewport());
         //Adding Background IMG
-//        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
+//        tex = new Texture(Gdx.files.internal("image/gameplaytest.png"));
 //        region = new TextureRegion(tex,0,0,750,1334);
 //        image = new Image(region);
 //        image.setPosition(0,0);
@@ -211,7 +211,7 @@ public class GameScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
                 Gdx.files.internal("smallfont/smallfont.png"), false);
         font.setColor(Color.BLACK);
-        fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
+        fontLarge = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"), Gdx.files.internal("font/dbfont.png"), false);
         fontLarge.setColor(Color.BLACK);
 
 
@@ -519,7 +519,7 @@ public class GameScreen extends ScreenAdapter {
                         temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 25);
+                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
                         if (turnTimer >= 10.0f) {
@@ -538,7 +538,7 @@ public class GameScreen extends ScreenAdapter {
                         temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 25);
+                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
                     // font.draw(game.getBatch(), temp2, 0, 200);
                 }
             }

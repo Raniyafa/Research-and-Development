@@ -74,7 +74,7 @@ public class gameRuleScreen extends ScreenAdapter{
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.button.play();
                 game.setScreen(new SettingMenu(game));
-                SoundManager.background.dispose();
+                //SoundManager.background.dispose();
             }
         });
         Gdx.input.setInputProcessor(stage);
