@@ -211,7 +211,7 @@ public class GameScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
                 Gdx.files.internal("smallfont/smallfont.png"), false);
         font.setColor(Color.BLACK);
-        fontLarge = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"), Gdx.files.internal("font/dbfont.png"), false);
+        fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
 
 
