@@ -86,6 +86,8 @@ public class GameScreen extends ScreenAdapter {
     private float drawTimer = 0.0f;
     private float menuTimer = 0.0f;
 
+    private float oneLineModeTimer = 30.0f;
+
     private float disconnectedTimer = 0.0f;
     private float emoteOpacity = 1.0f;
     private float heightRatio;
@@ -427,6 +429,15 @@ public class GameScreen extends ScreenAdapter {
                     drawTimer = 0.0f;
                 }
             } else if (gameMode.matches("One Line")) {
+                oneLineModeTimer += delta;
+
+                if(oneLineModeTimer >= 30.0f){
+                    oneLineDrawing = false;
+                    game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
+                    myTurn = false;
+                    isDrawing = false;
+                }
+
                 if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
                     if (!isDrawing) {
                         isDrawing = true;
