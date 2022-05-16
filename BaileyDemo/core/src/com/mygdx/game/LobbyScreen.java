@@ -38,6 +38,8 @@ public class LobbyScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
+    private boolean moveToGame = false;
+
     public LobbyScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -108,6 +110,10 @@ public class LobbyScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (moveToGame) {
+            game.setScreen(new LoadingScreen(game));
+        }
+
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
@@ -132,7 +138,7 @@ public class LobbyScreen extends ScreenAdapter {
 
                 if(temp.contains("Ready")){
                     System.out.println("Match ready");
-                    game.setScreen(new LoadingScreen(game));
+                    moveToGame = true;
                 }
                 if (packet.contains("LobbyInfo")) {
                     String[] serverMessage = packet.split("/");

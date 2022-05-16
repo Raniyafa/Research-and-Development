@@ -50,6 +50,8 @@ public class SimpleServer extends WebSocketServer {
 
     public ArrayList<GameLobby> gameLobbies = new ArrayList<>();
     public ArrayList<Client> gameQueue = new ArrayList<>();
+    
+    public ArrayList<Client> clientList = new ArrayList<>();
       
     public SimpleServer(InetSocketAddress address) {
         super(address);
@@ -61,7 +63,10 @@ public class SimpleServer extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         conn.send("/Welcome to the server!"); //This method sends a message to the new client
        // broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This method sends a message to all clients connected
-        System.out.println("new connection to " + conn.getRemoteSocketAddress());
+        String clientCode[] = handshake.toString().split("@");
+        System.out.println("new connection to " + conn.getRemoteSocketAddress() + "handshake: "+ clientCode[1]);
+        clientList.add(new Client(conn, "temp", clientCode[1]));
+        conn.send("AuthCode/"+clientCode[1]);
     }
 
     @Override
@@ -90,6 +95,13 @@ public class SimpleServer extends WebSocketServer {
                 gameQueue.remove(e);
             }
         }
+        
+        for(Client e : clientList){
+            if(e.socket.equals(conn)){
+                System.out.println("removing player from client list due to disconnect:"+conn.toString());
+                clientList.remove(e);
+            }
+        }
     }
     
     @Override
@@ -102,21 +114,29 @@ public class SimpleServer extends WebSocketServer {
         
         if(clientMessage[0].matches("GameMessage")){
             if(clientMessage[1].matches("RequestCanvas")){
-                String canvasInfo = gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeListToString(Integer.valueOf(clientMessage[3]));
+                GameLobby lobby = gameLobbies.get(Integer.valueOf(clientMessage[2]));
+                if(clientMessage[3].matches(lobby.p1AuthCode) || clientMessage[3].matches(lobby.p2AuthCode)){
+                String canvasInfo = lobby.shapeListToString(Integer.valueOf(clientMessage[4]));
                 conn.send(canvasInfo);
+                }
          
             }
             else if(clientMessage[1].matches("UpdateCanvas")){
                 //called by either play in the lobby, updates the shared canvas that is accessed by both players
                // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
-               String[] clientMessage2 = clientMessage[3].split(":");
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).shapeList.add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
-            //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
-           //    }
-            //   else{
-               gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
-             //  }   
+               
+               String[] clientMessage2 = clientMessage[4].split(":");
+               GameLobby lobby = gameLobbies.get(Integer.valueOf(clientMessage[2]));
+                System.out.println("lobbyp1auth:"+lobby.p1AuthCode+" lobbyp2auth:"+lobby.p2AuthCode+" code given by client = "+clientMessage[3]);
+               if(clientMessage[3].matches(lobby.p1AuthCode) || clientMessage[3].matches(lobby.p2AuthCode)){
+                    lobby.shapeList.add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
+                 //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
+                    lobby.player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+                //    }
+                 //   else{
+                    lobby.player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+                  //  }   
+                     }
             }
             else if(clientMessage[1].matches("Emote")){
                     gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("Emote/"+clientMessage[3]); 
@@ -145,15 +165,18 @@ public class SimpleServer extends WebSocketServer {
                 try {
                     //creates a lobby and send the lobby info to client
 
-                    conn.send(createLobby(conn, "temp_name", clientMessage[2]));
+                    conn.send(createLobby(conn, "temp_name", clientMessage[2], clientMessage[3], clientMessage[4], clientMessage[5]));
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             else if(clientMessage[1].matches("JoinLobby")){
-                conn.send(lobbyInfoToString(clientMessage[2], conn));
+                conn.send(lobbyInfoToString(clientMessage[2], conn, clientMessage[4]));
                 gameLobbies.get(Integer.valueOf(clientMessage[2])).p2Name = clientMessage[3];
                 gameLobbies.get(Integer.valueOf(clientMessage[2])).player2 = conn;
+              //  gameLobbies.get(Integer.valueOf(clientMessage[2])).p2AuthCode = clientMessage[4];
+                
+                System.out.println("lobby auth code = "+clientMessage[4]);
             }
             else if(clientMessage[1].matches("TerminateLobby")){
                 //need to create a way on client side that checks every once in awhile if the lobby is still alive
@@ -167,7 +190,7 @@ public class SimpleServer extends WebSocketServer {
         }
         else if(clientMessage[0].matches("FindMatch")){
             try {
-                matchCreator(conn, clientMessage[1]);
+                matchCreator(conn, clientMessage[1], clientMessage[2]);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -182,6 +205,12 @@ public class SimpleServer extends WebSocketServer {
         else if(clientMessage[0].matches("CheckName")){    
             try {
                 if(checkName(clientMessage[1]) == true){
+                    for(Client e : clientList){
+                        if(e.socket.equals(conn)){
+                            e.name = clientMessage[1];
+                            clientList.remove(e);
+                        }
+                    }          
                     conn.send("Pass");
                     System.out.println("sending back pass");
                 }
@@ -223,44 +252,71 @@ public class SimpleServer extends WebSocketServer {
 
     //Lobby server functions
     
-    public String createLobby(WebSocket conn, String clientname, String lobbyType) throws FileNotFoundException{
+    public String createLobby(WebSocket conn, String clientname, String lobbyType, String p1Auth, String roundAmount, String roundTime) throws FileNotFoundException{
         String[] lobbyCodes = new String[gameLobbies.size()];     
         for(int i = 0; i <= gameLobbies.size() - 1; i++){
             lobbyCodes[i] += gameLobbies.get(i)+"\n";
         }
         
         GameLobby newLobby = new GameLobby(lobbyCodes, lobbyType);
+        newLobby.p1AuthCode = p1Auth;
         newLobby.p1Name = clientname;
         newLobby.player1 = conn;
+        newLobby.maxTurns = Integer.valueOf(roundAmount);
+        
+        switch(roundTime){
+            case("10 sec"):
+                newLobby.turnTime = "10";
+            break;
+            case("15 sec"):
+                newLobby.turnTime = "15";
+            break;
+            case("20 sec"):
+                newLobby.turnTime = "20";
+            break;
+            case("30 sec"):
+                newLobby.turnTime = "30";
+            break;
+            case("1 min"):
+                newLobby.turnTime = "60";
+            break;        
+        }
+        
         gameLobbies.add(newLobby);
         newLobby.lobbyIndex = gameLobbies.indexOf(newLobby);
         System.out.println("New lobby created at index:"+newLobby.lobbyIndex);
-        return "LobbyInfo/"+newLobby.lobbyToString()+"/"+lobbyType;
+        return "LobbyInfo/"+newLobby.lobbyToString()+"/"+lobbyType+"/"+newLobby.maxTurns+"/"+newLobby.turnTime;    
     }
     
-    public String lobbyInfoToString(String lobbyCode, WebSocket Conn){
+    public String lobbyInfoToString(String lobbyCode, WebSocket Conn, String p2Auth){
         for(int i = 0; i <= gameLobbies.size() - 1; i++){
             if(gameLobbies.get(i).lobbyCode.matches(lobbyCode)){
                 gameLobbies.get(i).player2 = Conn;
+                gameLobbies.get(i).p2AuthCode = p2Auth;
                 gameLobbies.get(i).player1.send("Ready");
-                return "LobbyInfo/"+gameLobbies.get(i).lobbyToString()+"/"+gameLobbies.get(i).lobbyType;            
+                return "LobbyInfo/"+gameLobbies.get(i).lobbyToString()+"/"+gameLobbies.get(i).lobbyType+"/"+gameLobbies.get(i).maxTurns+"/"+gameLobbies.get(i).turnTime;            
             }
         }
         return "Error";  
     }
     
-    public void matchCreator(WebSocket conn, String clientname) throws FileNotFoundException{
+    public void matchCreator(WebSocket conn, String clientname, String authCode) throws FileNotFoundException{
         for(int i = 0; i <= gameQueue.size() - 1; i++){
-            String lobbyInfo = createLobby(conn, clientname, "Regular");
+            
+            //guy who joined queue = conn, this loop only activate if someone already in q
+            String lobbyInfo = createLobby(conn, clientname, "Regular", authCode, "6", "10 sec");
             conn.send(lobbyInfo);         
-            String[] lobbyString = lobbyInfo.split("/");    
+            String[] lobbyString = lobbyInfo.split("/");   
+            
+            //set the player 2 info from the gameQueue(i) position
             gameLobbies.get(Integer.valueOf(lobbyString[1])).player2 = gameQueue.get(i).socket;
             gameLobbies.get(Integer.valueOf(lobbyString[1])).p2Name = gameQueue.get(i).name;
+            gameLobbies.get(Integer.valueOf(lobbyString[1])).p2AuthCode = gameQueue.get(i).authcode;
             gameQueue.get(i).socket.send(lobbyInfo);
             gameQueue.remove(i);
             return;
         }
-        gameQueue.add(new Client(conn, clientname));
+        gameQueue.add(new Client(conn, clientname, authCode));
     }
     
     //In match server functions

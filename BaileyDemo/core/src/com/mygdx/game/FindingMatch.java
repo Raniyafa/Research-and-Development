@@ -60,6 +60,8 @@ public class FindingMatch extends ScreenAdapter {
                     game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
                     game.getGameLobby().setWordTopic(clientMessage[3]);
                     game.getGameLobby().setGameMode(clientMessage[4]);
+                    game.getGameLobby().setTurnAmount(clientMessage[5]);
+                    game.getGameLobby().setTurnTimer(clientMessage[6]);
                     game.getSocket().send("joining match");
                     matchFound = true;
                 }
@@ -76,7 +78,7 @@ public class FindingMatch extends ScreenAdapter {
 
         //Adding WebSocket listener for this class
         game.setListener(getListener());
-        game.getSocket().send("FindMatch/"+game.getPlayerName());
+        game.getSocket().send("FindMatch/"+game.getPlayerName()+"/"+game.getAuthCode());
 
         //Creating stage and setting the skin for the UI
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));

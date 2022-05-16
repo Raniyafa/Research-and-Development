@@ -11,6 +11,9 @@ public class GameLobby {
     private String imageString;
     private String partnerName;
 
+    private String turnAmount;
+    private String turnTimer;
+
     private String gameMode;
 
     public GameLobby(){
@@ -80,5 +83,20 @@ public class GameLobby {
 
     public void setGameMode(String gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public String getTurnAmount() {
+        return turnAmount;
+    }
+
+    public void setTurnAmount(String turnAmount) {
+        this.turnAmount = turnAmount;
+    }
+    public String getTurnTimer() {
+        return turnTimer;
+    }
+
+    public void setTurnTimer(String turnTimer) {
+        this.turnTimer = turnTimer;
     }
 }

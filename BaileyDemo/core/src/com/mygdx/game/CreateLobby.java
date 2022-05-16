@@ -127,7 +127,8 @@ public class CreateLobby extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.button.play();
                 if(game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
-                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected());
+
+                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected()+"/"+game.getAuthCode()+"/"+round.getSelected()+"/"+time.getSelected());
                 }
             }
         });
@@ -240,6 +241,9 @@ public class CreateLobby extends ScreenAdapter {
                     CreateLobby(Integer.valueOf(serverMessage[1]), serverMessage[2]);
                     game.getGameLobby().setWordTopic(serverMessage[3]);
                     game.getGameLobby().setGameMode(serverMessage[4]);
+                    game.getGameLobby().setTurnAmount(serverMessage[5]);
+                    game.getGameLobby().setTurnTimer(serverMessage[6]);
+                   // game.getGameLobby().set
                     moveToLobby = true;
                 }
                 return FULLY_HANDLED;

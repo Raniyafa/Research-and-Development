@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import com.github.czyzby.websocket.WebSocket;
+import com.github.czyzby.websocket.WebSocketAdapter;
 import com.github.czyzby.websocket.WebSocketListener;
 import com.github.czyzby.websocket.WebSockets;
 
@@ -23,6 +24,8 @@ public class MultipleScenes extends Game {
 
     private String playerName;
     private SpriteBatch batch;
+
+    private String authCode = "";
 
     public String socketException = "";
 
@@ -82,10 +85,6 @@ public class MultipleScenes extends Game {
         Gdx.app.exit();
     }
 
-    public WebSocketListener getListener() {
-        return listener;
-    }
-
     public void setListener(WebSocketListener listener) {
         socket.removeListener(this.listener);
         this.listener = listener;
@@ -124,4 +123,28 @@ public class MultipleScenes extends Game {
         this.gameLobby = gameLobby;
     }
 
+
+    private WebSocketAdapter getListener() {
+        return new WebSocketAdapter() {
+            @Override
+            public boolean onMessage(final WebSocket webSocket, final String packet) {
+                String temp = packet;
+                Gdx.app.log("WS", "Got message: " + packet);
+                String[] serverMessage = packet.split("/");
+
+                if (serverMessage[0].matches("AuthCode")) {
+                    setAuthCode(serverMessage[1]);
+                }
+                return FULLY_HANDLED;
+            }
+        };
+    }
+
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
+    }
 }

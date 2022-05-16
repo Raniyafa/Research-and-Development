@@ -56,6 +56,11 @@ public class LoginScreen extends ScreenAdapter {
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 Gdx.app.log("WS Loginscreen", "Got message: " + packet);
 
+                String[] serverMessage = packet.split("/");
+                if (serverMessage[0].matches("AuthCode")) {
+                    game.setAuthCode(serverMessage[1]);
+                }
+
                 if(packet.matches("Pass")){
                       game.setPlayerName(name);
                       moveToHome = true;

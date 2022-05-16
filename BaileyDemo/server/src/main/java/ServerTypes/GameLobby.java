@@ -11,7 +11,9 @@ public class GameLobby {
     
     public WebSocket player1;
     public String p1Name;
+    public String p1AuthCode;
     public String p2Name;
+    public String p2AuthCode;
     public WebSocket player2;
     public ArrayList<Shape> shapeList;
     public String lobbyCode;
@@ -20,7 +22,7 @@ public class GameLobby {
     public int readyCount;
     public int turnCount;
     public int maxTurns;
-    public float turnTime;
+    public String turnTime;
     public String wordTopic;
     public String lobbyType;
 

@@ -79,6 +79,9 @@ public class GameScreen extends ScreenAdapter {
 
     private float renderTimer;
     private float turnTimer = 0.0f;
+
+    private float turnLength = 0.0f;
+
     private float waitTime;
     private float drawTimer = 0.0f;
     private float menuTimer = 0.0f;
@@ -189,6 +192,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+
+        turnLength = Float.valueOf(game.getGameLobby().getTurnTimer());
 
         stage = new Stage(new ScreenViewport());
         //Adding Background IMG
@@ -513,7 +518,7 @@ public class GameScreen extends ScreenAdapter {
                 if (myTurn) {
                     String temp = "";
                     if(gameMode.matches("Regular")) {
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! " + (Math.round(10.0f - turnTimer));
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! " + (Math.round(turnLength - turnTimer));
                     }
                     else{
                         temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
@@ -522,7 +527,7 @@ public class GameScreen extends ScreenAdapter {
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
-                        if (turnTimer >= 10.0f) {
+                        if (turnTimer >= turnLength) {
                             myTurn = false;
                             game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                             turnTimer = 0.0f;
@@ -532,7 +537,7 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
 
                     if(gameMode.matches("Regular")) {
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!" + (Math.round(10.0f - turnTimer));
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!" + (Math.round(turnLength - turnTimer));
                     }
                     else{
                         temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
@@ -628,14 +633,14 @@ public class GameScreen extends ScreenAdapter {
         */
 
         //Sending the new shape to the server to be added to the shared canvas
-        game.getSocket().send("GameMessage/"+"UpdateCanvas/"+String.valueOf(lobbyID)+"/"+temp.type
+        game.getSocket().send("GameMessage/"+"UpdateCanvas/"+String.valueOf(lobbyID)+"/"+game.getAuthCode()+"/"+temp.type
                 +  ":" + temp.colour + ":" +   temp.x + ":" +temp.y + ":" + lineNo);
         sent++;
     }
 
     public void getCanvasUpdates(){
         //Gets the new shapes from the server that has been added to the shared canvas since the last update call from the client
-         game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+shapeArr.size());
+         game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+game.getAuthCode()+"/"+shapeArr.size());
     }
 
     public float[] getRGB(String colour){

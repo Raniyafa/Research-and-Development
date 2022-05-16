@@ -71,11 +71,12 @@ public class HomeScreen extends ScreenAdapter {
                 Gdx.app.log("WS Homescreen", "Got message: " + packet);
 
                     String[] clientMessage = packet.split("/");
-                System.out.println("clientmessage[0] = "+clientMessage[0]);
                     if(clientMessage[0].matches("LobbyInfo")) {
                         game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
                         game.getGameLobby().setWordTopic(clientMessage[3]);
                         game.getGameLobby().setGameMode(clientMessage[4]);
+                        game.getGameLobby().setTurnAmount(clientMessage[5]);
+                        game.getGameLobby().setTurnTimer(clientMessage[6]);
                         moveToLobby = true;
                    }
 
@@ -121,7 +122,7 @@ public class HomeScreen extends ScreenAdapter {
             public boolean keyDown (InputEvent event, int keycode) {
                 if(keycode == Input.Keys.ENTER){
                     textField.setVisible(false);
-                    game.getSocket().send("LobbyMessage/JoinLobby/"+textField.getText()+"/"+game.getPlayerName());
+                    game.getSocket().send("LobbyMessage/JoinLobby/"+textField.getText()+"/"+game.getPlayerName()+"/"+game.getAuthCode());
                 }
                 return false;
             }
