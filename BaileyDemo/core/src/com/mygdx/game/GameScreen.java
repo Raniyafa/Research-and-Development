@@ -436,6 +436,7 @@ public class GameScreen extends ScreenAdapter {
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                     myTurn = false;
                     isDrawing = false;
+                    oneLineModeTimer = 0.0f;
                 }
 
                 if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
