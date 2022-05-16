@@ -104,9 +104,7 @@ public class SettingMenu extends ScreenAdapter{
             public void clicked(InputEvent event, float x, float y) {
                 //back to last activity
                 SoundManager.button.play();
-                //set back to HomePage for test
                 game.setScreen(new HomeScreen(game));
-                SoundManager.background.dispose();
             }
         });
 
