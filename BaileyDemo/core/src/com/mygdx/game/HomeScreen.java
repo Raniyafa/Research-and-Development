@@ -317,7 +317,8 @@ public class HomeScreen extends ScreenAdapter {
             }
             if (moveToMatchmaking) {
 
-                game.setScreen(new FindingMatch(game));
+             //   game.setScreen(new FindingMatch(game));
+                game.setScreen(new QuickPlayMenu(game));
             }
             font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", Gdx.graphics.getWidth() / 2 - 130, Gdx.graphics.getHeight() / 2 + 200);
         }

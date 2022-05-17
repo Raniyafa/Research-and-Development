@@ -127,7 +127,6 @@ public class SimpleServer extends WebSocketServer {
                
                String[] clientMessage2 = clientMessage[4].split(":");
                GameLobby lobby = gameLobbies.get(Integer.valueOf(clientMessage[2]));
-                System.out.println("lobbyp1auth:"+lobby.p1AuthCode+" lobbyp2auth:"+lobby.p2AuthCode+" code given by client = "+clientMessage[3]);
                if(clientMessage[3].matches(lobby.p1AuthCode) || clientMessage[3].matches(lobby.p2AuthCode)){
                     lobby.shapeList.add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
                  //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
@@ -176,7 +175,7 @@ public class SimpleServer extends WebSocketServer {
                 gameLobbies.get(Integer.valueOf(clientMessage[2])).player2 = conn;
               //  gameLobbies.get(Integer.valueOf(clientMessage[2])).p2AuthCode = clientMessage[4];
                 
-                System.out.println("lobby auth code = "+clientMessage[4]);
+               
             }
             else if(clientMessage[1].matches("TerminateLobby")){
                 //need to create a way on client side that checks every once in awhile if the lobby is still alive
@@ -190,7 +189,7 @@ public class SimpleServer extends WebSocketServer {
         }
         else if(clientMessage[0].matches("FindMatch")){
             try {
-                matchCreator(conn, clientMessage[1], clientMessage[2]);
+                matchCreator(conn, clientMessage[1], clientMessage[2], clientMessage[3]);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -300,11 +299,11 @@ public class SimpleServer extends WebSocketServer {
         return "Error";  
     }
     
-    public void matchCreator(WebSocket conn, String clientname, String authCode) throws FileNotFoundException{
+    public void matchCreator(WebSocket conn, String clientname, String authCode, String gameMode) throws FileNotFoundException{
         for(int i = 0; i <= gameQueue.size() - 1; i++){
             
-            //guy who joined queue = conn, this loop only activate if someone already in q
-            String lobbyInfo = createLobby(conn, clientname, "Regular", authCode, "6", "10 sec");
+            String lobbyInfo = createLobby(conn, clientname, gameMode, authCode, "6", "10 sec");
+            
             conn.send(lobbyInfo);         
             String[] lobbyString = lobbyInfo.split("/");   
             

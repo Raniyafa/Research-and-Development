@@ -35,6 +35,9 @@ public class QuickPlayMenu extends ScreenAdapter{
 
     public boolean moveToLobby = false;
     private boolean moveToMatchmaking = false;
+    private boolean matchFound = false;
+    private boolean moveToLoading = false;
+    private boolean standardMode = false;
     private BitmapFont font;
 
     private Texture tex;
@@ -48,6 +51,7 @@ public class QuickPlayMenu extends ScreenAdapter{
     private Texture tex2;
     private ImageButton button;
 
+
     public QuickPlayMenu(MultipleScenes game) {
         this.game = game;
     }
@@ -55,6 +59,7 @@ public class QuickPlayMenu extends ScreenAdapter{
     @Override
     public void show(){
         stage = new Stage(new ScreenViewport());
+
 
         tex = new Texture(Gdx.files.internal("image/Lobby.png"));
         region = new TextureRegion(tex,0,0,750,1334);
@@ -92,7 +97,6 @@ public class QuickPlayMenu extends ScreenAdapter{
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 + 115,Gdx.graphics.getHeight() / 2 + 250);
         button.setSize(30,30);
-        stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -100,6 +104,8 @@ public class QuickPlayMenu extends ScreenAdapter{
                 SoundManager.button.play();
             }
         });
+
+        stage.addActor(button);
 
         //Back Icon
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
@@ -111,14 +117,21 @@ public class QuickPlayMenu extends ScreenAdapter{
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth()/2 - 180,Gdx.graphics.getHeight() / 2 + 270);
         button.setSize(105,30);
-        stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                if(game.getGameLobby().getLobbyIndex() != -1) {
+                    game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
+                }
+                else{
+                    game.getSocket().send("ReturnToMain");
+                }
                 game.setScreen(new HomeScreen(game));
                 SoundManager.button.play();
             }
         });
+
+        stage.addActor(button);
 
         //Standard Mode Button
         tex2 = new Texture(Gdx.files.internal("button/StandardButton.png"));
@@ -129,15 +142,17 @@ public class QuickPlayMenu extends ScreenAdapter{
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 + 50);
-        stage.addActor(button);
         button.setSize(240,70);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                standardMode = true;
+                moveToLoading = true;
                 SoundManager.button.play();
             }
         });
 
+        stage.addActor(button);
 
         //Single Line Mode Button
         tex2 = new Texture(Gdx.files.internal("button/slModeButton.png"));
@@ -149,18 +164,27 @@ public class QuickPlayMenu extends ScreenAdapter{
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 50);
         button.setSize(240,70);
-        stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                standardMode = false;
+                moveToLoading = true;
                 SoundManager.button.play();
             }
         });
 
+        stage.addActor(button);
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
+
+        if(moveToLoading){
+            game.setScreen(new FindingMatch(game, standardMode));
+        }
+
         game.getBatch().begin();
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

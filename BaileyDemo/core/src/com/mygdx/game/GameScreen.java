@@ -90,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
     private float drawTimer = 0.0f;
     private float menuTimer = 0.0f;
 
-    private float oneLineModeTimer = 30.0f;
+    private float oneLineModeTimer = 0.0f;
 
     private float disconnectedTimer = 0.0f;
     private float emoteOpacity = 1.0f;
@@ -451,7 +451,7 @@ public class GameScreen extends ScreenAdapter {
             } else if (gameMode.matches("One Line")) {
                 oneLineModeTimer += delta;
 
-                if(oneLineModeTimer >= 30.0f){
+                if(oneLineModeTimer > Float.valueOf(game.getGameLobby().getTurnTimer())){
                     oneLineDrawing = false;
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                     myTurn = false;

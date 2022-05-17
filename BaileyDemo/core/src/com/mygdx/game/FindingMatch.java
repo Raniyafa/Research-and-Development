@@ -41,8 +41,11 @@ public class FindingMatch extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
-    public FindingMatch(MultipleScenes game) {
+    private boolean standardMode;
+
+    public FindingMatch(MultipleScenes game, boolean standard) {
         this.game = game;
+        standardMode = standard;
     }
 
     private WebSocketAdapter getListener() {
@@ -76,9 +79,16 @@ public class FindingMatch extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
         Gdx.files.internal("font/dbfont.png"), false);
 
+        if(standardMode){
+            game.getSocket().send("FindMatch/"+game.getPlayerName()+"/"+game.getAuthCode()+"/Regular");
+        }
+        else {
+            game.getSocket().send("FindMatch/" + game.getPlayerName() + "/" + game.getAuthCode() + "/One Line");
+        }
+
         //Adding WebSocket listener for this class
         game.setListener(getListener());
-        game.getSocket().send("FindMatch/"+game.getPlayerName()+"/"+game.getAuthCode());
+        //game.getSocket().send("FindMatch/"+game.getPlayerName()+"/"+game.getAuthCode());
 
         //Creating stage and setting the skin for the UI
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
