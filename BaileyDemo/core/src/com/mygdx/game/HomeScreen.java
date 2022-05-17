@@ -239,6 +239,7 @@ public class HomeScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 moveToMatchmaking = true;
                 SoundManager.button.play();
+//                game.setScreen(new QuickPlayMenu(game));
             }
         });
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -46,6 +47,9 @@ public class GameScreen extends ScreenAdapter {
 
     private BitmapFont font;
     private BitmapFont fontLarge;
+
+    private BitmapFont dbfont;
+    private BitmapFont dbSmallFont;
 
     private Texture annoyed;
     private Texture hearteye;
@@ -113,6 +117,7 @@ public class GameScreen extends ScreenAdapter {
     private Texture tex;
     private Image image;
     private TextureRegion region;
+    private SpriteBatch batch;
 
     public GameScreen(MultipleScenes game) {
         this.game = game;
@@ -198,6 +203,7 @@ public class GameScreen extends ScreenAdapter {
         turnLength = Float.valueOf(game.getGameLobby().getTurnTimer());
 
         stage = new Stage(new ScreenViewport());
+
         //Adding Background IMG
 //        tex = new Texture(Gdx.files.internal("image/gameplaytest.png"));
 //        region = new TextureRegion(tex,0,0,750,1334);
@@ -205,6 +211,10 @@ public class GameScreen extends ScreenAdapter {
 //        image.setPosition(0,0);
 //        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
 //        stage.addActor(image);
+
+        //Adding Background (new)
+        tex = new Texture(Gdx.files.internal("image/gameplay.png"));
+        batch = new SpriteBatch();
 
         gameMode = game.getGameLobby().getGameMode();
         System.out.println("gamemode = "+gameMode);
@@ -220,6 +230,13 @@ public class GameScreen extends ScreenAdapter {
         font.setColor(Color.BLACK);
         fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
+
+        dbfont = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+                Gdx.files.internal("font/dbfont.png"), false);
+        dbfont.setColor(Color.BLACK);
+        dbSmallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
+                Gdx.files.internal("font/dbSmallFont.png"), false);
+        dbSmallFont.setColor(Color.BLACK);
 
 
         shapeRenderer = new ShapeRenderer();
@@ -406,6 +423,9 @@ public class GameScreen extends ScreenAdapter {
 
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(tex,0,0,360,750);
+        batch.end();
 
         //If the WebSocket is open (connected) then process the game controller logic
         if (game.getSocket().isOpen()) {
@@ -529,14 +549,17 @@ public class GameScreen extends ScreenAdapter {
             if (!gameFinished) {
                 if (myTurn) {
                     String temp = "";
+                    String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! " + (Math.round(turnLength - turnTimer));
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! ";
+                        temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
                         temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
+                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
                         if (turnTimer >= turnLength) {
@@ -547,15 +570,17 @@ public class GameScreen extends ScreenAdapter {
                     }
                 } else {
                     String temp = "";
-
+                    String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!" + (Math.round(turnLength - turnTimer));
+                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!";
+                        temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
                         temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
+                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
                     // font.draw(game.getBatch(), temp2, 0, 200);
                 }
             }
