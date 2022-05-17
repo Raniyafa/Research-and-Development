@@ -73,8 +73,7 @@ public class modeIntroScreen extends ScreenAdapter{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.button.play();
-                game.setScreen(new CreateLobby(game));
-                //SoundManager.background.dispose();
+                game.setScreen(new HomeScreen(game));
             }
         });
         Gdx.input.setInputProcessor(stage);

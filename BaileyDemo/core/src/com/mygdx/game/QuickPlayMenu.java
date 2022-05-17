@@ -63,6 +63,25 @@ public class QuickPlayMenu extends ScreenAdapter{
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Mode Intro Button
+        tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
+        TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
+        buttonUp = temp_3[0][0];
+        buttonDown = temp_3[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight()/2 + 195);
+        button.setSize(30,30);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SoundManager.button.play();
+                game.setScreen(new modeIntroScreen(game));
+            }
+        });
+
         //Setting Icon
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
