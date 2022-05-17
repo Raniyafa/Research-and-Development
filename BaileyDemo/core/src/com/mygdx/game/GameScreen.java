@@ -551,11 +551,12 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = game.getGameLobby().getWordTopic() + "\nYour turn to draw! ";
+                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName()+ "'s turn to draw! ";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
+                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName() + "'s turn to draw!\nOne line mode..";
+                        temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     dbfont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
@@ -577,6 +578,7 @@ public class GameScreen extends ScreenAdapter {
                     }
                     else{
                         temp = game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
+                        temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     dbfont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);

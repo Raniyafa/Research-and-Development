@@ -76,7 +76,7 @@ public class QuickPlayMenu extends ScreenAdapter{
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight()/2 + 195);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 10,Gdx.graphics.getHeight()/2 - 100);
         button.setSize(30,30);
         stage.addActor(button);
         button.addListener(new ClickListener() {
