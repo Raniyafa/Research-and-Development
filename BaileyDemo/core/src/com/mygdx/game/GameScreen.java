@@ -551,14 +551,14 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw! ";
+                        temp = game.getGameLobby().getWordTopic() + "\nYour turn to draw! ";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
+                        temp = game.getGameLobby().getWordTopic() + "\nYour turn to draw!\nOne line mode..";
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
+                    dbfont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
@@ -572,14 +572,14 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!";
+                        temp = game.getGameLobby().getWordTopic() + "\nYour partner is drawing!";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = "Drawing Topic: " + game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
+                        temp = game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    fontLarge.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
+                    dbfont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
                     // font.draw(game.getBatch(), temp2, 0, 200);
                 }

@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -26,6 +30,11 @@ public class PostGame extends ScreenAdapter {
     private TextButton twitterPost;
     private TextButton instagramPost;
     private TextButton exitToMenu;
+
+    private Texture tex;
+    private Image image;
+    private TextureRegion region;
+    private SpriteBatch batch;
 
     private Stage stage;
     private Skin mySkin;
@@ -46,6 +55,10 @@ public class PostGame extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
                 Gdx.files.internal("font/dbfont.png"), false);
         font.setColor(Color.BLACK);
+
+        //Adding Background (new)
+        tex = new Texture(Gdx.files.internal("image/gameFinish.png"));
+        batch = new SpriteBatch();
 
         game.setListener(getListener());
         shapeRenderer = new ShapeRenderer();
@@ -138,6 +151,9 @@ public class PostGame extends ScreenAdapter {
         game.getBatch().begin();
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(tex,0,0,360,750);
+        batch.end();
 
         stage.act();
         stage.draw();
