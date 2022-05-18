@@ -551,11 +551,11 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName()+ "'s turn to draw! ";
+                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName()+ "'s turn";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName() + "'s turn to draw!\nOne line mode..";
+                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName() + "'s turn\nOne line mode..";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
@@ -573,11 +573,11 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = game.getGameLobby().getWordTopic() + "\nYour partner is drawing!";
+                        temp = game.getGameLobby().getWordTopic() + "\nYour partner's turn'!";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = game.getGameLobby().getWordTopic() + "\nYour partner is drawing!\nOne line mode..";
+                        temp = game.getGameLobby().getWordTopic() + "\nYour partner's turn\nOne line mode..";
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
