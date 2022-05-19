@@ -53,10 +53,6 @@ public class SettingMenu extends ScreenAdapter {
     private TextureRegion buttonUp;
     private TextureRegion buttonDown;
     private Texture tex2;
-    private Texture tex3;
-    private Texture tex4;
-    private Texture tex5;
-    private Texture tex6;
     private ImageButton button;
 
 
@@ -126,15 +122,16 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
-        TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
+        //Game Rules Button
+        tex2 = new Texture(Gdx.files.internal("button/RulesButton.png"));
+        TextureRegion[][] temp_3 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_3[0][0];
         buttonDown = temp_3[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + -20,Gdx.graphics.getHeight()/2 + -220);
-        button.setSize(30,30);
+        button.setPosition(Gdx.graphics.getWidth() / 2 - 60,Gdx.graphics.getHeight()/2 - 220);
+        button.setSize(120,35);
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -144,8 +141,9 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        tex3 = new Texture(Gdx.files.internal("button/OnButton.png"));
-        TextureRegion[][] temp_4 = TextureRegion.split(tex3,200,140);
+        //Background Music ON
+        tex2 = new Texture(Gdx.files.internal("button/OnButton.png"));
+        TextureRegion[][] temp_4 = TextureRegion.split(tex2,200,140);
         buttonUp = temp_4[0][0];
         buttonDown = temp_4[0][1];
         up = new TextureRegionDrawable(buttonUp);
@@ -157,14 +155,14 @@ public class SettingMenu extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SoundManager.background.play();
+                SoundManager.background.setVolume(0.1f);
                 SoundManager.button.play();
-
             }
         });
 
-        tex4 = new Texture(Gdx.files.internal("button/OffButton.png"));
-        TextureRegion[][] temp_5 = TextureRegion.split(tex4,200,140);
+        //Background Music OFF
+        tex2 = new Texture(Gdx.files.internal("button/OffButton.png"));
+        TextureRegion[][] temp_5 = TextureRegion.split(tex2,200,140);
         buttonUp = temp_5[0][0];
         buttonDown = temp_5[0][1];
         up = new TextureRegionDrawable(buttonUp);
@@ -176,15 +174,14 @@ public class SettingMenu extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
-
-                SoundManager.background.pause();
+                SoundManager.background.setVolume(0.0f);
                 SoundManager.button.play();
             }
         });
 
-        tex5 = new Texture(Gdx.files.internal("button/OnButton1.png"));
-        TextureRegion[][] temp_6 = TextureRegion.split(tex5,200,140);
+        //Sound Effect ON
+        tex2 = new Texture(Gdx.files.internal("button/OnButton.png"));
+        TextureRegion[][] temp_6 = TextureRegion.split(tex2,200,140);
         buttonUp = temp_6[0][0];
         buttonDown = temp_6[0][1];
         up = new TextureRegionDrawable(buttonUp);
@@ -197,12 +194,12 @@ public class SettingMenu extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.button.resume();
-
             }
         });
 
-        tex6 = new Texture(Gdx.files.internal("button/OffButton1.png"));
-        TextureRegion[][] temp_7 = TextureRegion.split(tex6,200,140);
+        //Sound Effect OFF
+        tex2 = new Texture(Gdx.files.internal("button/OffButton.png"));
+        TextureRegion[][] temp_7 = TextureRegion.split(tex2,200,140);
         buttonUp = temp_7[0][0];
         buttonDown = temp_7[0][1];
         up = new TextureRegionDrawable(buttonUp);
@@ -214,7 +211,6 @@ public class SettingMenu extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                SoundManager.button.dispose();
             }
         });
