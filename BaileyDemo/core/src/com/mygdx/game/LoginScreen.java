@@ -93,7 +93,7 @@ public class LoginScreen extends ScreenAdapter {
         //Background music
         SoundManager.create();
         SoundManager.background.setLooping(true);
-        SoundManager.background.setVolume(0.1f);
+        SoundManager.background.setVolume(0.03f);
         SoundManager.background.play();
 
         final TextField textField = new TextField("Text field", mySkin);

@@ -11,6 +11,8 @@ public class SoundManager {
     public static void create() {
         background = Gdx.audio.newMusic(Gdx.files.internal("Music/backgroundmusic.mp3"));
         button = Gdx.audio.newSound(Gdx.files.internal("Music/buttonsound.mp3"));
+
+
     }
 
     public static void dispose(){
