@@ -28,6 +28,7 @@ public class LoginScreen extends ScreenAdapter {
     private Stage stage;
     private Skin mySkin;
     private BitmapFont font;
+    private BitmapFont smallFont;
     private boolean moveToHome;
     private TextField.OnscreenKeyboard keyboard;
     private String name;
@@ -77,6 +78,10 @@ public class LoginScreen extends ScreenAdapter {
     public void show(){
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
         Gdx.files.internal("font/dbfont.png"), false);
+        game.setListener(getListener());
+
+        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
+                Gdx.files.internal("font/dbSmallfont.png"), false);
         game.setListener(getListener());
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
@@ -212,7 +217,7 @@ public class LoginScreen extends ScreenAdapter {
         //font.draw(game.getBatch(), "If playing on phone,\nuse random name button", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 220);
 
         if(passTimer > 0.0f){
-            font.draw(game.getBatch(), "Inappropriate name detected\n please try again.\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 + 200);
+            smallFont.draw(game.getBatch(), "Inappropriate name detected\n please try again.\n", Gdx.graphics.getWidth() / 2 - 140, Gdx.graphics.getHeight() / 2 - 70);
             passTimer -= delta;
         }
 
