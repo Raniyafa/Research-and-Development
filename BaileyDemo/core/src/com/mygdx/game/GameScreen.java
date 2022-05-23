@@ -549,17 +549,26 @@ public class GameScreen extends ScreenAdapter {
             if (!gameFinished) {
                 if (myTurn) {
                     String temp = "";
+                    String temp_1 = "";
+                    String temp_topic = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName()+ "'s turn";
+                        temp = game.getPlayerName();
+                        temp_1 = game.getGameLobby().getPartnerName();
+                        temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = game.getGameLobby().getWordTopic() + "\n" + game.getPlayerName() + "'s turn\nOne line mode..";
+                        //one line mode
+                        temp = game.getPlayerName();
+                        temp_1 = game.getGameLobby().getPartnerName();
+                        temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    dbfont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
+                    dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
+                    dbSmallFont.draw(game.getBatch(), temp_1, Gdx.graphics.getWidth() / 2 + 110, Gdx.graphics.getHeight() - 45);
+                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() - 50);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
@@ -571,17 +580,26 @@ public class GameScreen extends ScreenAdapter {
                     }
                 } else {
                     String temp = "";
+                    String temp_1 = "";
+                    String temp_topic = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
-                        temp = game.getGameLobby().getWordTopic() + "\nYour partner's turn'!";
+                        temp = game.getGameLobby().getPartnerName();
+                        temp_1 = game.getPlayerName();
+                        temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        temp = game.getGameLobby().getWordTopic() + "\nYour partner's turn\nOne line mode..";
+                        //one line mode
+                        temp = game.getGameLobby().getPartnerName();
+                        temp_1 = game.getPlayerName();
+                        temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    dbfont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 165, Gdx.graphics.getHeight() - 10);
+                    dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 + 110, Gdx.graphics.getHeight() - 45);
+                    dbSmallFont.draw(game.getBatch(), temp_1, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
+                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() - 50);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
                     // font.draw(game.getBatch(), temp2, 0, 200);
                 }
