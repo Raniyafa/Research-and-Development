@@ -155,7 +155,7 @@ public class SettingMenu extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SoundManager.background.setVolume(0.1f);
+                SoundManager.background.setVolume(0.03f);
                 SoundManager.button.play();
             }
         });
