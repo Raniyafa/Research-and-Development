@@ -119,6 +119,13 @@ public class GameScreen extends ScreenAdapter {
     private TextureRegion region;
     private SpriteBatch batch;
 
+    private TextureRegionDrawable up;
+    private TextureRegionDrawable down;
+    private TextureRegion buttonUp;
+    private TextureRegion buttonDown;
+    private Texture tex2;
+    private ImageButton button;
+
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -334,8 +341,32 @@ public class GameScreen extends ScreenAdapter {
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Black", "Green", "Blue", "Yellow", "Red");
         colour.setName("Pencil Colour");
-        colour.setBounds(35, 50, 70 * (Gdx.graphics.getWidth() / 360), 33 * (Gdx.graphics.getHeight() / 640));
+        colour.setBounds(35, 50, 70 * (Gdx.graphics.getWidth() / 360), 80 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(colour);
+        colour.setVisible(false);
+
+        //Color Button
+        tex2 = new Texture(Gdx.files.internal("button/ColorButton.png"));
+        TextureRegion[][] temp_0 = TextureRegion.split(tex2,85,85);
+        buttonUp = temp_0[0][0];
+        buttonDown = temp_0[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth()/2 - 130,Gdx.graphics.getHeight() / 2 - 270);
+        button.setSize(30,30);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(!colour.isVisible()){
+                    colour.setVisible(true);
+                }
+                else{
+                    colour.setVisible(false);
+                }
+            }
+        });
 
         triangle = new TextButton("Triangle", mySkin, "toggle");
         triangle.setBounds(260, Gdx.graphics.getHeight() - 33, 70, 33);
@@ -569,7 +600,7 @@ public class GameScreen extends ScreenAdapter {
                     dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
                     dbSmallFont.draw(game.getBatch(), temp_1, Gdx.graphics.getWidth() / 2 + 110, Gdx.graphics.getHeight() - 45);
                     dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() - 50);
-                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
+                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
                         if (turnTimer >= turnLength) {
@@ -600,7 +631,7 @@ public class GameScreen extends ScreenAdapter {
                     dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 + 110, Gdx.graphics.getHeight() - 45);
                     dbSmallFont.draw(game.getBatch(), temp_1, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
                     dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() - 50);
-                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 125);
+                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
                     // font.draw(game.getBatch(), temp2, 0, 200);
                 }
             }
