@@ -599,7 +599,7 @@ public class GameScreen extends ScreenAdapter {
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
                     dbSmallFont.draw(game.getBatch(), temp_1, Gdx.graphics.getWidth() / 2 + 110, Gdx.graphics.getHeight() - 45);
-                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() - 50);
+                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 120);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
                  //   font.draw(game.getBatch(), temp2, 0, 200);
                     if(gameMode.matches("Regular")) {
@@ -630,7 +630,7 @@ public class GameScreen extends ScreenAdapter {
                     String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 + 110, Gdx.graphics.getHeight() - 45);
                     dbSmallFont.draw(game.getBatch(), temp_1, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
-                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 60, Gdx.graphics.getHeight() - 50);
+                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 120);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
                     // font.draw(game.getBatch(), temp2, 0, 200);
                 }
