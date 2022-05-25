@@ -24,10 +24,7 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 public class CreateLobby extends ScreenAdapter {
 
     private MultipleScenes game;
-    private TextButton createLobby;
-    private TextButton exitLobby;
     private Stage stage;
-    private Skin mySkin;
     private BitmapFont font;
     private SelectBox<String> lobbyType;
     private SelectBox<String> time;
@@ -91,26 +88,6 @@ public class CreateLobby extends ScreenAdapter {
             }
         });
 
-//        exitLobby = new TextButton("Go Back", mySkin, "toggle");
-//        exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() / 2 - 150, 150, 50);
-//        exitLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        exitLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                exitLobby.setText("Go Back");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                SoundManager.button.play();
-//                if(game.getSocket().isOpen()) {
-//                    game.setScreen(new HomeScreen(game));
-//                }
-//                return true;
-//            }
-//        });
-//        stage.addActor(exitLobby);
-
         //Adding Create Button
         tex2 = new Texture(Gdx.files.internal("button/CreateButton.png"));
         TextureRegion[][] temp_2 = TextureRegion.split(tex2,480,140);
@@ -132,26 +109,6 @@ public class CreateLobby extends ScreenAdapter {
                 }
             }
         });
-
-//        createLobby = new TextButton("Create Lobby", mySkin, "toggle");
-//        createLobby.setBounds(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - 150, 150, 50);
-//        createLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        createLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                createLobby.setText("Create Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                SoundManager.button.play();
-//                if(game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
-//                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected());
-//                }
-//                return true;
-//            }
-//        });
-//        stage.addActor(createLobby);
 
         tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
@@ -264,7 +221,8 @@ public class CreateLobby extends ScreenAdapter {
     public void dispose(){
         game.dispose();
         stage.dispose();
-        mySkin.dispose();
         font.dispose();
+        tex.dispose();
+        tex2.dispose();
     }
 }

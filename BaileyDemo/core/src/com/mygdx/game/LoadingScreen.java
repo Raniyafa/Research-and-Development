@@ -83,6 +83,7 @@ import sun.awt.ExtendedKeyCodes;
         public void dispose(){
             game.dispose();
             stage.dispose();
+            tex.dispose();
         }
     }
 

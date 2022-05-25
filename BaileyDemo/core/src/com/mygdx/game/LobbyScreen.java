@@ -164,5 +164,8 @@ public class LobbyScreen extends ScreenAdapter {
         stage.dispose();
         mySkin.dispose();
         font.dispose();
+
+        tex.dispose();
+        tex2.dispose();
     }
 }

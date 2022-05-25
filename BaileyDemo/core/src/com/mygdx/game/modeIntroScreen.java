@@ -98,5 +98,7 @@ public class modeIntroScreen extends ScreenAdapter{
     public void dispose(){
         game.dispose();
         stage.dispose();
+        tex.dispose();
+        tex2.dispose();
     }
 }

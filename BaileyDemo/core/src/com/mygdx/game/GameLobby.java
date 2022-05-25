@@ -68,7 +68,6 @@ public class GameLobby {
         this.imageString = imageString;
     }
 
-
     public String getPartnerName() {
         return partnerName;
     }
@@ -92,6 +91,7 @@ public class GameLobby {
     public void setTurnAmount(String turnAmount) {
         this.turnAmount = turnAmount;
     }
+
     public String getTurnTimer() {
         return turnTimer;
     }

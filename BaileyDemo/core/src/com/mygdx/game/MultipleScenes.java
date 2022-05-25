@@ -39,23 +39,19 @@ public class MultipleScenes extends Game {
         this.socket = socket;
     }
 
-    //need to add server connection + socket variables to this class so it can be accessed all the time, also other shit
-
     @Override
     public void create () {
 
         //non secure wss testing
         // socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("drawbuddygame.co.vu", 3000));
 
-       //pc localhost testing
+        //pc localhost testing
         socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
 
         //aws online testing html
+        //socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
 
-        //this one
-      //  socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
-
-         //aws online testing desktop
+        //aws online testing desktop
         //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("52.62.8.106", 8080));
 
         //android testing
@@ -63,12 +59,12 @@ public class MultipleScenes extends Game {
 
         socket.setSendGracefully(true);
 
-            try {
-                socket.connect();
-            } catch (Exception e) {
-                socketException = e.toString();
-                System.out.println("Exception: " + e);
-            }
+        try {
+            socket.connect();
+        } catch (Exception e) {
+            socketException = e.toString();
+            System.out.println("Error connecting to the server.\nException Message: " + e);
+        }
 
         gameLobby = new GameLobby();
 
@@ -83,6 +79,8 @@ public class MultipleScenes extends Game {
         font.dispose();
         batch.dispose();
         Gdx.app.exit();
+        font.dispose();
+        socket.close();
     }
 
     public void setListener(WebSocketListener listener) {

@@ -123,12 +123,6 @@ public class LoginScreen extends ScreenAdapter {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                //Gdx.app.log("", "touchdown");
-                //Gdx.input.setOnscreenKeyboardVisible(true);
-                //textField.getOnscreenKeyboard().show(true);
-
-                //prompt(textField);
-
 
                 return false;
             }
@@ -252,7 +246,9 @@ public class LoginScreen extends ScreenAdapter {
         mySkin.dispose();
         font.dispose();
         game.dispose();
-        Gdx.app.exit();
+        font.dispose();
+        smallFont.dispose();
+        tex.dispose();
         SoundManager.dispose();
     }
 }

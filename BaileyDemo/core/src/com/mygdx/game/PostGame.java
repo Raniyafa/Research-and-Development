@@ -214,7 +214,6 @@ public class PostGame extends ScreenAdapter {
         };
     }
 
-
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);
@@ -226,6 +225,10 @@ public class PostGame extends ScreenAdapter {
         stage.dispose();
         mySkin.dispose();
         font.dispose();
+        tex.dispose();
+        batch.dispose();
+        font.dispose();
+        fontLarge.dispose();
     }
 }
 

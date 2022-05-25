@@ -33,9 +33,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.Preferences;
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.event.*;
 
 public class SettingMenu extends ScreenAdapter {
 
@@ -238,5 +235,7 @@ public class SettingMenu extends ScreenAdapter {
     public void dispose(){
         game.dispose();
         stage.dispose();
+        tex.dispose();
+        tex2.dispose();
     }
 }

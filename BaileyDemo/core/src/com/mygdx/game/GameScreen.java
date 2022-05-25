@@ -766,9 +766,20 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose(){
-        game.dispose();
         stage.dispose();
         font.dispose();
         fontLarge.dispose();
+        tex.dispose();
+        font.dispose();
+        fontLarge.dispose();
+        dbfont.dispose();
+        dbSmallFont.dispose();
+        annoyed.dispose();
+        hearteye.dispose();
+        sad.dispose();
+        laugh.dispose();
+        activeEmote.dispose();
+        shapeRenderer.dispose();
+        batch.dispose();
     }
 }

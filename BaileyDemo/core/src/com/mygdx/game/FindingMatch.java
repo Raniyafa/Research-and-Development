@@ -22,13 +22,10 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 public class FindingMatch extends ScreenAdapter {
 
-    private TextButton exitLobby;
     private MultipleScenes game;
     private BitmapFont font;
     private Stage stage;
     private boolean matchFound = false;
-    private float disconnectionTimer = 0.0f;
-    private SpriteBatch batch;
 
     private Texture tex;
     private Image image;
@@ -191,5 +188,7 @@ public class FindingMatch extends ScreenAdapter {
         game.dispose();
         stage.dispose();
         font.dispose();
+        tex.dispose();
+        tex2.dispose();
     }
 }

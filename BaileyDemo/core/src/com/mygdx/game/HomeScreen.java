@@ -35,9 +35,6 @@ import sun.awt.ExtendedKeyCodes;
 public class HomeScreen extends ScreenAdapter {
 
     private MultipleScenes game;
-//    private TextButton joinLobby;
-//    private TextButton findMatch;
-//    private TextButton createLobby;
     private Stage stage;
     private Skin mySkin;
     private boolean moveToGame = false;
@@ -340,5 +337,7 @@ public class HomeScreen extends ScreenAdapter {
         stage.dispose();
         mySkin.dispose();
         font.dispose();
+        tex.dispose();
+        tex2.dispose();
     }
 }

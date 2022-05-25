@@ -202,5 +202,8 @@ public class QuickPlayMenu extends ScreenAdapter{
     public void dispose(){
         game.dispose();
         stage.dispose();
+        font.dispose();
+        tex.dispose();
+        tex2.dispose();
     }
 }
