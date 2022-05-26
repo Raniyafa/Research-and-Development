@@ -143,17 +143,17 @@ public class SettingMenu extends ScreenAdapter {
         });
 
         //Background Music ON
-        tex2 = new Texture(Gdx.files.internal("button/OnButton.png"));
-        TextureRegion[][] temp_4 = TextureRegion.split(tex2,200,140);
+        tex2 = new Texture(Gdx.files.internal("button/VolumeButton_Off.png"));
+        TextureRegion[][] temp_4 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_4[0][0];
         buttonDown = temp_4[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         backgroundMusicButton_On = new ImageButton(up,down);
-        backgroundMusicButton_On.setPosition(Gdx.graphics.getWidth() / 2 + 10,Gdx.graphics.getHeight()/2 + 5);
-        backgroundMusicButton_On.setSize(100,70);
+        backgroundMusicButton_On.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + 5);
+        backgroundMusicButton_On.setSize(100,100);
         stage.addActor(backgroundMusicButton_On);
-        backgroundMusicButton_On.setVisible(true);
+        backgroundMusicButton_On.setVisible(false);
         backgroundMusicButton_On.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -165,17 +165,17 @@ public class SettingMenu extends ScreenAdapter {
         });
 
         //Background Music OFF
-        tex2 = new Texture(Gdx.files.internal("button/OffButton.png"));
-        TextureRegion[][] temp_5 = TextureRegion.split(tex2,200,140);
+        tex2 = new Texture(Gdx.files.internal("button/VolumeButton_On.png"));
+        TextureRegion[][] temp_5 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_5[0][0];
         buttonDown = temp_5[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         backgroundMusicButton_Off = new ImageButton(up,down);
-        backgroundMusicButton_Off.setPosition(Gdx.graphics.getWidth() / 2 + 10,Gdx.graphics.getHeight()/2 + 5);
-        backgroundMusicButton_Off.setSize(100,70);
+        backgroundMusicButton_Off.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + 5);
+        backgroundMusicButton_Off.setSize(100,100);
         stage.addActor(backgroundMusicButton_Off);
-        backgroundMusicButton_Off.setVisible(false);
+        backgroundMusicButton_Off.setVisible(true);
         backgroundMusicButton_Off.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -187,38 +187,44 @@ public class SettingMenu extends ScreenAdapter {
         });
 
         //Sound Effect ON
-        tex2 = new Texture(Gdx.files.internal("button/OnButton.png"));
-        TextureRegion[][] temp_6 = TextureRegion.split(tex2,200,140);
+        tex2 = new Texture(Gdx.files.internal("button/VolumeButton_Off.png"));
+        TextureRegion[][] temp_6 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_6[0][0];
         buttonDown = temp_6[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + -120,Gdx.graphics.getHeight()/2 + -150);
-        button.setSize(100,70);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
+        soundEffectButton_On = new ImageButton(up,down);
+        soundEffectButton_On.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + -150);
+        soundEffectButton_On.setSize(100,100);
+        stage.addActor(soundEffectButton_On);
+        soundEffectButton_On.setVisible(false);
+        soundEffectButton_On.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.button.resume();
+                soundEffectButton_On.setVisible(false);
+                soundEffectButton_Off.setVisible(true);
             }
         });
 
         //Sound Effect OFF
-        tex2 = new Texture(Gdx.files.internal("button/OffButton.png"));
-        TextureRegion[][] temp_7 = TextureRegion.split(tex2,200,140);
+        tex2 = new Texture(Gdx.files.internal("button/VolumeButton_On.png"));
+        TextureRegion[][] temp_7 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_7[0][0];
         buttonDown = temp_7[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + 10,Gdx.graphics.getHeight()/2 + -150);
-        button.setSize(100,70);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
+        soundEffectButton_Off = new ImageButton(up,down);
+        soundEffectButton_Off.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + -150);
+        soundEffectButton_Off.setSize(100,100);
+        stage.addActor(soundEffectButton_Off);
+        soundEffectButton_Off.setVisible(true);
+        soundEffectButton_Off.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                SoundManager.button.dispose();
+               soundEffectButton_On.setVisible(true);
+               soundEffectButton_Off.setVisible(false);
             }
         });
 
