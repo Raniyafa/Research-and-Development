@@ -80,7 +80,7 @@ public class PostGame extends ScreenAdapter {
 
 
         facebookPost = new TextButton("Facebook", mySkin, "toggle");
-        facebookPost.setBounds(widthSlice, Gdx.graphics.getHeight() - 40, 80, 40);
+        facebookPost.setBounds(widthSlice, Gdx.graphics.getHeight()/2 - 310, 80, 40);
         facebookPost.getLabel().setFontScale(0.6f, 0.6f);
         facebookPost.addListener(new InputListener(){
 
@@ -97,7 +97,7 @@ public class PostGame extends ScreenAdapter {
         stage.addActor(facebookPost);
 
         twitterPost = new TextButton("Twitter", mySkin, "toggle");
-        twitterPost.setBounds(widthSlice * 6, Gdx.graphics.getHeight() - 40, 80, 40);
+        twitterPost.setBounds(widthSlice * 6, Gdx.graphics.getHeight()/2 - 310, 80, 40);
         twitterPost.getLabel().setFontScale(0.6f, 0.6f);
         twitterPost.addListener(new InputListener(){
 
@@ -151,7 +151,7 @@ public class PostGame extends ScreenAdapter {
 //        stage.addActor(exitToMenu);
 
         instagramPost = new TextButton("Instagram", mySkin, "toggle");
-        instagramPost.setBounds(widthSlice * 11, Gdx.graphics.getHeight() - 40, 80, 40);
+        instagramPost.setBounds(widthSlice * 11, Gdx.graphics.getHeight()/2 - 310, 80, 40);
         instagramPost.getLabel().setFontScale(0.6f, 0.6f);
         instagramPost.addListener(new InputListener(){
 
@@ -188,7 +188,7 @@ public class PostGame extends ScreenAdapter {
         stage.draw();
 
         String postGameMsg = "Artwork created by:\n"+game.getPlayerName()+" & "+game.getGameLobby().getPartnerName();
-        font.draw(game.getBatch(), postGameMsg, Gdx.graphics.getWidth() / 2 - 165, 75);
+        font.draw(game.getBatch(), postGameMsg, Gdx.graphics.getWidth()/2 - 150, Gdx.graphics.getHeight() - 20);
 
         game.getBatch().end();
 
