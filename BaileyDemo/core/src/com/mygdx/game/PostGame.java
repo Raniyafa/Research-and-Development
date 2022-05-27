@@ -13,9 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
@@ -43,6 +46,13 @@ public class PostGame extends ScreenAdapter {
     private boolean moveToMain = false;
     private ShapeRenderer shapeRenderer;
     private ArrayList<Shape> shapeArr;
+
+    private TextureRegionDrawable up;
+    private TextureRegionDrawable down;
+    private TextureRegion buttonUp;
+    private TextureRegion buttonDown;
+    private Texture tex2;
+    private ImageButton button;
 
     public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray) {
         shapeArr = shapeArray;
@@ -103,23 +113,42 @@ public class PostGame extends ScreenAdapter {
         });
         stage.addActor(twitterPost);
 
-        exitToMenu = new TextButton("Home", mySkin, "toggle");
-        exitToMenu.setBounds(widthSlice * 16, Gdx.graphics.getHeight() - 40, 80, 40);
-        exitToMenu.getLabel().setFontScale(0.6f, 0.6f);
-        exitToMenu.addListener(new InputListener(){
-
+        //back to lobby button
+        tex2 = new Texture(Gdx.files.internal("button/BackToLobbyButton.png"));
+        TextureRegion[][] temp_0 = TextureRegion.split(tex2,400,200);
+        buttonUp = temp_0[0][0];
+        buttonDown = temp_0[0][1];
+        up = new TextureRegionDrawable(buttonUp);
+        down = new TextureRegionDrawable(buttonDown);
+        button = new ImageButton(up,down);
+        button.setPosition(Gdx.graphics.getWidth()/2 - 100,Gdx.graphics.getHeight() / 2 - 280);
+        button.setSize(200,100);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                game.setGameLobby(new GameLobby());
-                moveToMain = true;
-                return true;
+            public void clicked(InputEvent event, float x, float y) {
+                SoundManager.button.play();
+                game.setScreen(new HomeScreen(game));
             }
         });
-        stage.addActor(exitToMenu);
+
+//        exitToMenu = new TextButton("Home", mySkin, "toggle");
+//        exitToMenu.setBounds(widthSlice * 16, Gdx.graphics.getHeight() - 40, 80, 40);
+//        exitToMenu.getLabel().setFontScale(0.6f, 0.6f);
+//        exitToMenu.addListener(new InputListener(){
+//
+//            @Override
+//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+//
+//            }
+//            @Override
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                game.setGameLobby(new GameLobby());
+//                moveToMain = true;
+//                return true;
+//            }
+//        });
+//        stage.addActor(exitToMenu);
 
         instagramPost = new TextButton("Instagram", mySkin, "toggle");
         instagramPost.setBounds(widthSlice * 11, Gdx.graphics.getHeight() - 40, 80, 40);
