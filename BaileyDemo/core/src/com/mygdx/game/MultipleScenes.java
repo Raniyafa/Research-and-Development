@@ -45,9 +45,6 @@ public class MultipleScenes extends Game {
         //non secure wss testing
         // socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("drawbuddygame.co.vu", 3000));
 
-        //pc localhost testing
-        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
-
         //aws online testing html
         //socket = WebSockets.newSocket(WebSockets.toSecureWebSocketUrl("drawbuddygame.co.vu", 8080));
 
@@ -56,6 +53,9 @@ public class MultipleScenes extends Game {
 
         //android testing
         //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("127.0.0.1", 8080));
+
+        //pc localhost testing
+        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
 
         socket.setSendGracefully(true);
 

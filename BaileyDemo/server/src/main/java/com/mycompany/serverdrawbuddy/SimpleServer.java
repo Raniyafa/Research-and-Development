@@ -54,9 +54,9 @@ public class SimpleServer extends WebSocketServer {
     public ArrayList<Client> clientList = new ArrayList<>();
       
     public SimpleServer(InetSocketAddress address) {
-        super(address);
+       super(address);
        // SSLContext sslContext = getSSLContextFromLetsEncrypt();
-      // setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+       // setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SimpleServer extends WebSocketServer {
         conn.send("/Welcome to the server!"); //This method sends a message to the new client
        // broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This method sends a message to all clients connected
         String clientCode[] = handshake.toString().split("@");
-        System.out.println("new connection to " + conn.getRemoteSocketAddress() + "handshake: "+ clientCode[1]);
+        System.out.println("New client connection from IP: " + conn.getRemoteSocketAddress() + ", Handshake: "+ clientCode[1]);
         clientList.add(new Client(conn, "temp", clientCode[1]));
         conn.send("AuthCode/"+clientCode[1]);
     }
@@ -326,20 +326,15 @@ public class SimpleServer extends WebSocketServer {
     
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, KeyManagementException {
-      
-        
+        //Amazon EC-2 Machine IP (Only use when server is being run on the EC2 or add a new IP for any new server being used)
         //String host = "172.31.45.56";
+        
+        //Use localhost when running server from local environment
         String host = "localhost";
-        int port = 8080;
-        
+        int port = 8080;      
         SimpleServer server = new SimpleServer(new InetSocketAddress(host, port));
-    
-        System.out.println("Attemping to run server with "+host+" on port "+port);
-                
-        
-        server.start();   
-        
-     
+        System.out.println("Attemping to run server on IP: "+host+", using Port: "+port);           
+        server.start();        
     }
     
         private static SSLContext getSSLContextFromLetsEncrypt() {
