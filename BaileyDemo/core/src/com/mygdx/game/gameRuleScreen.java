@@ -33,6 +33,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.Preferences;
 
 public class gameRuleScreen extends ScreenAdapter{
+
+    //GameRuleScreen class, panel which shows the game rules to the player
+
     private MultipleScenes game;
     private Stage stage;
     private Texture tex;

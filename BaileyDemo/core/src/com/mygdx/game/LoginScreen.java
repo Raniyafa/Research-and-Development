@@ -23,6 +23,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class LoginScreen extends ScreenAdapter {
+
+    //LoginScreen class, this is the first screen the player will see when they launch the game
+
     private MultipleScenes game;
     private TextButton exitLobby;
     private Stage stage;
@@ -58,10 +61,15 @@ public class LoginScreen extends ScreenAdapter {
                 Gdx.app.log("WS Loginscreen", "Got message: " + packet);
 
                 String[] serverMessage = packet.split("/");
+
+                //Save the authcode that is received from the server
                 if (serverMessage[0].matches("AuthCode")) {
                     game.setAuthCode(serverMessage[1]);
                 }
 
+                //Below are the handlers for the name validity message from server
+
+                //If pass is received then move to homescreen
                 if(packet.matches("Pass")){
                       game.setPlayerName(name);
                       moveToHome = true;
@@ -110,6 +118,7 @@ public class LoginScreen extends ScreenAdapter {
         textField.setVisible(true);
         textField.addListener(new InputListener(){
 
+            //If user presses enter on the input field then send the name to the server and check if it is valid
             @Override
             public boolean keyDown (InputEvent event, int keycode) {
                 if(keycode == Input.Keys.ENTER){

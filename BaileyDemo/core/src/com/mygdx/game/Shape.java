@@ -2,11 +2,12 @@ package com.mygdx.game;
 
 public class Shape {
 
-    int x, y, radius, width, height, corners;
-    float[] rgb;
-    String type;
-    String colour;
-    int lineNo;
+    //Shape class to represent a shape in the drawing canvas
+    private int x, y, radius, width, height, corners;
+    private float[] rgb;
+    private String type;
+    private String colour;
+    private int lineNo;
 
     public Shape(int x, int y, int width, int height, String type, float[] color, int lineNo){
         rgb = new float[3];
@@ -53,4 +54,83 @@ public class Shape {
         lineNo = -1;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getCorners() {
+        return corners;
+    }
+
+    public void setCorners(int corners) {
+        this.corners = corners;
+    }
+
+    public float[] getRgb() {
+        return rgb;
+    }
+
+    public void setRgb(float[] rgb) {
+        this.rgb = rgb;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getColour() {
+        return colour;
+    }
+
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    public int getLineNo() {
+        return lineNo;
+    }
+
+    public void setLineNo(int lineNo) {
+        this.lineNo = lineNo;
+    }
 }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
+    //SoundManager class
+
     public static Music background;
     public static Sound button;
 

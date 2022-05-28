@@ -34,6 +34,8 @@ import sun.awt.ExtendedKeyCodes;
 
 public class HomeScreen extends ScreenAdapter {
 
+    //HomeScreen class which is the Home page or main menu for the game
+
     private MultipleScenes game;
     private Stage stage;
     private Skin mySkin;
@@ -67,15 +69,17 @@ public class HomeScreen extends ScreenAdapter {
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 Gdx.app.log("WS Homescreen", "Got message: " + packet);
 
-                    String[] clientMessage = packet.split("/");
-                    if(clientMessage[0].matches("LobbyInfo")) {
-                        game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
-                        game.getGameLobby().setWordTopic(clientMessage[3]);
-                        game.getGameLobby().setGameMode(clientMessage[4]);
-                        game.getGameLobby().setTurnAmount(clientMessage[5]);
-                        game.getGameLobby().setTurnTimer(clientMessage[6]);
-                        moveToLobby = true;
-                   }
+                //The client can receive lobby info while in the home screen if they successfully enter a valid lobby code
+                //the listener will then set the lobby info and switch to the lobby screen
+                String[] clientMessage = packet.split("/");
+                if(clientMessage[0].matches("LobbyInfo")) {
+                    game.setGameLobby(new GameLobby(clientMessage[2], Integer.valueOf(clientMessage[1])));
+                    game.getGameLobby().setWordTopic(clientMessage[3]);
+                    game.getGameLobby().setGameMode(clientMessage[4]);
+                    game.getGameLobby().setTurnAmount(clientMessage[5]);
+                    game.getGameLobby().setTurnTimer(clientMessage[6]);
+                    moveToLobby = true;
+               }
 
                 return FULLY_HANDLED;
             }
@@ -295,9 +299,11 @@ public class HomeScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        //Move to create lobby screen if moveToCreateLobby is true
         if(moveToCreateLobby){
             game.setScreen(new CreateLobby(game));
         }
+        //Move to lobby if moveToLobby is true
         if (moveToLobby) {
             System.out.println("Changing to loading screen");
             game.setScreen(new LoadingScreen(game));

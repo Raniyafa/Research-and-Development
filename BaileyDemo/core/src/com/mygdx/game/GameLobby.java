@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class GameLobby {
 
+    //GameLobby class to represent a game lobby object on the client
+
     private ArrayList<Shape> shapeList;
     private String lobbyCode;
     private int lobbyIndex;

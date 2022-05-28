@@ -29,6 +29,8 @@ import com.badlogic.gdx.Preferences;
 
 public class QuickPlayMenu extends ScreenAdapter{
 
+    //QuickPlayMenu class which allows the player to choose which game mode they want to queue up for
+
     private MultipleScenes game;
     private Stage stage;
     private Skin mySkin;
@@ -68,7 +70,7 @@ public class QuickPlayMenu extends ScreenAdapter{
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
-        //Mode Intro Button
+        //Mode Intro Button, takes the player to the game mode info screen
         tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_3[0][0];
@@ -87,7 +89,7 @@ public class QuickPlayMenu extends ScreenAdapter{
             }
         });
 
-        //Setting Icon
+        //Setting Icon, takes the client to the setting menu
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
         buttonUp = temp[0][0];
@@ -107,7 +109,7 @@ public class QuickPlayMenu extends ScreenAdapter{
 
         stage.addActor(button);
 
-        //Back Icon
+        //Back Icon, tells server to destroy gamelobby and returns client to main menu
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
         buttonUp = temp_0[0][0];

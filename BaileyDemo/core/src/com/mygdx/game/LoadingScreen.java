@@ -24,6 +24,9 @@ import sun.awt.ExtendedKeyCodes;
 
     public class LoadingScreen extends ScreenAdapter {
 
+        //Artificial loading screen class because it looks awkward when the game instantly switches between panels
+        //can by removed changing all calls to switch to this class into calls for switching to GameScreen using : game.setScreen(new GameScreen(game));
+
         private MultipleScenes game;
         private float timer = 0.0f;
 

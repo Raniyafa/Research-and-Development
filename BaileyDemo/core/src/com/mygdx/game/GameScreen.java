@@ -45,6 +45,8 @@ import java.util.zip.Deflater;
 
 public class GameScreen extends ScreenAdapter {
 
+    //GameScreen class which is used when the player is inside the game/match
+
     private BitmapFont font;
     private BitmapFont fontLarge;
 
@@ -144,38 +146,32 @@ public class GameScreen extends ScreenAdapter {
                 try {
                     String[] clientMessage = packet.split("/");
 
-                    if (clientMessage[0].matches("GameMessage2")) {
+                    //Add new shape to shapeList when a NewShapeInfo is received from the server
+                    if (clientMessage[0].matches("NewShapeInfo")) {
                         lineNo = Integer.valueOf(clientMessage[5]);
                         float[] colour = getRGB(clientMessage[4]);
                         shapeArr.add(new Shape(Integer.valueOf(clientMessage[1]), Integer.valueOf(clientMessage[2]), 10, clientMessage[3], colour, lineNo));
                         received++;
 
                     }
-                    else if (clientMessage[0].matches("CanvasInfo") && Integer.valueOf(clientMessage[1]) > shapeArr.size() && !isUpdating) {
-                        isUpdating = true;
-                        int shapeArrSize = shapeArr.size();
-                        int index = 2;
-                        int size = shapeArrSize + ((clientMessage.length - 2) / 4);
-
-                        for (int i = shapeArrSize; i <= size - 1; i++) {
-                            float[] colour = getRGB(clientMessage[index + 1]);
-                            shapeArr.add(new Shape(Integer.valueOf(clientMessage[index + 2]), Integer.valueOf(clientMessage[index + 3]), 10, clientMessage[index], colour, Integer.valueOf(clientMessage[5])));
-                            index += 4;
-                            received++;
-                        }
-                    } else if (clientMessage[0].matches("YourTurn")) {
+                    //The server will tell the client when it is their turn, then appropriate values will be set
+                    else if (clientMessage[0].matches("YourTurn")) {
                         turnTimer = 0.0f;
                         myTurn = true;
                         lineNo++;
                         game.getGameLobby().setPartnerName(clientMessage[1]);
                     }
+                    //Statement to set the partner name when match is started
                     else if (clientMessage[0].matches("PartnerTurn")) {
                         game.getGameLobby().setPartnerName(clientMessage[1]);
 
-                    } else if (clientMessage[0].matches("GameFinished")) {
+                    }
+                    //The server will tell the client when the match is over
+                    else if (clientMessage[0].matches("GameFinished")) {
                         stage.clear();
                         gameFinished = true;
                     }
+                    //Emote message from server, the corresponding emote will be drawn to screen
                     else if(clientMessage[0].matches("Emote")) {
                         emoteActive = true;
 
@@ -208,7 +204,6 @@ public class GameScreen extends ScreenAdapter {
     public void show() {
 
         turnLength = Float.valueOf(game.getGameLobby().getTurnTimer());
-
         stage = new Stage(new ScreenViewport());
 
         //Adding Background IMG
@@ -232,8 +227,7 @@ public class GameScreen extends ScreenAdapter {
         widthRatio = Gdx.graphics.getHeight() / 360;
 
         //Font creations
-        font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"),
-                Gdx.files.internal("smallfont/smallfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"), Gdx.files.internal("smallfont/smallfont.png"), false);
         font.setColor(Color.BLACK);
         fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
         fontLarge.setColor(Color.BLACK);
@@ -245,9 +239,7 @@ public class GameScreen extends ScreenAdapter {
                 Gdx.files.internal("font/dbSmallFont.png"), false);
         dbSmallFont.setColor(Color.BLACK);
 
-
         shapeRenderer = new ShapeRenderer();
-
 
         emojiButtons = new ImageButton[4];
 
@@ -368,72 +360,6 @@ public class GameScreen extends ScreenAdapter {
             }
         });
 
-        triangle = new TextButton("Triangle", mySkin, "toggle");
-        triangle.setBounds(260, Gdx.graphics.getHeight() - 33, 70, 33);
-        triangle.getLabel().setFontScale(0.6f, 0.6f);
-
-        triangle.addListener(new ClickListener() {
-
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (selectedType.matches("circle")) {
-                    circle.toggle();
-                } else if (selectedType.matches("square")) {
-                    square.toggle();
-                }
-                selectedType = "triangle";
-                triangle.setText("Triangle Selected");
-                square.setText("Square");
-                circle.setText("Circle");
-            }
-        });
-        //  stage.addActor(triangle);
-
-        circle = new TextButton("Circle Selected", mySkin, "toggle");
-        circle.setBounds(0, Gdx.graphics.getHeight() - 33, 130, 33);
-        circle.getLabel().setFontScale(0.6f, 0.6f);
-        circle.toggle();
-
-        circle.addListener(new ClickListener() {
-
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (selectedType.matches("square")) {
-                    square.toggle();
-                } else if (selectedType.matches("triangle")) {
-                    triangle.toggle();
-                }
-                selectedType = "circle";
-                circle.setText("Circle Selected");
-                square.setText("Square");
-                triangle.setText("Triangle");
-            }
-        });
-
-        // stage.addActor(circle);
-
-        square = new TextButton("Square", mySkin, "toggle");
-        square.setBounds(130, Gdx.graphics.getHeight() - 33, 130, 33);
-        square.getLabel().setFontScale(0.6f, 0.6f);
-
-        square.addListener(new ClickListener() {
-
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (selectedType.matches("circle")) {
-                    circle.toggle();
-                } else if (selectedType.matches("triangle")) {
-                    triangle.toggle();
-                }
-                selectedType = "square";
-                square.setText("Square Selected");
-                circle.setText("Circle");
-                triangle.setText("Triangle");
-            }
-        });
-
-        // stage.addActor(square);
-
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -461,8 +387,6 @@ public class GameScreen extends ScreenAdapter {
         //If the WebSocket is open (connected) then process the game controller logic
         if (game.getSocket().isOpen()) {
 
-
-
             //If the requirements are met then the current mouse location is captured and a shape is created corresponding to the selected
             //shape, colour and size
             if (gameMode.matches("Regular")) {
@@ -482,6 +406,7 @@ public class GameScreen extends ScreenAdapter {
             } else if (gameMode.matches("One Line")) {
                 oneLineModeTimer += delta;
 
+                //If the maximum amount of time for the one line mode turn has been reached, then tell server to go to next turn
                 if(oneLineModeTimer > Float.valueOf(game.getGameLobby().getTurnTimer())){
                     oneLineDrawing = false;
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
@@ -490,17 +415,20 @@ public class GameScreen extends ScreenAdapter {
                     oneLineModeTimer = 0.0f;
                 }
 
+                //Check if it is my turn and if the player is touching the screen
                 if (myTurn && Gdx.input.isTouched() && !colour.isTouchFocusTarget()) {
                     if (!isDrawing) {
                         isDrawing = true;
                         lineNo++;
                     }
+                    //Check if the input is within the drawing area
                     if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
                         oneLineDrawing = true;
                         storeMouseLoc(delta);
                         drawTimer = 0.0f;
                     }
                 }
+                //Check if current input is on the same line as previous input
                 else if(oneLineDrawing && !Gdx.input.isTouched()){
                     oneLineDrawing = false;
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
@@ -523,31 +451,25 @@ public class GameScreen extends ScreenAdapter {
             for (int i = 0; i <= shapeArr.size() - 1; i++) {
                 drawnAmount++;
                 try {
+                    //Get reference to shape object then draw the shape to screen
                     Shape drawShape = shapeArr.get(i);
-                    shapeRenderer.setColor(drawShape.rgb[0], drawShape.rgb[1], drawShape.rgb[2], 1);
-                    String temp = drawShape.type;
-                    float drawShapeX = drawShape.x * widthRatio;
-                    float drawShapeY = drawShape.y * heightRatio;
+                    shapeRenderer.setColor(drawShape.getRgb()[0], drawShape.getRgb()[1], drawShape.getRgb()[2], 1);
+                    String temp = drawShape.getType();
+                    //Scale the drawing for different resolutions
+                    float drawShapeX = drawShape.getX() * widthRatio;
+                    float drawShapeY = drawShape.getY() * heightRatio;
+                    float tempShapeX = tempShape.getX() * widthRatio;
+                    float tempShapeY = tempShape.getY() * heightRatio;
 
-                    float tempShapeX = tempShape.x * widthRatio;
-                    float tempShapeY = tempShape.y * heightRatio;
-
-                    if (drawShape.lineNo == tempShape.lineNo) {
+                    //Check if current shape is on the same line as the previous shape, if so then connect them with a line
+                    if (drawShape.getLineNo() == tempShape.getLineNo()) {
                         if ((!(drawShapeX >= tempShapeX - 5 && drawShapeX <= tempShapeX + 5)) || (!(drawShapeY >= tempShapeY - 5 && drawShapeY <= tempShapeY + 5))) {
 
                             shapeRenderer.rectLine(tempShapeX, tempShapeY, drawShapeX, drawShapeY, 20);
                         }
                     }
-                    //   if (temp.matches("circle")) {
+                    //Draw the current shape as a circle
                     shapeRenderer.circle(drawShapeX, drawShapeY, 10);
-                    /*
-                    } else if (temp.matches("square")) {
-                        shapeRenderer.rect(drawShape.x, drawShape.y, 10, 10);
-
-                    } else {
-                        shapeRenderer.triangle(drawShape.x - 30.0f, drawShape.y, drawShape.x + 30.0f, drawShape.y, drawShape.x, drawShape.y + 45.0f);
-                    }
-                     */
                     tempShape = drawShape;
                 } catch (Exception e) {
                     System.out.println("Null error drawing shapeArr[" + i + "]");
@@ -558,6 +480,7 @@ public class GameScreen extends ScreenAdapter {
 
             game.getBatch().begin();
 
+            //If emoteActive then draw the current Emote and keep track of the timer, and opacity
             if (emoteActive) {
                 emote.draw(game.getBatch());
                 emoteY += 1.0f;
@@ -574,7 +497,6 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
 
-
             //In game information displayed here, such as whos turn it is and how many shapes have been sent/received by the client, and how many
             //shapes are being drawn to the screen.
             if (!gameFinished) {
@@ -583,21 +505,24 @@ public class GameScreen extends ScreenAdapter {
                     String temp_topic = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
+                        //Draw regular game mode UI for when it is my turn
                         temp = game.getPlayerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        //one line mode
+                        //Draw one-line mode game UI for when it is my turn
                         temp = game.getPlayerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
-                    String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+
                     dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
                     dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 120);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
-                 //   font.draw(game.getBatch(), temp2, 0, 200);
+                    //Uncomment this line if you want to see packet debug info
+                    //String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+                    //   font.draw(game.getBatch(), debugInfo, 0, 200);
                     if(gameMode.matches("Regular")) {
                         if (turnTimer >= turnLength) {
                             myTurn = false;
@@ -610,27 +535,28 @@ public class GameScreen extends ScreenAdapter {
                     String temp_topic = "";
                     String temp_time = "";
                     if(gameMode.matches("Regular")) {
+                        //Draw regular game mode UI for when it is not my turn
                         temp = game.getGameLobby().getPartnerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
                     else{
-                        //one line mode
+                        //Draw one-line mode game UI for when it is not my turn
                         temp = game.getGameLobby().getPartnerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
-                    String temp2 = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
                     dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 120);
                     dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
-                    // font.draw(game.getBatch(), temp2, 0, 200);
+                    //Uncomment this line if you want to see packet debug info
+                    //String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+                    //   font.draw(game.getBatch(), debugInfo, 0, 200);
                 }
             }
         }
 
         //If game socket is closed and not connecting, attempt to connect
-
 
         //If game socket is closed then display that information to the user and attempt to re-connect, also keep track of the time spent disconnecting
         else if(game.getSocket().isClosed()){
@@ -651,12 +577,11 @@ public class GameScreen extends ScreenAdapter {
         stage.act();
         stage.draw();
 
-
-
         //When the game is finished (The server sends a message to the clients to say so) then the client will exit to the main menu
         if (gameFinished) {
+            //If the client is using Android or Desktop then take a screenshot of the drawing and convert to Base64 string then send to server
+            //Server could interact with image hosting API to host drawing which can be used for social media sharing
             if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop) {
-
 
             final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             PixmapIO.writePNG(Gdx.files.external("drawbuddytestscreenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
@@ -671,10 +596,9 @@ public class GameScreen extends ScreenAdapter {
             pixmap.dispose();
 
             game.getSocket().send(encodedfile);
-            game.setScreen(new PostGame(game, shapeArr));
             }
+            game.setScreen(new PostGame(game, shapeArr));
         }
-
     }
 
     @Override
@@ -689,32 +613,18 @@ public class GameScreen extends ScreenAdapter {
         Shape temp =  (new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()));
 
         //Gets the selected colour
-        temp.colour = colour.getSelected();
+        temp.setColour(colour.getSelected());
         //Gets the selected colour RGB value
-        temp.rgb = getRGB(colour.getSelected());
+        temp.setRgb(getRGB(colour.getSelected()));
         //Gets the selected shape (circle, square, triangle)
-        temp.type = selectedType;
+        temp.setType(selectedType);
 
-        temp.lineNo = lineNo;
-        temp.radius = 10;
-
-        /*
-        //Sets the required values for the selected shape
-        if (selectedType == "circle") {
-            temp.radius = 10;
-        } else if (selectedType == "square") {
-            shapeArr.get(currentSize).width = 10;
-            shapeArr.get(currentSize).height = 10;
-        } else {
-            shapeArr.get(currentSize).corners = 10;
-            shapeArr.get(currentSize).radius = 10;
-        }
-
-        */
+        temp.setLineNo(lineNo);
+        temp.setRadius(10);
 
         //Sending the new shape to the server to be added to the shared canvas
-        game.getSocket().send("GameMessage/"+"UpdateCanvas/"+String.valueOf(lobbyID)+"/"+game.getAuthCode()+"/"+temp.type
-                +  ":" + temp.colour + ":" +   temp.x + ":" +temp.y + ":" + lineNo);
+        game.getSocket().send("GameMessage/"+"UpdateCanvas/"+String.valueOf(lobbyID)+"/"+game.getAuthCode()+"/"+temp.getType()
+                +  ":" + temp.getColour() + ":" +   temp.getX() + ":" +temp.getY() + ":" + lineNo);
         sent++;
     }
 

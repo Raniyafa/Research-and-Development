@@ -52,3 +52,56 @@ Sky Tower
 Harbour Bridge
 Carrot
 Keyboard
+Cake
+Phone
+Ocean
+Beach
+Towel
+Umbrella
+Microphone
+Soda
+Steak
+Nachos
+Horse
+Cow
+Puppy
+Giraffe
+Deer
+Possum
+Spider
+Lizard
+Ant
+Ladybug
+School
+Teacher
+Book
+Light Bulb
+Cookie
+Milk
+Laptop
+Alien
+Television
+Kangaroo
+Kiwi
+Kiwifruit
+Grape
+Orange
+Strawberry
+Watermelon
+Perfume
+Car
+Bike
+Scooter
+Skateboard
+Train
+Road
+Police car
+Ambulance
+Noodles
+Candy
+Parrot
+Fern
+Flax
+Candyfloss
+Lollipop
+Jet plane

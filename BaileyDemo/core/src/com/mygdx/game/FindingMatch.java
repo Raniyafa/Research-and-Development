@@ -22,6 +22,8 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 public class FindingMatch extends ScreenAdapter {
 
+    //Finding match class which allows the player to search for a match
+
     private MultipleScenes game;
     private BitmapFont font;
     private Stage stage;

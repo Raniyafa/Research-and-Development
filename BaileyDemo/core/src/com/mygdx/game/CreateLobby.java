@@ -23,6 +23,8 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 public class CreateLobby extends ScreenAdapter {
 
+    //CreateLobby class which allows the player to create a lobby in the game
+
     private MultipleScenes game;
     private Stage stage;
     private BitmapFont font;
@@ -51,7 +53,7 @@ public class CreateLobby extends ScreenAdapter {
     @Override
     public void show(){
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-                Gdx.files.internal("font/dbfont.png"), false);
+        Gdx.files.internal("font/dbfont.png"), false);
 
         game.setListener(getListener());
         shapeRenderer = new ShapeRenderer();
@@ -105,7 +107,7 @@ public class CreateLobby extends ScreenAdapter {
                 SoundManager.button.play();
                 if(game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
 
-                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected()+"/"+game.getAuthCode()+"/"+round.getSelected()+"/"+time.getSelected());
+                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected()+"/"+game.getAuthCode()+"/"+round.getSelected()+"/"+time.getSelected()+"/"+game.getPlayerName());
                 }
             }
         });
@@ -162,6 +164,7 @@ public class CreateLobby extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        //If moveToLobby variable is true then move to the LobbyScreen
         if(moveToLobby){
             game.setScreen(new LobbyScreen(game));
         }
@@ -178,6 +181,7 @@ public class CreateLobby extends ScreenAdapter {
         stage.draw();
         game.getBatch().begin();
 
+        //Check if client is disconnected, if so then display error message and attempt to reconnect
         if(game.getSocket().isClosed() && !game.getSocket().isConnecting()){
             game.getSocket().connect();
             font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
@@ -194,13 +198,13 @@ public class CreateLobby extends ScreenAdapter {
                 Gdx.app.log("WS", "Got message: " + packet);
                 String[] serverMessage = packet.split("/");
 
+                //If LobbyInfo packet is received, then set the lobby info and set moveToLobby as true
                 if (serverMessage[0].matches("LobbyInfo")) {
                     CreateLobby(Integer.valueOf(serverMessage[1]), serverMessage[2]);
                     game.getGameLobby().setWordTopic(serverMessage[3]);
                     game.getGameLobby().setGameMode(serverMessage[4]);
                     game.getGameLobby().setTurnAmount(serverMessage[5]);
                     game.getGameLobby().setTurnTimer(serverMessage[6]);
-                   // game.getGameLobby().set
                     moveToLobby = true;
                 }
                 return FULLY_HANDLED;

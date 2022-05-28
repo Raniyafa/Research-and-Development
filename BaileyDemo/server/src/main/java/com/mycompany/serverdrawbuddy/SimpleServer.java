@@ -53,160 +53,186 @@ public class SimpleServer extends WebSocketServer {
     
     public ArrayList<Client> clientList = new ArrayList<>();
       
+    //Constructor for the server, uncomment line the below lines if using SSL and you have changed the path for the certificates accordingly
     public SimpleServer(InetSocketAddress address) {
        super(address);
        // SSLContext sslContext = getSSLContextFromLetsEncrypt();
        // setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
 
+    //This function is called whenever a new client connects to the server
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conn.send("/Welcome to the server!"); //This method sends a message to the new client
-       // broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This method sends a message to all clients connected
+        conn.send("Connection to Draw Buddy server successful.");
         String clientCode[] = handshake.toString().split("@");
         System.out.println("New client connection from IP: " + conn.getRemoteSocketAddress() + ", Handshake: "+ clientCode[1]);
+        //Adding new client to list of clients
         clientList.add(new Client(conn, "temp", clientCode[1]));
+        //Sending the client their auth code which is used for packet verification
         conn.send("AuthCode/"+clientCode[1]);
     }
 
+    //Function is called whenever a client disconnects from the server
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println("closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
         
+        //Checking if any client is inside of a gamelobby after they have disconnected, if they are they will be removed and any other
+        //clients still inside the lobby will be sent back to the main menu.
         for(GameLobby e : gameLobbies){
-            if(e.player1.equals(conn) || e.player2.equals(conn)){
+            if(e.getPlayer1().equals(conn) || e.getPlayer2().equals(conn)){
                 System.out.println("removing game " +gameLobbies.indexOf(e) +"lobby due to");
-                if(e.player1.isOpen()){
+                if(e.getPlayer1().isOpen()){
                 System.out.println("player 2 disconnecting");
-                e.player1.send("GameFinished");
+                e.getPlayer1().send("GameFinished");
                 }
-                if(e.player2.isOpen()){
+                if(e.getPlayer2().isOpen()){
                 System.out.println("player 1 disconnecting");
-                e.player2.send("GameFinished");
+                e.getPlayer2().send("GameFinished");
                 }
                 gameLobbies.remove(e);
                 System.out.println("size of gamelobby array = "+gameLobbies.size());
             }
         }
         
+        //Remove disconnect client from gameQueue if present
         for(Client e : gameQueue){
-            if(e.socket.equals(conn)){
+            if(e.getSocket().equals(conn)){
                 System.out.println("removing player from queue due to disconnect:"+conn.toString());
                 gameQueue.remove(e);
             }
         }
-        
+        //Remove disconnected client from clientList if present
         for(Client e : clientList){
-            if(e.socket.equals(conn)){
+            if(e.getSocket().equals(conn)){
                 System.out.println("removing player from client list due to disconnect:"+conn.toString());
                 clientList.remove(e);
             }
         }
     }
     
+    //This function is called everytime the server receives a message from a client, it contains various if/else and switch
+    //statements that handle all incoming packet data from all clients
     @Override
     public void onMessage(WebSocket conn, String message) {
         if(!message.contains("GameMessage/RequestCanvas/")){
         System.out.println("received message from "	+ conn.getRemoteSocketAddress() + ": " + message);
         }
 
+        //Each packet is coming in the form of a string with each value seperated by a '/' symbol
+        //so each value is split into an array of strings named clientMessage
         String[] clientMessage = message.split("/");
         
-        if(clientMessage[0].matches("GameMessage")){
+        //Switch statement which systematically checks what category the incoming packet is for, eg Gameplay, Lobby creation, Error messages
+        //it will then execute the corresponding logic using the information provided
+        switch(clientMessage[0]){
+            case "GameMessage":
+            //Function is called when a client has lost connection to the server and then reconnects
+            //this statement will then send the shapeList information to the client so they can update their canvas 
+            //and continue to play
             if(clientMessage[1].matches("RequestCanvas")){
                 GameLobby lobby = gameLobbies.get(Integer.valueOf(clientMessage[2]));
-                if(clientMessage[3].matches(lobby.p1AuthCode) || clientMessage[3].matches(lobby.p2AuthCode)){
+                if(clientMessage[3].matches(lobby.getP1AuthCode()) || clientMessage[3].matches(lobby.getP2AuthCode())){
                 String canvasInfo = lobby.shapeListToString(Integer.valueOf(clientMessage[4]));
                 conn.send(canvasInfo);
                 }
          
             }
+            //This statement is called whenever the clients attempt to draw to the canvas when it is their turn
             else if(clientMessage[1].matches("UpdateCanvas")){
-                //called by either play in the lobby, updates the shared canvas that is accessed by both players
-               // gameLobbies.get(Integer.valueOf(clientMessage[2])).stringToShapeList(clientMessage[3]);
-               
-               String[] clientMessage2 = clientMessage[4].split(":");
-               GameLobby lobby = gameLobbies.get(Integer.valueOf(clientMessage[2]));
-               if(clientMessage[3].matches(lobby.p1AuthCode) || clientMessage[3].matches(lobby.p2AuthCode)){
-                    lobby.shapeList.add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
-                 //   if(gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.equals(conn)){
-                    lobby.player1.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
-                //    }
-                 //   else{
-                    lobby.player2.send("GameMessage2/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
-                  //  }   
-                     }
+         
+                String[] clientMessage2 = clientMessage[4].split(":");
+                GameLobby lobby = gameLobbies.get(Integer.valueOf(clientMessage[2]));
+                //If the client sends in an Auth code that matches the authcode for player 1 or player 2
+                //then the new drawing information is added to the shapeList for the lobby and is sent to both players
+                if(clientMessage[3].matches(lobby.getP1AuthCode()) || clientMessage[3].matches(lobby.getP2AuthCode())){
+                    lobby.getShapeList().add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
+                    lobby.getPlayer1().send("NewShapeInfo/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+                    lobby.getPlayer2().send("NewShapeInfo/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
+                }
             }
+            //Statement to handle Emote use by players
             else if(clientMessage[1].matches("Emote")){
-                    gameLobbies.get(Integer.valueOf(clientMessage[2])).player1.send("Emote/"+clientMessage[3]); 
-                    gameLobbies.get(Integer.valueOf(clientMessage[2])).player2.send("Emote/"+clientMessage[3]); 
+                    gameLobbies.get(Integer.valueOf(clientMessage[2])).getPlayer1().send("Emote/"+clientMessage[3]); 
+                    gameLobbies.get(Integer.valueOf(clientMessage[2])).getPlayer2().send("Emote/"+clientMessage[3]); 
             }
-        }
-                else if(clientMessage[0].matches("TurnFinished")){     
-           gameLobbies.get(Integer.valueOf(clientMessage[1])).turnCount++;
+        break;
+        //Handler for lobby turn counter, keeps track of the amount of turns that have happened in the match
+        //and tells the players when it is their turn and when the match is over
+        case "TurnFinished":    
+           gameLobbies.get(Integer.valueOf(clientMessage[1])).increaseTurnCount();
            
-           if(gameLobbies.get(Integer.valueOf(clientMessage[1])).turnCount < gameLobbies.get(Integer.valueOf(clientMessage[1])).maxTurns){
-                if( gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.equals(conn)){
-                    gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("YourTurn");
+           if(gameLobbies.get(Integer.valueOf(clientMessage[1])).getTurnCount() < gameLobbies.get(Integer.valueOf(clientMessage[1])).getMaxTurns()){
+                if( gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1().equals(conn)){
+                    gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("YourTurn");
                 }
                 else{
-                    gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("YourTurn");
+                    gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1().send("YourTurn");
                 }
            }
            else{
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("GameFinished");
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("GameFinished");
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1().send("GameFinished");
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("GameFinished");
                gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[1])));
            }
-        }
-        else if(clientMessage[0].matches("LobbyMessage")){
+        break;
+        //Handler for lobby messages, a client can send a packet with the lobby handler value when they 
+        //want to create a lobby, join a lobby or exit a lobby
+        case "LobbyMessage":
             if(clientMessage[1].matches("CreateLobby")){
                 try {
-                    //creates a lobby and send the lobby info to client
-
-                    conn.send(createLobby(conn, "temp_name", clientMessage[2], clientMessage[3], clientMessage[4], clientMessage[5]));
+                    //Creates a lobby and send the lobby info to client
+                    conn.send(createLobby(conn, clientMessage[6], clientMessage[2], clientMessage[3], clientMessage[4], clientMessage[5]));
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             else if(clientMessage[1].matches("JoinLobby")){
+                //Get index of lobby in lobbyList from lobby code that is sent by client
+                int lobbyIndex = getLobbyIndexFromCode(clientMessage[2]);
+                //Send the client the lobby info
                 conn.send(lobbyInfoToString(clientMessage[2], conn, clientMessage[4]));
-                gameLobbies.get(Integer.valueOf(clientMessage[2])).p2Name = clientMessage[3];
-                gameLobbies.get(Integer.valueOf(clientMessage[2])).player2 = conn;
-              //  gameLobbies.get(Integer.valueOf(clientMessage[2])).p2AuthCode = clientMessage[4];
-                
-               
+                if(lobbyIndex != -1){
+                gameLobbies.get(lobbyIndex).setP2Name(clientMessage[3]);
+                gameLobbies.get(lobbyIndex).setPlayer2(conn);
+                }
             }
+            //If a client leaves a lobby the lobby will be terminated
             else if(clientMessage[1].matches("TerminateLobby")){
                 //need to create a way on client side that checks every once in awhile if the lobby is still alive
                 gameLobbies.remove(gameLobbies.get(Integer.valueOf(clientMessage[2])));
                 for(Client e : gameQueue){
-                    if(e.socket.equals(conn)){
+                    if(e.getSocket().equals(conn)){
                         gameQueue.remove(e);
                     }
                 }
             }
-        }
-        else if(clientMessage[0].matches("FindMatch")){
+        break;
+        //Adds the player to the matchmaking queue
+        case "FindMatch":
             try {
                 matchCreator(conn, clientMessage[1], clientMessage[2], clientMessage[3]);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else if(clientMessage[0].matches("Ready")){
-           gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount++;
-           if( gameLobbies.get(Integer.valueOf(clientMessage[1])).readyCount == 2){
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player1.send("YourTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).p2Name);
-               gameLobbies.get(Integer.valueOf(clientMessage[1])).player2.send("PartnerTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).p1Name);
+        break;
+        //A client will send a packet saying "Ready" after they have received the information for the lobby and have loaded into the game
+        //this statement will tell each player that the match is ready to start once the ready counter hits 2
+        case "Ready":
+           gameLobbies.get(Integer.valueOf(clientMessage[1])).increaseReadyCount();
+           if( gameLobbies.get(Integer.valueOf(clientMessage[1])).getReadyCount() == 2){
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1().send("YourTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).getP2Name());
+               gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("PartnerTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).getP1Name());
            }
-        }
-        else if(clientMessage[0].matches("CheckName")){    
+        break;
+        //The client will send a CheckName packet when they attempt to set their user name when first opening the game
+        case "CheckName":   
             try {
                 if(checkName(clientMessage[1]) == true){
+                    //Go through the list of clients and set the name of the client
                     for(Client e : clientList){
-                        if(e.socket.equals(conn)){
-                            e.name = clientMessage[1];
+                        if(e.getSocket().equals(conn)){
+                            e.setName(clientMessage[1]);
                             clientList.remove(e);
                         }
                     }          
@@ -215,116 +241,133 @@ public class SimpleServer extends WebSocketServer {
                 }
                 else{
                     conn.send("Fail");
-                                      System.out.println("sending back fail");
+                    System.out.println("sending back fail");
                 }
             } catch (FileNotFoundException ex) {
                 System.out.println("exception found in checkname "+ex);
             }
-        }
-         else if(clientMessage[0].matches("ReturnToMain")){    
+        break;
+        //ReturnToMain is used when a client chooses to return to the main menu moving to the find match screen
+        //they will be removed from the gameQueue list
+        case "ReturnToMain":  
              for(int i = 0; i <= gameQueue.size() - 1; i++){
                  System.out.println("inside for loop");
-                 if(conn.equals(gameQueue.get(i).socket)){
+                 if(conn.equals(gameQueue.get(i).getSocket())){
                      gameQueue.remove(i);
                  }
-             }
+             }  
              System.out.println("gamequeue size after removing "+gameQueue.size());
-         }
+         break;
+        }
     }
-
+    
+    //Handler for ByteBuffer packets
     @Override
     public void onMessage( WebSocket conn, ByteBuffer message ) {
         System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress() + "message = " + message);
     }
     
-
+    //Function called when client encounters an error, eg Null error, concurrent modification ect
     @Override
     public void onError(WebSocket conn, Exception ex) {
         System.err.println("an error occurred on connection " + conn.getRemoteSocketAddress()  + ":" + ex);
     }
 
+    //Function called when server is started
     @Override
     public void onStart() {
         System.out.println("server started successfully");
         setConnectionLostTimeout(5);
     }
 
-    //Lobby server functions
-    
+    //Function to create a game lobby
     public String createLobby(WebSocket conn, String clientname, String lobbyType, String p1Auth, String roundAmount, String roundTime) throws FileNotFoundException{
+        //Obtain a list of all the current lobby codes, it is used in the constructor for a lobby to ensure
+        //that duplicate lobby codes are not being created
         String[] lobbyCodes = new String[gameLobbies.size()];     
         for(int i = 0; i <= gameLobbies.size() - 1; i++){
             lobbyCodes[i] += gameLobbies.get(i)+"\n";
         }
         
+        //Creat the new lobby object, set the lobby info according to the input variables
         GameLobby newLobby = new GameLobby(lobbyCodes, lobbyType);
-        newLobby.p1AuthCode = p1Auth;
-        newLobby.p1Name = clientname;
-        newLobby.player1 = conn;
-        newLobby.maxTurns = Integer.valueOf(roundAmount);
+        newLobby.setP1AuthCode(p1Auth);
+        newLobby.setP1Name(clientname);
+        newLobby.setPlayer1(conn);
+        newLobby.setMaxTurns(Integer.valueOf(roundAmount));
         
         switch(roundTime){
             case("10 sec"):
-                newLobby.turnTime = "10";
+                newLobby.setTurnTime("10");
             break;
             case("15 sec"):
-                newLobby.turnTime = "15";
+                newLobby.setTurnTime("15");
             break;
             case("20 sec"):
-                newLobby.turnTime = "20";
+                newLobby.setTurnTime("20");
             break;
             case("30 sec"):
-                newLobby.turnTime = "30";
+                newLobby.setTurnTime("30");
             break;
             case("1 min"):
-                newLobby.turnTime = "60";
+                newLobby.setTurnTime("60");
             break;        
         }
-        
+        //Add the new lobby to the lobby list
         gameLobbies.add(newLobby);
-        newLobby.lobbyIndex = gameLobbies.indexOf(newLobby);
-        System.out.println("New lobby created at index:"+newLobby.lobbyIndex);
-        return "LobbyInfo/"+newLobby.lobbyToString()+"/"+lobbyType+"/"+newLobby.maxTurns+"/"+newLobby.turnTime;    
+        newLobby.setLobbyIndex(gameLobbies.indexOf(newLobby));
+        System.out.println("New lobby created at index:"+newLobby.getLobbyIndex());
+        return "LobbyInfo/"+newLobby.lobbyToString()+"/"+lobbyType+"/"+newLobby.getMaxTurns()+"/"+newLobby.getTurnTime();    
     }
     
+    //Function to convert a lobby object into a string which is used by the client to save the lobby info
     public String lobbyInfoToString(String lobbyCode, WebSocket Conn, String p2Auth){
         for(int i = 0; i <= gameLobbies.size() - 1; i++){
-            if(gameLobbies.get(i).lobbyCode.matches(lobbyCode)){
-                gameLobbies.get(i).player2 = Conn;
-                gameLobbies.get(i).p2AuthCode = p2Auth;
-                gameLobbies.get(i).player1.send("Ready");
-                return "LobbyInfo/"+gameLobbies.get(i).lobbyToString()+"/"+gameLobbies.get(i).lobbyType+"/"+gameLobbies.get(i).maxTurns+"/"+gameLobbies.get(i).turnTime;            
+            if(gameLobbies.get(i).getLobbyCode().matches(lobbyCode)){
+                gameLobbies.get(i).setPlayer2(Conn); 
+                gameLobbies.get(i).setP2AuthCode(p2Auth);
+                gameLobbies.get(i).getPlayer1().send("Ready");
+                return "LobbyInfo/"+gameLobbies.get(i).lobbyToString()+"/"+gameLobbies.get(i).getLobbyType()+"/"+gameLobbies.get(i).getMaxTurns()+"/"+gameLobbies.get(i).getTurnTime();            
             }
         }
         return "Error";  
     }
     
+    //Function to get the Array index of the lobby from the lobby code string
+    public int getLobbyIndexFromCode(String lobbyCode){
+        for(int i = 0; i <= gameLobbies.size() - 1; i++){
+            if(gameLobbies.get(i).getLobbyCode().matches(lobbyCode)){
+                return i;          
+            }
+        }
+        return -1;
+    }
+    
     public void matchCreator(WebSocket conn, String clientname, String authCode, String gameMode) throws FileNotFoundException{
         for(int i = 0; i <= gameQueue.size() - 1; i++){
+            //If there are people in the queue then this function is called, it will then create the lobby
+            //and send the data to the first person found in the queue and to the person who called the function
             
+            //Creating lobby with basic settings
             String lobbyInfo = createLobby(conn, clientname, gameMode, authCode, "6", "10 sec");
-            
+            //Sending lobby info to player who called the function
             conn.send(lobbyInfo);         
             String[] lobbyString = lobbyInfo.split("/");   
-            
-            //set the player 2 info from the gameQueue(i) position
-            gameLobbies.get(Integer.valueOf(lobbyString[1])).player2 = gameQueue.get(i).socket;
-            gameLobbies.get(Integer.valueOf(lobbyString[1])).p2Name = gameQueue.get(i).name;
-            gameLobbies.get(Integer.valueOf(lobbyString[1])).p2AuthCode = gameQueue.get(i).authcode;
-            gameQueue.get(i).socket.send(lobbyInfo);
+            //Setting the values for player 2 in the lobby, player 2 in this case is the person who was waiting in the queue
+            gameLobbies.get(Integer.valueOf(lobbyString[1])).setPlayer2(gameQueue.get(i).getSocket());
+            gameLobbies.get(Integer.valueOf(lobbyString[1])).setP2Name(gameQueue.get(i).getName());
+            gameLobbies.get(Integer.valueOf(lobbyString[1])).setP2AuthCode(gameQueue.get(i).getAuthcode());
+            //Sending the lobby info to player 2
+            gameQueue.get(i).getSocket().send(lobbyInfo);
+            //Removing player 2 from the queue
             gameQueue.remove(i);
             return;
         }
+        //If there are no players in the queue then add the player who called this function to the queue
         gameQueue.add(new Client(conn, clientname, authCode));
     }
-    
-    //In match server functions
-    
-    public String shapeDataToString(){
-        return "lol";
-    }
-    
 
+    //Main method which creates the server object and starts it
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, KeyManagementException {
         //Amazon EC-2 Machine IP (Only use when server is being run on the EC2 or add a new IP for any new server being used)
         //String host = "172.31.45.56";
@@ -337,83 +380,83 @@ public class SimpleServer extends WebSocketServer {
         server.start();        
     }
     
-        private static SSLContext getSSLContextFromLetsEncrypt() {
-            SSLContext context;
-            String pathTo = "/etc/letsencrypt/live/drawbuddygame.co.vu";
-            String keyPassword = "";
-            try {
-                context = SSLContext.getInstance("TLS");
+    //Function to create the SSL socket using a LetsEncrypt certificate
+    private static SSLContext getSSLContextFromLetsEncrypt() {
+        SSLContext context;
+        String pathTo = "/etc/letsencrypt/live/drawbuddygame.co.vu";
+        String keyPassword = "";
+        try {
+            context = SSLContext.getInstance("TLS");
 
-                byte[] certBytes = parseDERFromPEM(Files.readAllBytes(new File(pathTo + File.separator + "cert.pem").toPath()), "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
-                byte[] keyBytes = parseDERFromPEM(Files.readAllBytes(new File(pathTo + File.separator + "privkey.pem").toPath()), "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
+            byte[] certBytes = parseDERFromPEM(Files.readAllBytes(new File(pathTo + File.separator + "cert.pem").toPath()), "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
+            byte[] keyBytes = parseDERFromPEM(Files.readAllBytes(new File(pathTo + File.separator + "privkey.pem").toPath()), "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
 
-                X509Certificate cert = generateCertificateFromDER(certBytes);
-                RSAPrivateKey key = generatePrivateKeyFromDER(keyBytes);
+            X509Certificate cert = generateCertificateFromDER(certBytes);
+            RSAPrivateKey key = generatePrivateKeyFromDER(keyBytes);
 
-                KeyStore keystore = KeyStore.getInstance("JKS");
-                keystore.load(null);
-                keystore.setCertificateEntry("cert-alias", cert);
-                keystore.setKeyEntry("key-alias", key, keyPassword.toCharArray(), new Certificate[]{cert});
+            KeyStore keystore = KeyStore.getInstance("JKS");
+            keystore.load(null);
+            keystore.setCertificateEntry("cert-alias", cert);
+            keystore.setKeyEntry("key-alias", key, keyPassword.toCharArray(), new Certificate[]{cert});
 
-                KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-                kmf.init(keystore, keyPassword.toCharArray());
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(keystore, keyPassword.toCharArray());
 
-                KeyManager[] km = kmf.getKeyManagers();
+            KeyManager[] km = kmf.getKeyManagers();
 
-                context.init(km, null, null);
-            } catch (IOException | KeyManagementException | KeyStoreException | InvalidKeySpecException | UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException e) {
-                System.out.println("caught "+e);
-                throw new IllegalArgumentException();
-            }        
-            return context;
+            context.init(km, null, null);
+        } catch (IOException | KeyManagementException | KeyStoreException | InvalidKeySpecException | UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException e) {
+            System.out.println("caught "+e);
+            throw new IllegalArgumentException();
+        }        
+        return context;
+    }
+
+    //getSSLContextFromLetsEncrypt helper function
+    protected static byte[] parseDERFromPEM(byte[] pem, String beginDelimiter, String endDelimiter) {
+        String data = new String(pem);               
+        String[] tokens = data.split(beginDelimiter);
+        tokens = tokens[1].split(endDelimiter);
+        tokens[0] = tokens[0].replace("\n","");
+        return Base64.getDecoder().decode(tokens[0]);
+    }
+    //getSSLContextFromLetsEncrypt helper function
+    protected static RSAPrivateKey generatePrivateKeyFromDER(byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory factory = KeyFactory.getInstance("RSA");
+        return (RSAPrivateKey) factory.generatePrivate(spec);
+    }
+    //getSSLContextFromLetsEncrypt helper function
+    protected static X509Certificate generateCertificateFromDER(byte[] certBytes) throws CertificateException {
+        CertificateFactory factory = CertificateFactory.getInstance("X.509");
+        return (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(certBytes));
+    }
+
+    //Function that checks if the name the client is attempting to use is on the list of badwords
+    private boolean checkName(String name) throws FileNotFoundException{   
+        
+        //Document file path for EC2 Amazon machine
+        //  File txt = new File("/home/ec2-user/badwords.txt");
+
+        //File path if running the server locally
+        File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\badwords.txt");
+        
+        Scanner scan = new Scanner(txt);
+        ArrayList<String> data = new ArrayList<>() ;
+        while(scan.hasNextLine()){
+            data.add(scan.nextLine());
         }
 
-        protected static byte[] parseDERFromPEM(byte[] pem, String beginDelimiter, String endDelimiter) {
-            String data = new String(pem);               
-            String[] tokens = data.split(beginDelimiter);
-            tokens = tokens[1].split(endDelimiter);
-            tokens[0] = tokens[0].replace("\n","");
-            return Base64.getDecoder().decode(tokens[0]);
-        }
-
-        protected static RSAPrivateKey generatePrivateKeyFromDER(byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory factory = KeyFactory.getInstance("RSA");
-            return (RSAPrivateKey) factory.generatePrivate(spec);
-        }
-
-        protected static X509Certificate generateCertificateFromDER(byte[] certBytes) throws CertificateException {
-            CertificateFactory factory = CertificateFactory.getInstance("X.509");
-
-            return (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(certBytes));
-        }
-       
-        private boolean checkName(String name) throws FileNotFoundException{
-         //  File txt = new File("/home/ec2-user/badwords.txt");
-           // System.out.println("badword dir = "+System.getProperty("user.dir"));
-         
-         File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\badwords.txt");
-           Scanner scan = new Scanner(txt);
-            ArrayList<String> data = new ArrayList<>() ;
-            while(scan.hasNextLine()){
-                data.add(scan.nextLine());
+        String nameLower = name.toLowerCase();
+        String[] simpleArray = data.toArray(new String[]{});
+        String temp = "";
+        
+        for(int i = 0; i <= simpleArray.length - 1; i++){
+            temp = simpleArray[i].toLowerCase();
+            if(nameLower.contains(temp) || temp.matches(nameLower)){
+                return false;
             }
-            
-            String nameLower = name.toLowerCase();
-            
-            String[] simpleArray = data.toArray(new String[]{});
-            
-            String temp = "";
-            for(int i = 0; i <= simpleArray.length - 1; i++){
-               
-                temp = simpleArray[i].toLowerCase();
-                if(nameLower.contains(temp) || temp.matches(nameLower)){
-                    return false;
-                }
-  
-            }
-            
-            return true;
         }
+        return true;
+    }
 }
-

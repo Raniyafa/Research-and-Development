@@ -27,6 +27,8 @@ import java.util.ArrayList;
 
 public class PostGame extends ScreenAdapter {
 
+    //PostGame screen which is shown after users complete a match
+
     private MultipleScenes game;
 
 //    private TextButton facebookPost;
@@ -59,6 +61,9 @@ public class PostGame extends ScreenAdapter {
     private ImageButton Instagram;
     private ImageButton Share;
 
+    private float heightRatio;
+    private float widthRatio;
+
     public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray) {
         shapeArr = shapeArray;
         this.game = game;
@@ -66,6 +71,9 @@ public class PostGame extends ScreenAdapter {
 
     @Override
     public void show(){
+
+        heightRatio = Gdx.graphics.getHeight() / 640;
+        widthRatio = Gdx.graphics.getHeight() / 360;
 
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
                 Gdx.files.internal("font/dbfont.png"), false);
@@ -87,7 +95,6 @@ public class PostGame extends ScreenAdapter {
 
         float widthSlice = Gdx.graphics.getWidth() / 20;
 
-
 //        facebookPost = new TextButton("Facebook", mySkin, "toggle");
 //        facebookPost.setBounds(widthSlice, Gdx.graphics.getHeight()/2 - 310, 80, 40);
 //        facebookPost.getLabel().setFontScale(0.6f, 0.6f);
@@ -106,6 +113,7 @@ public class PostGame extends ScreenAdapter {
 //        facebookPost.setVisible(false);
 //        stage.addActor(facebookPost);
 
+        //FaceBook share button
         tex2 = new Texture(Gdx.files.internal("button/FaceBookButton.png"));
         TextureRegion[][] temp_f = TextureRegion.split(tex2,512,512);
         buttonUp = temp_f[0][0];
@@ -143,6 +151,7 @@ public class PostGame extends ScreenAdapter {
 //        twitterPost.setVisible(false);
 //        stage.addActor(twitterPost);
 
+        //Twitter share button
         tex2 = new Texture(Gdx.files.internal("button/TwitterButton.png"));
         TextureRegion[][] temp_t = TextureRegion.split(tex2,512,512);
         buttonUp = temp_t[0][0];
@@ -162,6 +171,7 @@ public class PostGame extends ScreenAdapter {
             }
         });
 
+        //Instagram share button
         tex2 = new Texture(Gdx.files.internal("button/Instagram.png"));
         TextureRegion[][] temp_i = TextureRegion.split(tex2,512,512);
         buttonUp = temp_i[0][0];
@@ -313,25 +323,25 @@ public class PostGame extends ScreenAdapter {
         //For loop which iterates through the shape array and draws each shape individually
         for (int i = 0; i <= shapeArr.size() - 1; i++) {
             try {
+                //Get reference to shape object then draw the shape to screen
                 Shape drawShape = shapeArr.get(i);
-                shapeRenderer.setColor(drawShape.rgb[0], drawShape.rgb[1], drawShape.rgb[2], 1);
-                String temp = drawShape.type;
+                shapeRenderer.setColor(drawShape.getRgb()[0], drawShape.getRgb()[1], drawShape.getRgb()[2], 1);
+                String temp = drawShape.getType();
+                //Scale the drawing for different resolutions
+                float drawShapeX = drawShape.getX() * widthRatio;
+                float drawShapeY = drawShape.getY() * heightRatio;
+                float tempShapeX = tempShape.getX() * widthRatio;
+                float tempShapeY = tempShape.getY() * heightRatio;
 
-                if (drawShape.lineNo == tempShape.lineNo) {
-                    if ((!(drawShape.x >= tempShape.x - 5 && drawShape.x <= tempShape.x + 5)) || (!(drawShape.y >= tempShape.y - 5 && drawShape.y <= tempShape.y + 5))) {
-                        shapeRenderer.rectLine(tempShape.x, tempShape.y, drawShape.x, drawShape.y, 20);
+                //Check if current shape is on the same line as the previous shape, if so then connect them with a line
+                if (drawShape.getLineNo() == tempShape.getLineNo()) {
+                    if ((!(drawShapeX >= tempShapeX - 5 && drawShapeX <= tempShapeX + 5)) || (!(drawShapeY >= tempShapeY - 5 && drawShapeY <= tempShapeY + 5))) {
+
+                        shapeRenderer.rectLine(tempShapeX, tempShapeY, drawShapeX, drawShapeY, 20);
                     }
                 }
-                if (temp.matches("circle")) {
-                    shapeRenderer.circle(drawShape.x, drawShape.y, 10);
-
-                } else if (temp.matches("square")) {
-                    shapeRenderer.rect(drawShape.x, drawShape.y, 10, 10);
-
-                } else {
-                    shapeRenderer.triangle(drawShape.x - 30.0f, drawShape.y, drawShape.x + 30.0f, drawShape.y, drawShape.x, drawShape.y + 45.0f);
-                }
-
+                //Draw the current shape as a circle
+                shapeRenderer.circle(drawShapeX, drawShapeY, 10);
                 tempShape = drawShape;
             } catch (Exception e) {
                 System.out.println("Null error drawing shapeArr[" + i + "]");
@@ -348,11 +358,7 @@ public class PostGame extends ScreenAdapter {
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 String temp = packet;
                 Gdx.app.log("WS", "Got message: " + packet);
-                String[] serverMessage = packet.split("/");
 
-                if (serverMessage[0].matches("LobbyInfo")) {
-
-                }
                 return FULLY_HANDLED;
             }
         };

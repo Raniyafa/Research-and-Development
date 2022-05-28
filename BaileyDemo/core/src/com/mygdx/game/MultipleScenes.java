@@ -15,6 +15,9 @@ import java.net.URISyntaxException;
 
 public class MultipleScenes extends Game {
 
+    //Initial class which implements the Game object and holds information which needs to be accessed by multiple classes
+    //such as a reference to the server, gamelobby, playername and authcode
+
     private BitmapFont font;
 
     private WebSocket socket;

@@ -36,6 +36,8 @@ import com.badlogic.gdx.Preferences;
 
 public class SettingMenu extends ScreenAdapter {
 
+    //SettingMenu class which allows the player to change the game options
+
     private MultipleScenes game;
     private Stage stage;
     private Skin skin;
@@ -69,14 +71,6 @@ public class SettingMenu extends ScreenAdapter {
 
         stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-
-
-
-
-
-
-
-
 
     //slider = new Slider(0, 100, 1, false, skin);
         ////slider.setValue(1);

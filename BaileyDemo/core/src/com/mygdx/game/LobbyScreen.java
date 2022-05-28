@@ -21,6 +21,8 @@ import com.github.czyzby.websocket.WebSocketAdapter;
 
 public class LobbyScreen extends ScreenAdapter {
 
+    //LobbyScreen class, this is the screen that will be shown when a player has joined a lobby and is waiting for someone to join
+
     private MultipleScenes game;
     private TextButton exitLobby;
     private Stage stage;
