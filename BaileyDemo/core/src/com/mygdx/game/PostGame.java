@@ -201,23 +201,23 @@ public class PostGame extends ScreenAdapter {
         });
 
         //Save button
-        tex2 = new Texture(Gdx.files.internal("button/SaveButton.png"));
-        TextureRegion[][] temp_2 = TextureRegion.split(tex2,220,400);
-        buttonUp = temp_2[0][0];
-        buttonDown = temp_2[0][1];
-        up = new TextureRegionDrawable(buttonUp);
-        down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth()/2 - 75,Gdx.graphics.getHeight() / 2 - 280);
-        button.setSize(73,133);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SoundManager.button.play();
-                // code here ~~
-            }
-        });
+//        tex2 = new Texture(Gdx.files.internal("button/SaveButton.png"));
+//        TextureRegion[][] temp_2 = TextureRegion.split(tex2,220,400);
+//        buttonUp = temp_2[0][0];
+//        buttonDown = temp_2[0][1];
+//        up = new TextureRegionDrawable(buttonUp);
+//        down = new TextureRegionDrawable(buttonDown);
+//        button = new ImageButton(up,down);
+//        button.setPosition(Gdx.graphics.getWidth()/2 - 75,Gdx.graphics.getHeight() / 2 - 280);
+//        button.setSize(73,133);
+//        stage.addActor(button);
+//        button.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                SoundManager.button.play();
+//                // code here ~~
+//            }
+//        });
 
 //        exitToMenu = new TextButton("Home", mySkin, "toggle");
 //        exitToMenu.setBounds(widthSlice * 16, Gdx.graphics.getHeight() - 40, 80, 40);
