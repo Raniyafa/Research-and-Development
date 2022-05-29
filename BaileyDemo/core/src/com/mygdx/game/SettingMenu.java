@@ -91,6 +91,7 @@ public class SettingMenu extends ScreenAdapter {
 //        });
         //stage.addActor(slider);
 
+        //Add setting.png as the background
         tex = new Texture(Gdx.files.internal("image/setting.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
@@ -98,6 +99,7 @@ public class SettingMenu extends ScreenAdapter {
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Add Back Button, click it will move back to Lobby (Home Screen)
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
         buttonUp = temp_0[0][0];
@@ -117,7 +119,7 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        //Game Rules Button
+        //Add Game Rules Button, click it the Rule Intro will show up
         tex2 = new Texture(Gdx.files.internal("button/RulesButton.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_3[0][0];
@@ -136,7 +138,7 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        //Background Music ON
+        //Add Volume Button(Off) show the Background Music is ON, click it the Background Music will turn OFF
         tex2 = new Texture(Gdx.files.internal("button/VolumeButton_Off.png"));
         TextureRegion[][] temp_4 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_4[0][0];
@@ -158,7 +160,7 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        //Background Music OFF
+        //Add Volume Button(On) show the Background Music is OFF, click it the Background Music will turn ON
         tex2 = new Texture(Gdx.files.internal("button/VolumeButton_On.png"));
         TextureRegion[][] temp_5 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_5[0][0];
@@ -180,7 +182,7 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        //Sound Effect ON
+        //Add Volume Button(On) show the Sound Effect is ON, click it the Sound Effect will turn OFF
         tex2 = new Texture(Gdx.files.internal("button/VolumeButton_Off.png"));
         TextureRegion[][] temp_6 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_6[0][0];
@@ -201,7 +203,7 @@ public class SettingMenu extends ScreenAdapter {
             }
         });
 
-        //Sound Effect OFF
+        //Add Volume Button(On) show the Sound Effect is OFF, click it the Sound Effect will turn ON
         tex2 = new Texture(Gdx.files.internal("button/VolumeButton_On.png"));
         TextureRegion[][] temp_7 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_7[0][0];

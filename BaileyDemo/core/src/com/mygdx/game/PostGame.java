@@ -83,7 +83,7 @@ public class PostGame extends ScreenAdapter {
                 Gdx.files.internal("font/dbSmallFont.png"), false);
         smallFont.setColor(Color.BLACK);
 
-        //Adding Background (new)
+        //Adding Background (new) - Add gameFinish.png as the background
         tex = new Texture(Gdx.files.internal("image/gameFinish.png"));
         batch = new SpriteBatch();
 
@@ -113,7 +113,7 @@ public class PostGame extends ScreenAdapter {
 //        facebookPost.setVisible(false);
 //        stage.addActor(facebookPost);
 
-        //FaceBook share button
+        //FaceBook Share Button(new) to exchange the Text Button (FaceBook) below
         tex2 = new Texture(Gdx.files.internal("button/FaceBookButton.png"));
         TextureRegion[][] temp_f = TextureRegion.split(tex2,512,512);
         buttonUp = temp_f[0][0];
@@ -151,7 +151,7 @@ public class PostGame extends ScreenAdapter {
 //        twitterPost.setVisible(false);
 //        stage.addActor(twitterPost);
 
-        //Twitter share button
+        //Twitter Share Button(new) to exchange the Text Button(Twitter) below
         tex2 = new Texture(Gdx.files.internal("button/TwitterButton.png"));
         TextureRegion[][] temp_t = TextureRegion.split(tex2,512,512);
         buttonUp = temp_t[0][0];
@@ -171,7 +171,7 @@ public class PostGame extends ScreenAdapter {
             }
         });
 
-        //Instagram share button
+        //Instagram Share Button(new) to exchange the Text Button(Instagram) below
         tex2 = new Texture(Gdx.files.internal("button/Instagram.png"));
         TextureRegion[][] temp_i = TextureRegion.split(tex2,512,512);
         buttonUp = temp_i[0][0];
@@ -191,7 +191,7 @@ public class PostGame extends ScreenAdapter {
             }
         });
 
-        //back to lobby button
+        //Back to Lobby Button(new) tp exchange the Text Button(Exit to Lobby) below
         tex2 = new Texture(Gdx.files.internal("button/BackToLobbyButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,400,200);
         buttonUp = temp_0[0][0];
@@ -265,7 +265,7 @@ public class PostGame extends ScreenAdapter {
 //        instagramPost.setVisible(false);
 //        stage.addActor(instagramPost);
 
-        //share button
+        //Share Button, click it the 3 Share Buttons(FaceBook, Twitter, Instagram) will show up
         tex2 = new Texture(Gdx.files.internal("button/ShareButton.png"));
         TextureRegion[][] temp_1 = TextureRegion.split(tex2,400,190);
         buttonUp = temp_1[0][0];

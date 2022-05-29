@@ -99,7 +99,8 @@ public class HomeScreen extends ScreenAdapter {
         final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
         textField.setY(Gdx.graphics.getHeight() / 2 - 100);
-        //Isaac add-img_background
+
+        //Add Lobby.png as the background
         tex = new Texture(Gdx.files.internal("image/Lobby.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
@@ -107,6 +108,7 @@ public class HomeScreen extends ScreenAdapter {
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Add Text Field for the Game PIN function
        // final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
 //        textField.setY(Gdx.graphics.getHeight() / 2 - 100);
@@ -116,7 +118,6 @@ public class HomeScreen extends ScreenAdapter {
         textField.setHeight(50);
         textField.setVisible(false);
         textField.setText("");
-
         textField.addListener(new InputListener(){
 
             @Override
@@ -184,7 +185,7 @@ public class HomeScreen extends ScreenAdapter {
 //        stage.addActor(textField);
 
 
-        //Setting Icon
+        //Add Setting Button, click it will move to Setting Menu Scene
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
         buttonUp = temp[0][0];
@@ -224,7 +225,7 @@ public class HomeScreen extends ScreenAdapter {
 //            }
 //        });
 
-        //Quick Play Button
+        //Add Quick Play Button, click it will move to Quick Play Scene
         tex2 = new Texture(Gdx.files.internal("button/QuickPlayButton.png"));
         TextureRegion[][] temp_1 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_1[0][0];
@@ -245,7 +246,7 @@ public class HomeScreen extends ScreenAdapter {
         });
 
 
-        //Create Lobby Button
+        //Add Create Lobby Button, click it will move to Create Room Scene
         tex2 = new Texture(Gdx.files.internal("button/CreateRoomButton.png"));
         TextureRegion[][] temp_2 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_2[0][0];
@@ -265,7 +266,7 @@ public class HomeScreen extends ScreenAdapter {
         });
 
 
-        //Game PIN Button
+        //Add Game PIN Button, click it will open the Text Field
         tex2 = new Texture(Gdx.files.internal("button/GamePINButton.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_3[0][0];

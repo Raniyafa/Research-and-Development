@@ -63,6 +63,7 @@ public class CreateLobby extends ScreenAdapter {
 
         Gdx.graphics.setWindowedMode(360, 640);
 
+        //Add CreateRoom.png as the background
         tex = new Texture(Gdx.files.internal("image/CreateRoom.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
@@ -70,6 +71,7 @@ public class CreateLobby extends ScreenAdapter {
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Add Back Button, click it will move back to Lobby (Home Screen)
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
         buttonUp = temp_0[0][0];
@@ -90,7 +92,7 @@ public class CreateLobby extends ScreenAdapter {
             }
         });
 
-        //Adding Create Button
+        //Adding Create Button, click it will create a Game Room/Lobby as User required
         tex2 = new Texture(Gdx.files.internal("button/CreateButton.png"));
         TextureRegion[][] temp_2 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_2[0][0];
@@ -112,6 +114,7 @@ public class CreateLobby extends ScreenAdapter {
             }
         });
 
+        //Add Mode Intro Button, takes the player to the game mode info screen
         tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_3[0][0];
@@ -130,6 +133,7 @@ public class CreateLobby extends ScreenAdapter {
             }
         });
 
+        //Select Box for Game Mode
         lobbyType = new SelectBox<String>(mySkin);
         lobbyType.setItems("Regular", "One Line", "Test");
         //lobbyType.setName("Lobby Type:");
@@ -138,6 +142,7 @@ public class CreateLobby extends ScreenAdapter {
         lobbyType.setSelected("5");
         stage.addActor(lobbyType);
 
+        //Select Box for Topic
         topicType = new SelectBox<String>(mySkin);
         topicType.setItems("Test 1", "Test 2", "Test 3");
         topicType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 70, 100, 60);
@@ -145,6 +150,7 @@ public class CreateLobby extends ScreenAdapter {
         topicType.setSelected("5");
         stage.addActor(topicType);
 
+        //Select Box for Time
         time = new SelectBox<String>(mySkin);
         time.setItems("10 sec", "15 sec", "20 sec", "30 sec", "1 min");
         time.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 - 35, 100, 60);
@@ -152,6 +158,7 @@ public class CreateLobby extends ScreenAdapter {
         time.setSelected("5");
         stage.addActor(time);
 
+        //Select Box for Round
         round = new SelectBox<String>(mySkin);
         round.setItems("2", "4", "6", "8", "10");
         round.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 - 140, 100, 60);

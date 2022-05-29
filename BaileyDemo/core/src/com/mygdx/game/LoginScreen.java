@@ -96,6 +96,7 @@ public class LoginScreen extends ScreenAdapter {
         stage = new Stage(new ScreenViewport());
         //Gdx.graphics.setWindowedMode(360, 640);
 
+        //Add HomePage.png as the background
         tex = new Texture(Gdx.files.internal("image/HomePage.png"));
         region = new TextureRegion(tex,0,0, 750, 1334);
         image = new Image(region);
@@ -103,12 +104,13 @@ public class LoginScreen extends ScreenAdapter {
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
-        //Background music
+        //Play the Background Music and set it into a loop
         SoundManager.create();
         SoundManager.background.setLooping(true);
         SoundManager.background.setVolume(0.03f);
         SoundManager.background.play();
 
+        //Text field for input the User Name
         final TextField textField = new TextField("Text field", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 125);
         textField.setY(Gdx.graphics.getHeight() / 2 - 50);
@@ -154,7 +156,7 @@ public class LoginScreen extends ScreenAdapter {
 //
 //        stage.addActor(randomName);
 
-        //Start Button
+        //Add Start Button, and if click Start Button it will give User a random User Name
         tex2 = new Texture(Gdx.files.internal("button/StartButton.png"));
         TextureRegion[][] temp_1 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_1[0][0];

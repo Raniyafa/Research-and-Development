@@ -55,6 +55,8 @@ public class gameRuleScreen extends ScreenAdapter{
     @Override
     public void show(){
         stage = new Stage(new ScreenViewport());
+
+        //Add Rules.png as the background
         tex = new Texture(Gdx.files.internal("image/Rules.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
@@ -62,6 +64,7 @@ public class gameRuleScreen extends ScreenAdapter{
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
+        //Add Back Button, click it will move back to Lobby (Home Screen)
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
         buttonUp = temp_0[0][0];

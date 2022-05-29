@@ -43,6 +43,7 @@ import sun.awt.ExtendedKeyCodes;
         public void show(){
             stage = new Stage(new ScreenViewport());
 
+            //Add loading.png as the background
             tex = new Texture(Gdx.files.internal("image/loading.png"));
             region = new TextureRegion(tex,0,0,750,1334);
             image = new Image(region);

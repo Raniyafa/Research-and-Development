@@ -93,7 +93,7 @@ public class FindingMatch extends ScreenAdapter {
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
 
-        //Adding Background Img
+        //Add waiting2.png as the background
         tex = new Texture(Gdx.files.internal("image/waiting2.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);

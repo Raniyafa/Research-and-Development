@@ -214,7 +214,7 @@ public class GameScreen extends ScreenAdapter {
 //        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
 //        stage.addActor(image);
 
-        //Adding Background (new)
+        //Adding Background (new) - Add gameplay.png as the background
         tex = new Texture(Gdx.files.internal("image/gameplay.png"));
         batch = new SpriteBatch();
 
@@ -337,7 +337,7 @@ public class GameScreen extends ScreenAdapter {
         stage.addActor(colour);
         colour.setVisible(false);
 
-        //Color Button
+        //Add Color Button, click it the Color Select Box will show up
         tex2 = new Texture(Gdx.files.internal("button/ColorButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,85,85);
         buttonUp = temp_0[0][0];

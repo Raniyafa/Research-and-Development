@@ -62,7 +62,7 @@ public class QuickPlayMenu extends ScreenAdapter{
     public void show(){
         stage = new Stage(new ScreenViewport());
 
-
+        //Add Lobby.png as the background
         tex = new Texture(Gdx.files.internal("image/Lobby.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
@@ -70,7 +70,7 @@ public class QuickPlayMenu extends ScreenAdapter{
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
-        //Mode Intro Button, takes the player to the game mode info screen
+        //Add Mode Intro Button, takes the player to the game mode info screen
         tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
         TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
         buttonUp = temp_3[0][0];
@@ -89,7 +89,7 @@ public class QuickPlayMenu extends ScreenAdapter{
             }
         });
 
-        //Setting Icon, takes the client to the setting menu
+        //Add Setting Icon, takes the client to the setting menu
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
         buttonUp = temp[0][0];
@@ -135,7 +135,7 @@ public class QuickPlayMenu extends ScreenAdapter{
 
         stage.addActor(button);
 
-        //Standard Mode Button
+        //Add Standard Mode Button, click it the game room(Standard Mode) will be create, move to Loading Scene
         tex2 = new Texture(Gdx.files.internal("button/StandardButton.png"));
         TextureRegion[][] temp_1 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_1[0][0];
@@ -156,7 +156,7 @@ public class QuickPlayMenu extends ScreenAdapter{
 
         stage.addActor(button);
 
-        //Single Line Mode Button
+        //Add Single Line Mode Button, click it the game room(Single Line Mode) will be create, move to Loading Scene
         tex2 = new Texture(Gdx.files.internal("button/slModeButton.png"));
         TextureRegion[][] temp_2 = TextureRegion.split(tex2,480,140);
         buttonUp = temp_2[0][0];
