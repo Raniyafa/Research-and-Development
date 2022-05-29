@@ -7,8 +7,6 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.github.czyzby.websocket.CommonWebSockets;
 import com.mygdx.game.MultipleScenes;
 
-import Upskilling.MyGdxGame;
-
 public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {

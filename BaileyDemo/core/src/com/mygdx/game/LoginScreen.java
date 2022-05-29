@@ -84,13 +84,12 @@ public class LoginScreen extends ScreenAdapter {
 
     @Override
     public void show(){
-        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-        Gdx.files.internal("font/dbfont.png"), false);
+      //  font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+       // Gdx.files.internal("font/dbfont.png"), false);
         game.setListener(getListener());
 
-        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
-                Gdx.files.internal("font/dbSmallfont.png"), false);
-        game.setListener(getListener());
+       // smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
+       //         Gdx.files.internal("font/dbSmallfont.png"), false);
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
@@ -235,9 +234,9 @@ public class LoginScreen extends ScreenAdapter {
             if(!game.getSocket().isConnecting()) {
                 game.getSocket().connect();
             }
-            font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+       //     font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
             //font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
-            font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+         //   font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
         game.getBatch().end();
     }

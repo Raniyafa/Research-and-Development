@@ -93,19 +93,19 @@ public class GameLobby {
     public String generateWord() throws FileNotFoundException{
         String temp = "";
         
-            File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
-          // File txt = new File("/home/ec2-user/topicwords.txt");
-           Scanner scan = new Scanner(txt);
-            ArrayList<String> data = new ArrayList<>() ;
-            while(scan.hasNextLine()){
-                data.add(scan.nextLine());
-            }
-            
-            String[] simpleArray = data.toArray(new String[]{});    
-            Random rand = new Random();      
-            return simpleArray[rand.nextInt(simpleArray.length)];
+        File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
+        // File txt = new File("/home/ec2-user/topicwords.txt");
+       Scanner scan = new Scanner(txt);
+        ArrayList<String> data = new ArrayList<>() ;
+        while(scan.hasNextLine()){
+            data.add(scan.nextLine());
+        }
+
+        String[] simpleArray = data.toArray(new String[]{});    
+        Random rand = new Random();      
+        return simpleArray[rand.nextInt(simpleArray.length)];
     }
-    
+      
     //Getters and setters for the class variables
 
     public void increaseTurnCount(){

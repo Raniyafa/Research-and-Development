@@ -78,6 +78,7 @@ public class FindingMatch extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
         Gdx.files.internal("font/dbfont.png"), false);
 
+        //Send packet to server that requests for the player to be added to the game queue
         if(standardMode){
             game.getSocket().send("FindMatch/"+game.getPlayerName()+"/"+game.getAuthCode()+"/Regular");
         }
@@ -125,37 +126,11 @@ public class FindingMatch extends ScreenAdapter {
             }
         });
         stage.addActor(button);
-
-        //Create the exit to main screen button, also adding the listener which controls what happens when you interact with the button
-//        exitLobby = new TextButton("Stop searching", mySkin, "toggle");
-//        exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 200, 150, 50);
-//        exitLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        exitLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                exitLobby.setText("Join Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                if(game.getGameLobby().getLobbyIndex() != -1) {
-//                    game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
-//                }
-//                else{
-//                    game.getSocket().send("ReturnToMain");
-//                }
-//
-//                game.setScreen(new HomeScreen(game));
-//                return true;
-//            }
-//        });
-//        stage.addActor(exitLobby);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-
 
         //If a match is found then switch to the loading screen
         if(matchFound){
@@ -177,7 +152,6 @@ public class FindingMatch extends ScreenAdapter {
             //add server code that remove person from queue if dc
         }
         game.getBatch().end();
-
     }
 
     @Override

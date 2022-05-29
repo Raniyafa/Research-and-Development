@@ -130,61 +130,6 @@ public class HomeScreen extends ScreenAdapter {
             }
         });
 
-//        joinLobby = new TextButton("Join Lobby", mySkin, "toggle");
-//        joinLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 - 25, 150, 50);
-//        joinLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        joinLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                joinLobby.setText("Join Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                if(!textField.isVisible()){
-//                    textField.setVisible(true);
-//                }
-//                else{
-//                    textField.setVisible(false);
-//                    textField.setText("");
-//                }
-//                return true;
-//            }
-//        });
-//
-//        createLobby = new TextButton("Create Lobby", mySkin, "toggle");
-//        createLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 50, 150, 50);
-//        createLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        createLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                createLobby.setText("Join Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                moveToCreateLobby = true;
-//                return true;
-//            }
-//        });
-//
-//        findMatch = new TextButton("Find match", mySkin, "toggle");
-//        findMatch.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 125, 150, 50);
-//        findMatch.getLabel().setFontScale(0.6f, 0.6f);
-//
-//
-//        findMatch.addListener(new InputListener(){
-//
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                moveToMatchmaking = true;
-//                return true;
-//            }
-//        });
-//
-//        stage.addActor(textField);
-
-
         //Add Setting Button, click it will move to Setting Menu Scene
         tex2 = new Texture(Gdx.files.internal("button/SettingButton.png"));
         TextureRegion[][] temp = TextureRegion.split(tex2,85,85);
@@ -201,29 +146,9 @@ public class HomeScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingMenu(game));
                 SoundManager.button.play();
-                //SoundManager.background.dispose();
+                SoundManager.background.dispose();
             }
         });
-
-        //Back Icon
-//        tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
-//        TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
-//        buttonUp = temp_0[0][0];
-//        buttonDown = temp_0[0][1];
-//        up = new TextureRegionDrawable(buttonUp);
-//        down = new TextureRegionDrawable(buttonDown);
-//        button = new ImageButton(up,down);
-//        button.setPosition(Gdx.graphics.getWidth()/2 - 180,Gdx.graphics.getHeight() / 2 + 270);
-//        button.setSize(105,30);
-//        stage.addActor(button);
-//        button.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                game.setScreen(new LoginScreen(game));
-//                SoundManager.button.play();
-//                SoundManager.background.dispose();
-//            }
-//        });
 
         //Add Quick Play Button, click it will move to Quick Play Scene
         tex2 = new Texture(Gdx.files.internal("button/QuickPlayButton.png"));
@@ -261,7 +186,7 @@ public class HomeScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 moveToCreateLobby = true;
-                SoundManager.button.play();
+                     SoundManager.button.play();
             }
         });
 
@@ -280,7 +205,7 @@ public class HomeScreen extends ScreenAdapter {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SoundManager.button.play();
+                 SoundManager.button.play();
                 if(!textField.isVisible()) {
                     textField.setVisible(true);
                 }

@@ -181,8 +181,11 @@ public class SimpleServer extends WebSocketServer {
         case "LobbyMessage":
             if(clientMessage[1].matches("CreateLobby")){
                 try {
-                    //Creates a lobby and send the lobby info to client
-                    conn.send(createLobby(conn, clientMessage[6], clientMessage[2], clientMessage[3], clientMessage[4], clientMessage[5]));
+                    //Creates a lobby and send the lobby info to client after checking that the word is valid
+                    if(checkCustomWord(clientMessage[7])){
+                        conn.send(createLobby(conn, clientMessage[6], clientMessage[2], clientMessage[3], clientMessage[4], clientMessage[5], clientMessage[7]));
+                    }
+                    
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(SimpleServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -281,7 +284,7 @@ public class SimpleServer extends WebSocketServer {
     }
 
     //Function to create a game lobby
-    public String createLobby(WebSocket conn, String clientname, String lobbyType, String p1Auth, String roundAmount, String roundTime) throws FileNotFoundException{
+    public String createLobby(WebSocket conn, String clientname, String lobbyType, String p1Auth, String roundAmount, String roundTime, String drawTopic) throws FileNotFoundException{
         //Obtain a list of all the current lobby codes, it is used in the constructor for a lobby to ensure
         //that duplicate lobby codes are not being created
         String[] lobbyCodes = new String[gameLobbies.size()];     
@@ -295,6 +298,10 @@ public class SimpleServer extends WebSocketServer {
         newLobby.setP1Name(clientname);
         newLobby.setPlayer1(conn);
         newLobby.setMaxTurns(Integer.valueOf(roundAmount));
+        
+        if(!drawTopic.matches("Random")){
+            newLobby.setWordTopic(drawTopic);
+        }
         
         switch(roundTime){
             case("10 sec"):
@@ -349,7 +356,7 @@ public class SimpleServer extends WebSocketServer {
             //and send the data to the first person found in the queue and to the person who called the function
             
             //Creating lobby with basic settings
-            String lobbyInfo = createLobby(conn, clientname, gameMode, authCode, "6", "10 sec");
+            String lobbyInfo = createLobby(conn, clientname, gameMode, authCode, "6", "10 sec", "Random");
             //Sending lobby info to player who called the function
             conn.send(lobbyInfo);         
             String[] lobbyString = lobbyInfo.split("/");   
@@ -378,6 +385,29 @@ public class SimpleServer extends WebSocketServer {
         SimpleServer server = new SimpleServer(new InetSocketAddress(host, port));
         System.out.println("Attemping to run server on IP: "+host+", using Port: "+port);           
         server.start();        
+    }
+    
+        //Function to check if player may have modified the game to send custom drawing topic, this could create problems therefore we check if the 
+    //topic sent by the client is apart of the approved list
+    public boolean checkCustomWord(String drawTopic) throws FileNotFoundException{
+        String temp = "";
+        
+        File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
+        // File txt = new File("/home/ec2-user/topicwords.txt");
+        Scanner scan = new Scanner(txt);
+        ArrayList<String> data = new ArrayList<>() ;
+        while(scan.hasNextLine()){
+            data.add(scan.nextLine());
+        }
+
+        String[] simpleArray = data.toArray(new String[]{});    
+        
+        for(String e : simpleArray){
+            if(e.matches(drawTopic)){
+                return true;
+            }
+        }
+        return false;
     }
     
     //Function to create the SSL socket using a LetsEncrypt certificate

@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class CreateLobby extends ScreenAdapter {
 
@@ -109,7 +115,7 @@ public class CreateLobby extends ScreenAdapter {
                 SoundManager.button.play();
                 if(game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
 
-                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected()+"/"+game.getAuthCode()+"/"+round.getSelected()+"/"+time.getSelected()+"/"+game.getPlayerName());
+                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected()+"/"+game.getAuthCode()+"/"+round.getSelected()+"/"+time.getSelected()+"/"+game.getPlayerName()+"/"+topicType.getSelected());
                 }
             }
         });
@@ -135,16 +141,26 @@ public class CreateLobby extends ScreenAdapter {
 
         //Select Box for Game Mode
         lobbyType = new SelectBox<String>(mySkin);
-        lobbyType.setItems("Regular", "One Line", "Test");
+        lobbyType.setItems("Regular", "One Line");
         //lobbyType.setName("Lobby Type:");
         lobbyType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 180, 100, 60);
         lobbyType.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         lobbyType.setSelected("5");
         stage.addActor(lobbyType);
 
+        ArrayList<String> data = new ArrayList<>() ;
+        data.add("Random");
+        FileHandle handle = Gdx.files.local("textfiles/topicwords.txt");
+        String text = handle.readString();
+        String wordsArray[] = text.split("\\r?\\n");
+        for(String word : wordsArray) {
+            data.add(word);
+        }
+        String[] simpleArray = data.toArray(new String[]{});
+
         //Select Box for Topic
         topicType = new SelectBox<String>(mySkin);
-        topicType.setItems("Test 1", "Test 2", "Test 3");
+        topicType.setItems(simpleArray);
         topicType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 70, 100, 60);
         topicType.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         topicType.setSelected("5");

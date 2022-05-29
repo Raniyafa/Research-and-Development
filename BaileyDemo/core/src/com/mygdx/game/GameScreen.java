@@ -581,6 +581,8 @@ public class GameScreen extends ScreenAdapter {
         if (gameFinished) {
             //If the client is using Android or Desktop then take a screenshot of the drawing and convert to Base64 string then send to server
             //Server could interact with image hosting API to host drawing which can be used for social media sharing
+            //to be able to directly share the screenshot, interfaces must be added for each platform with sharing functions created for each and depending on which
+            //platform is being used the user, a different interface may be used to facilitate the sharing of a image
             if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop) {
 
             final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -605,6 +607,8 @@ public class GameScreen extends ScreenAdapter {
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
+
+
 
     public void storeMouseLoc(float delta) {
 
