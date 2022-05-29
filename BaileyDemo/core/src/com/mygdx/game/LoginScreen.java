@@ -84,12 +84,12 @@ public class LoginScreen extends ScreenAdapter {
 
     @Override
     public void show(){
-      //  font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-       // Gdx.files.internal("font/dbfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+        Gdx.files.internal("font/dbfont.png"), false);
         game.setListener(getListener());
 
-       // smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
-       //         Gdx.files.internal("font/dbSmallfont.png"), false);
+        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
+                Gdx.files.internal("font/dbSmallFont.png"), false);
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
