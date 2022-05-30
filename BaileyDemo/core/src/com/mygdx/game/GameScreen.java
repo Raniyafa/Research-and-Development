@@ -346,7 +346,7 @@ public class GameScreen extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth()/2 - 130,Gdx.graphics.getHeight() / 2 - 270);
-        button.setSize(30,30);
+        button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -381,7 +381,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(tex,0,0,360,750);
+        batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
         batch.end();
 
         //If the WebSocket is open (connected) then process the game controller logic

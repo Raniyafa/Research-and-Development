@@ -106,16 +106,16 @@ public class LoginScreen extends ScreenAdapter {
         //Play the Background Music and set it into a loop
         SoundManager.create();
         SoundManager.background.setLooping(true);
-        SoundManager.background.setVolume(0.03f);
+        SoundManager.background.setVolume(0.5f);
         SoundManager.background.play();
 
         //Text field for input the User Name
         final TextField textField = new TextField("Text field", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 125);
         textField.setY(Gdx.graphics.getHeight() / 2 - 50);
-        textField.setWidth(250);
+        textField.setWidth(250 * (Gdx.graphics.getWidth() / 360));
         textField.setText("");
-        textField.setHeight(70);
+        textField.setHeight(70 * (Gdx.graphics.getHeight() / 640));
         textField.setVisible(true);
         textField.addListener(new InputListener(){
 
@@ -164,7 +164,7 @@ public class LoginScreen extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 115, Gdx.graphics.getHeight() / 2 - 200);
-        button.setSize(240,70);
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override

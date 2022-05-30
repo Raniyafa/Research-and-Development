@@ -86,7 +86,7 @@ public class CreateLobby extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth()/2 - 180,Gdx.graphics.getHeight() / 2 + 270);
-        button.setSize(105,30);
+        button.setSize(105 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -107,7 +107,7 @@ public class CreateLobby extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 250);
-        button.setSize(240,70);
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -129,7 +129,7 @@ public class CreateLobby extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight()/2 + 195);
-        button.setSize(30,30);
+        button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override

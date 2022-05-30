@@ -113,9 +113,9 @@ public class HomeScreen extends ScreenAdapter {
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
 //        textField.setY(Gdx.graphics.getHeight() / 2 - 100);
         textField.setY(100);
-        textField.setWidth(200);
+        textField.setWidth(200 * (Gdx.graphics.getWidth() / 360));
         textField.setText("");
-        textField.setHeight(50);
+        textField.setHeight(50 * (Gdx.graphics.getHeight() / 640));
         textField.setVisible(false);
         textField.setText("");
         textField.addListener(new InputListener(){
@@ -139,7 +139,7 @@ public class HomeScreen extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 + 115,Gdx.graphics.getHeight() / 2 + 250);
-        button.setSize(30,30);
+        button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -160,7 +160,7 @@ public class HomeScreen extends ScreenAdapter {
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 + 50);
         stage.addActor(button);
-        button.setSize(240,70);
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360),140 * (Gdx.graphics.getHeight() / 640));
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -180,7 +180,7 @@ public class HomeScreen extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 50);
-        button.setSize(240,70);
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -200,7 +200,7 @@ public class HomeScreen extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 150);
-        button.setSize(240,70);
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override

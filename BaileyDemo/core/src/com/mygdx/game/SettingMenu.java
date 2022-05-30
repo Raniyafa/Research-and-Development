@@ -108,7 +108,7 @@ public class SettingMenu extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth()/2 - 180,Gdx.graphics.getHeight() / 2 + 270);
-        button.setSize(105,30);
+        button.setSize(105 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -128,7 +128,7 @@ public class SettingMenu extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth() / 2 - 60,Gdx.graphics.getHeight()/2 - 220);
-        button.setSize(120,35);
+        button.setSize(120 * (Gdx.graphics.getWidth() / 360),35 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -147,13 +147,13 @@ public class SettingMenu extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         backgroundMusicButton_On = new ImageButton(up,down);
         backgroundMusicButton_On.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + 5);
-        backgroundMusicButton_On.setSize(100,100);
+        backgroundMusicButton_On.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(backgroundMusicButton_On);
         backgroundMusicButton_On.setVisible(false);
         backgroundMusicButton_On.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SoundManager.background.setVolume(0.03f);
+                SoundManager.background.setVolume(0.5f);
                 SoundManager.button.play();
                 backgroundMusicButton_On.setVisible(false);
                 backgroundMusicButton_Off.setVisible(true);
@@ -169,7 +169,7 @@ public class SettingMenu extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         backgroundMusicButton_Off = new ImageButton(up,down);
         backgroundMusicButton_Off.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + 5);
-        backgroundMusicButton_Off.setSize(100,100);
+        backgroundMusicButton_Off.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(backgroundMusicButton_Off);
         backgroundMusicButton_Off.setVisible(true);
         backgroundMusicButton_Off.addListener(new ClickListener() {
@@ -191,7 +191,7 @@ public class SettingMenu extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         soundEffectButton_On = new ImageButton(up,down);
         soundEffectButton_On.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + -150);
-        soundEffectButton_On.setSize(100,100);
+        soundEffectButton_On.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(soundEffectButton_On);
         soundEffectButton_On.setVisible(false);
         soundEffectButton_On.addListener(new ClickListener() {
@@ -212,7 +212,7 @@ public class SettingMenu extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         soundEffectButton_Off = new ImageButton(up,down);
         soundEffectButton_Off.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight()/2 + -150);
-        soundEffectButton_Off.setSize(100,100);
+        soundEffectButton_Off.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(soundEffectButton_Off);
         soundEffectButton_Off.setVisible(true);
         soundEffectButton_Off.addListener(new ClickListener() {

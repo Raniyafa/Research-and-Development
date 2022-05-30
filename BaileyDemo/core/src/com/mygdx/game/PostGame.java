@@ -95,24 +95,6 @@ public class PostGame extends ScreenAdapter {
 
         float widthSlice = Gdx.graphics.getWidth() / 20;
 
-//        facebookPost = new TextButton("Facebook", mySkin, "toggle");
-//        facebookPost.setBounds(widthSlice, Gdx.graphics.getHeight()/2 - 310, 80, 40);
-//        facebookPost.getLabel().setFontScale(0.6f, 0.6f);
-//        facebookPost.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                Gdx.net.openURI("https://www.facebook.com/sharer/sharer.php?u=https://static-cdn.jtvnw.net/user-default-pictures-uv/215b7342-def9-11e9-9a66-784f43822e80-profile_image-70x70.png&quote=TEST DRAWING FROM DRAW BUDDY TEST");
-//                return true;
-//            }
-//        });
-//        facebookPost.setVisible(false);
-//        stage.addActor(facebookPost);
-
         //FaceBook Share Button(new) to exchange the Text Button (FaceBook) below
         tex2 = new Texture(Gdx.files.internal("button/FaceBookButton.png"));
         TextureRegion[][] temp_f = TextureRegion.split(tex2,512,512);
@@ -122,7 +104,7 @@ public class PostGame extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         FaceBook = new ImageButton(up,down);
         FaceBook.setPosition(Gdx.graphics.getWidth()/2 + 10,Gdx.graphics.getHeight() / 2 - 210);
-        FaceBook.setSize(45,45);
+        FaceBook.setSize(45 * (Gdx.graphics.getWidth() / 360),45 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(FaceBook);
         FaceBook.setVisible(false);
         FaceBook.addListener(new ClickListener() {
@@ -133,24 +115,6 @@ public class PostGame extends ScreenAdapter {
             }
         });
 
-//        twitterPost = new TextButton("Twitter", mySkin, "toggle");
-//        twitterPost.setBounds(widthSlice * 6, Gdx.graphics.getHeight()/2 - 310, 80, 40);
-//        twitterPost.getLabel().setFontScale(0.6f, 0.6f);
-//        twitterPost.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                Gdx.net.openURI("https://twitter.com/share?ref_src=https://static-cdn.jtvnw.net/user-default-pictures-uv/215b7342-def9-11e9-9a66-784f43822e80-profile_image-70x70.png");
-//                return true;
-//            }
-//        });
-//        twitterPost.setVisible(false);
-//        stage.addActor(twitterPost);
-
         //Twitter Share Button(new) to exchange the Text Button(Twitter) below
         tex2 = new Texture(Gdx.files.internal("button/TwitterButton.png"));
         TextureRegion[][] temp_t = TextureRegion.split(tex2,512,512);
@@ -160,7 +124,7 @@ public class PostGame extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         Twitter = new ImageButton(up,down);
         Twitter.setPosition(Gdx.graphics.getWidth()/2 + 65,Gdx.graphics.getHeight() / 2 - 210);
-        Twitter.setSize(45,45);
+        Twitter.setSize(45 * (Gdx.graphics.getWidth() / 360),45 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(Twitter);
         Twitter.setVisible(false);
         Twitter.addListener(new ClickListener() {
@@ -180,7 +144,7 @@ public class PostGame extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         Instagram = new ImageButton(up,down);
         Instagram.setPosition(Gdx.graphics.getWidth()/2 + 120,Gdx.graphics.getHeight() / 2 - 210);
-        Instagram.setSize(45,45);
+        Instagram.setSize(45 * (Gdx.graphics.getWidth() / 360),45 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(Instagram);
         Instagram.setVisible(false);
         Instagram.addListener(new ClickListener() {
@@ -200,7 +164,7 @@ public class PostGame extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
         button.setPosition(Gdx.graphics.getWidth()/2 + 10,Gdx.graphics.getHeight() / 2 - 280);
-        button.setSize(133,66);
+        button.setSize(133 * (Gdx.graphics.getWidth() / 360),63 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -209,61 +173,6 @@ public class PostGame extends ScreenAdapter {
                 game.setScreen(new HomeScreen(game));
             }
         });
-
-        //Save button
-//        tex2 = new Texture(Gdx.files.internal("button/SaveButton.png"));
-//        TextureRegion[][] temp_2 = TextureRegion.split(tex2,220,400);
-//        buttonUp = temp_2[0][0];
-//        buttonDown = temp_2[0][1];
-//        up = new TextureRegionDrawable(buttonUp);
-//        down = new TextureRegionDrawable(buttonDown);
-//        button = new ImageButton(up,down);
-//        button.setPosition(Gdx.graphics.getWidth()/2 - 75,Gdx.graphics.getHeight() / 2 - 280);
-//        button.setSize(73,133);
-//        stage.addActor(button);
-//        button.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                SoundManager.button.play();
-//                // code here ~~
-//            }
-//        });
-
-//        exitToMenu = new TextButton("Home", mySkin, "toggle");
-//        exitToMenu.setBounds(widthSlice * 16, Gdx.graphics.getHeight() - 40, 80, 40);
-//        exitToMenu.getLabel().setFontScale(0.6f, 0.6f);
-//        exitToMenu.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                game.setGameLobby(new GameLobby());
-//                moveToMain = true;
-//                return true;
-//            }
-//        });
-//        stage.addActor(exitToMenu);
-//
-//        instagramPost = new TextButton("Instagram", mySkin, "toggle");
-//        instagramPost.setBounds(widthSlice * 11, Gdx.graphics.getHeight()/2 - 310, 80, 40);
-//        instagramPost.getLabel().setFontScale(0.6f, 0.6f);
-//        instagramPost.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                Gdx.net.openURI("https://www.example.com");
-//                return true;
-//            }
-//        });
-//        instagramPost.setVisible(false);
-//        stage.addActor(instagramPost);
 
         //Share Button, click it the 3 Share Buttons(FaceBook, Twitter, Instagram) will show up
         tex2 = new Texture(Gdx.files.internal("button/ShareButton.png"));
@@ -274,7 +183,7 @@ public class PostGame extends ScreenAdapter {
         down = new TextureRegionDrawable(buttonDown);
         Share = new ImageButton(up,down);
         Share.setPosition(Gdx.graphics.getWidth()/2 + 10,Gdx.graphics.getHeight() / 2 - 210);
-        Share.setSize(133,63);
+        Share.setSize(133 * (Gdx.graphics.getWidth() / 360),63 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(Share);
         Share.addListener(new ClickListener() {
             @Override
@@ -306,7 +215,7 @@ public class PostGame extends ScreenAdapter {
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(tex,0,0,360,750);
+        batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
         batch.end();
 
         stage.act();
