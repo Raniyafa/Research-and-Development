@@ -457,9 +457,12 @@ public class GameScreen extends ScreenAdapter {
                     Shape drawShape = shapeArr.get(i);
                     shapeRenderer.setColor(drawShape.getRgb()[0], drawShape.getRgb()[1], drawShape.getRgb()[2], 1);
                     String temp = drawShape.getType();
-
                     float drawShapeX;
                     float drawShapeY;
+                    float tempShapeX;
+                    float tempShapeY = 0;
+
+
                     //incoming shapes from phone are being scaled again
                     //if its my turn then dont scale the stuff, if its not my turn then scale the stuff
                     if(drawShape.isMyTurn()) {
@@ -470,18 +473,24 @@ public class GameScreen extends ScreenAdapter {
                         if(widthRatio > partnerWidthRatio){
                             drawShapeX = drawShape.getX() / (partnerWidthRatio / widthRatio);
                         }
-                        else {
-                            drawShapeX = drawShape.getX() * widthRatio / partnerWidthRatio;
+                        else if (widthRatio < partnerWidthRatio){
+                            drawShapeX = drawShape.getX() * (widthRatio / partnerWidthRatio);
                         }
+                        else{
+                            drawShapeX = drawShape.getX();
+                        }
+
                         if(heightRatio > partnerHeightRatio){
                             drawShapeY = drawShape.getY() / (partnerHeightRatio / heightRatio);
                         }
-                        else {
+                        else if(heightRatio < partnerHeightRatio){
                             drawShapeY = drawShape.getY() * (heightRatio / partnerHeightRatio);
                         }
+                        else{
+                            drawShapeY = drawShape.getY();
+                        }
                     }
-                    float tempShapeX;
-                    float tempShapeY;
+
 
                     if(tempShape.isMyTurn()) {
                         tempShapeX = tempShape.getX();
@@ -491,14 +500,21 @@ public class GameScreen extends ScreenAdapter {
                         if(widthRatio > partnerWidthRatio){
                             tempShapeX = tempShape.getX() / (partnerWidthRatio / widthRatio);
                         }
-                        else {
-                            tempShapeX = tempShape.getX() * widthRatio / partnerWidthRatio;
+                        else if(widthRatio < partnerWidthRatio){
+                            tempShapeX = tempShape.getX() * (widthRatio / partnerWidthRatio);
                         }
+                        else{
+                            tempShapeX = tempShape.getX();
+                        }
+
                         if(heightRatio > partnerHeightRatio){
                             tempShapeY = tempShape.getY() / (partnerHeightRatio / heightRatio);
                         }
-                        else {
+                        else if(heightRatio < partnerHeightRatio){
                             tempShapeY = tempShape.getY() * (heightRatio / partnerHeightRatio);
+                        }
+                        else{
+                            tempShapeY = tempShape.getY();
                         }
                     }
 
@@ -518,8 +534,6 @@ public class GameScreen extends ScreenAdapter {
                     System.out.println("Null error drawing shapeArr[" + i + "]");
                 }
             }
-
-            shapeRenderer.circle(0f, 0f, 30.0f);
 
             shapeRenderer.end();
 

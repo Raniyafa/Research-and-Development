@@ -227,7 +227,7 @@ public class SimpleServer extends WebSocketServer {
                 gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("ResolutionRatio/"+clientMessage[2]+"/"+clientMessage[3]);
             }
             else{
-                gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("ResolutionRatio/"+clientMessage[2]+"/"+clientMessage[3]);
+                gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1().send("ResolutionRatio/"+clientMessage[2]+"/"+clientMessage[3]);
             }
             
            gameLobbies.get(Integer.valueOf(clientMessage[1])).increaseReadyCount();
