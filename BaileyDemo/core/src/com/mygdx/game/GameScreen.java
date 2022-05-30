@@ -333,7 +333,7 @@ public class GameScreen extends ScreenAdapter {
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Black", "Green", "Blue", "Yellow", "Red");
         colour.setName("Pencil Colour");
-        colour.setBounds(35, 50, 70 * (Gdx.graphics.getWidth() / 360), 80 * (Gdx.graphics.getHeight() / 640));
+        colour.setBounds(35, 50, 90 * (Gdx.graphics.getWidth() / 360), 80 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(colour);
         colour.setVisible(false);
 
@@ -345,7 +345,7 @@ public class GameScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth()/2 - 130,Gdx.graphics.getHeight() / 2 - 270);
+        button.setPosition(60 * (Gdx.graphics.getWidth() / 360), 45 * (Gdx.graphics.getHeight() / 640));
         button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -517,9 +517,9 @@ public class GameScreen extends ScreenAdapter {
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
 
-                    dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
-                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 120);
-                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
+                    dbfont.draw(game.getBatch(), temp, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 18.4f);
+                    dbfont.draw(game.getBatch(), temp_topic, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 16);
+                    dbSmallFont.draw(game.getBatch(), temp_time, (Gdx.graphics.getWidth() / 10) * 8.5f, (Gdx.graphics.getHeight() / 20) * 16);
                     //Uncomment this line if you want to see packet debug info
                     //String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     //   font.draw(game.getBatch(), debugInfo, 0, 200);
@@ -546,9 +546,9 @@ public class GameScreen extends ScreenAdapter {
                         temp_topic = game.getGameLobby().getWordTopic();
                         temp_time = ""+ (Math.round(turnLength - turnTimer));
                     }
-                    dbSmallFont.draw(game.getBatch(), temp, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 45);
-                    dbfont.draw(game.getBatch(), temp_topic, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 120);
-                    dbSmallFont.draw(game.getBatch(), temp_time, Gdx.graphics.getWidth() / 2 + 130, Gdx.graphics.getHeight() - 123);
+                    dbfont.draw(game.getBatch(), temp, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 18.4f);
+                    dbfont.draw(game.getBatch(), temp_topic, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 16);
+                    dbSmallFont.draw(game.getBatch(), temp_time, (Gdx.graphics.getWidth() / 10) * 8.5f, (Gdx.graphics.getHeight() / 20) * 16);
                     //Uncomment this line if you want to see packet debug info
                     //String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     //   font.draw(game.getBatch(), debugInfo, 0, 200);

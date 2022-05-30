@@ -106,7 +106,7 @@ public class CreateLobby extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 250);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 3);
         button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -128,7 +128,7 @@ public class CreateLobby extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + 100,Gdx.graphics.getHeight()/2 + 195);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 7, (Gdx.graphics.getHeight() / 20) * 16);
         button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -143,7 +143,7 @@ public class CreateLobby extends ScreenAdapter {
         lobbyType = new SelectBox<String>(mySkin);
         lobbyType.setItems("Regular", "One Line");
         //lobbyType.setName("Lobby Type:");
-        lobbyType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 180, 100, 60);
+        lobbyType.setBounds((Gdx.graphics.getWidth() / 10) * 4, (Gdx.graphics.getHeight() / 20) * 15.6f, 100, 60);
         lobbyType.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         lobbyType.setSelected("5");
         stage.addActor(lobbyType);
@@ -161,7 +161,7 @@ public class CreateLobby extends ScreenAdapter {
         //Select Box for Topic
         topicType = new SelectBox<String>(mySkin);
         topicType.setItems(simpleArray);
-        topicType.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 + 70, 100, 60);
+        topicType.setBounds((Gdx.graphics.getWidth() / 10) * 4, (Gdx.graphics.getHeight() / 20) * 12.2f, 100, 60);
         topicType.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         topicType.setSelected("5");
         stage.addActor(topicType);
@@ -169,7 +169,7 @@ public class CreateLobby extends ScreenAdapter {
         //Select Box for Time
         time = new SelectBox<String>(mySkin);
         time.setItems("10 sec", "15 sec", "20 sec", "30 sec", "1 min");
-        time.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 - 35, 100, 60);
+        time.setBounds((Gdx.graphics.getWidth() / 10) * 4, (Gdx.graphics.getHeight() / 20) * 8.9f, 100, 60);
         time.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         time.setSelected("5");
         stage.addActor(time);
@@ -177,7 +177,7 @@ public class CreateLobby extends ScreenAdapter {
         //Select Box for Round
         round = new SelectBox<String>(mySkin);
         round.setItems("2", "4", "6", "8", "10");
-        round.setBounds((Gdx.graphics.getWidth() / 2 - 40), Gdx.graphics.getHeight() / 2 - 140, 100, 60);
+        round.setBounds((Gdx.graphics.getWidth() / 10) * 4, (Gdx.graphics.getHeight() / 20) * 5.7f, 100, 60);
         round.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         round.setSelected("5");
         stage.addActor(round);

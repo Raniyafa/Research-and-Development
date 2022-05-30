@@ -103,7 +103,7 @@ public class PostGame extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         FaceBook = new ImageButton(up,down);
-        FaceBook.setPosition(Gdx.graphics.getWidth()/2 + 10,Gdx.graphics.getHeight() / 2 - 210);
+        FaceBook.setPosition((Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 1.8f);
         FaceBook.setSize(45 * (Gdx.graphics.getWidth() / 360),45 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(FaceBook);
         FaceBook.setVisible(false);
@@ -123,7 +123,7 @@ public class PostGame extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         Twitter = new ImageButton(up,down);
-        Twitter.setPosition(Gdx.graphics.getWidth()/2 + 65,Gdx.graphics.getHeight() / 2 - 210);
+        Twitter.setPosition((Gdx.graphics.getWidth() / 10) * 2.7f, (Gdx.graphics.getHeight() / 20) * 1.8f);
         Twitter.setSize(45 * (Gdx.graphics.getWidth() / 360),45 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(Twitter);
         Twitter.setVisible(false);
@@ -143,7 +143,7 @@ public class PostGame extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         Instagram = new ImageButton(up,down);
-        Instagram.setPosition(Gdx.graphics.getWidth()/2 + 120,Gdx.graphics.getHeight() / 2 - 210);
+        Instagram.setPosition((Gdx.graphics.getWidth() / 10) * 4.4f, (Gdx.graphics.getHeight() / 20) * 1.8f);
         Instagram.setSize(45 * (Gdx.graphics.getWidth() / 360),45 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(Instagram);
         Instagram.setVisible(false);
@@ -155,7 +155,7 @@ public class PostGame extends ScreenAdapter {
             }
         });
 
-        //Back to Lobby Button(new) tp exchange the Text Button(Exit to Lobby) below
+        //Back to Lobby Button(new) to exchange the Text Button(Exit to Lobby) below
         tex2 = new Texture(Gdx.files.internal("button/BackToLobbyButton.png"));
         TextureRegion[][] temp_0 = TextureRegion.split(tex2,400,200);
         buttonUp = temp_0[0][0];
@@ -163,8 +163,8 @@ public class PostGame extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth()/2 + 10,Gdx.graphics.getHeight() / 2 - 280);
-        button.setSize(133 * (Gdx.graphics.getWidth() / 360),63 * (Gdx.graphics.getHeight() / 640));
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 5.7f, (Gdx.graphics.getHeight() / 20) * 1.5f);
+        button.setSize(133 * (Gdx.graphics.getWidth() / 360),64 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -182,8 +182,8 @@ public class PostGame extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         Share = new ImageButton(up,down);
-        Share.setPosition(Gdx.graphics.getWidth()/2 + 10,Gdx.graphics.getHeight() / 2 - 210);
-        Share.setSize(133 * (Gdx.graphics.getWidth() / 360),63 * (Gdx.graphics.getHeight() / 640));
+        Share.setPosition((Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 1.5f);
+        Share.setSize(133 * (Gdx.graphics.getWidth() / 360),65 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(Share);
         Share.addListener(new ClickListener() {
             @Override
@@ -222,7 +222,7 @@ public class PostGame extends ScreenAdapter {
         stage.draw();
 
         String postGameMsg = "Artwork created by: "+game.getPlayerName()+" & "+game.getGameLobby().getPartnerName();
-        smallFont.draw(game.getBatch(), postGameMsg, Gdx.graphics.getWidth()/2 - 150, Gdx.graphics.getHeight() - 60);
+        smallFont.draw(game.getBatch(), postGameMsg, (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 18);
 
         game.getBatch().end();
 
