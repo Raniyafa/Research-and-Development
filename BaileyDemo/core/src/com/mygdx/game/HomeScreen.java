@@ -80,7 +80,6 @@ public class HomeScreen extends ScreenAdapter {
                     game.getGameLobby().setTurnTimer(clientMessage[6]);
                     moveToLobby = true;
                }
-
                 return FULLY_HANDLED;
             }
         };
@@ -109,9 +108,7 @@ public class HomeScreen extends ScreenAdapter {
         stage.addActor(image);
 
         //Add Text Field for the Game PIN function
-       // final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX((Gdx.graphics.getWidth() / 10) * 2.5f);
-//        textField.setY(Gdx.graphics.getHeight() / 2 - 100);
         textField.setY((Gdx.graphics.getHeight() / 20) * 3);
         textField.setWidth(200 * (Gdx.graphics.getWidth() / 360));
         textField.setText("");
@@ -146,7 +143,6 @@ public class HomeScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingMenu(game));
                 SoundManager.button.play();
-//                SoundManager.background.dispose();
             }
         });
 
@@ -166,7 +162,6 @@ public class HomeScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 moveToMatchmaking = true;
                 SoundManager.button.play();
-//                game.setScreen(new QuickPlayMenu(game));
             }
         });
 
@@ -216,10 +211,7 @@ public class HomeScreen extends ScreenAdapter {
             }
         });
 
-//        stage.addActor(findMatch);
         stage.addActor(textField);
-//        stage.addActor(createLobby);
-//        stage.addActor(joinLobby);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -245,8 +237,6 @@ public class HomeScreen extends ScreenAdapter {
                 game.setScreen(new LoadingScreen(game));
             }
             if (moveToMatchmaking) {
-
-             //   game.setScreen(new FindingMatch(game));
                 game.setScreen(new QuickPlayMenu(game));
             }
             font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 16);

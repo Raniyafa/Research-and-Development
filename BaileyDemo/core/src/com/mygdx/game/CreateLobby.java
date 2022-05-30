@@ -58,16 +58,14 @@ public class CreateLobby extends ScreenAdapter {
 
     @Override
     public void show(){
-   //     font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-      //          Gdx.files.internal("font/dbfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+                Gdx.files.internal("font/dbfont.png"), false);
 
         game.setListener(getListener());
         shapeRenderer = new ShapeRenderer();
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
-
-        //Gdx.graphics.setWindowedMode(360, 640);
 
         //Add CreateRoom.png as the background
         tex = new Texture(Gdx.files.internal("image/CreateRoom.png"));
@@ -207,7 +205,7 @@ public class CreateLobby extends ScreenAdapter {
         //Check if client is disconnected, if so then display error message and attempt to reconnect
         if(game.getSocket().isClosed() && !game.getSocket().isConnecting()){
             game.getSocket().connect();
-       //     font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
 
         game.getBatch().end();
@@ -248,7 +246,7 @@ public class CreateLobby extends ScreenAdapter {
     public void dispose(){
         game.dispose();
         stage.dispose();
-      //  font.dispose();
+        font.dispose();
         tex.dispose();
         tex2.dispose();
     }

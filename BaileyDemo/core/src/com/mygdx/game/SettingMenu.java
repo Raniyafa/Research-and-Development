@@ -72,25 +72,6 @@ public class SettingMenu extends ScreenAdapter {
         stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
 
-    //slider = new Slider(0, 100, 1, false, skin);
-        ////slider.setValue(1);
-        //Container<Slider> sliderContainer = new Container<Slider>(slider);
-        //sliderContainer.setTransform(true);
-
-        ////sliderContainer.setOrigin(slider.getWidth()/2,slider.getHeight()/2);
-       // sliderContainer.setSize(slider.getWidth(),slider.getHeight());
-       // sliderContainer.setScale(2);
-
-//        slider.setSize(30, 100);
-//        slider.setPosition(100, 100);
-//        slider.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//
-//            }
-//        });
-        //stage.addActor(slider);
-
         //Add setting.png as the background
         tex = new Texture(Gdx.files.internal("image/setting.png"));
         region = new TextureRegion(tex,0,0,750,1334);

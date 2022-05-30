@@ -210,17 +210,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-
         turnLength = Float.valueOf(game.getGameLobby().getTurnTimer());
         stage = new Stage(new ScreenViewport());
-
-        //Adding Background IMG
-//        tex = new Texture(Gdx.files.internal("image/gameplaytest.png"));
-//        region = new TextureRegion(tex,0,0,750,1334);
-//        image = new Image(region);
-//        image.setPosition(0,0);
-//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
-//        stage.addActor(image);
 
         //Adding Background (new) - Add gameplay.png as the background
         tex = new Texture(Gdx.files.internal("image/gameplay.png"));
@@ -534,9 +525,6 @@ public class GameScreen extends ScreenAdapter {
 
             game.getBatch().begin();
 
-
-
-
             //If emoteActive then draw the current Emote and keep track of the timer, and opacity
             if (emoteActive) {
                 // emote.draw(game.getBatch(), );
@@ -615,7 +603,6 @@ public class GameScreen extends ScreenAdapter {
         }
 
         //If game socket is closed and not connecting, attempt to connect
-
         //If game socket is closed then display that information to the user and attempt to re-connect, also keep track of the time spent disconnecting
         else if(game.getSocket().isClosed()){
             if(game.getSocket().isConnecting()){
@@ -644,9 +631,10 @@ public class GameScreen extends ScreenAdapter {
             //Server could interact with image hosting API to host drawing which can be used for social media sharing
             //to be able to directly share the screenshot, interfaces must be added for each platform with sharing functions created for each and depending on which
             //platform is being used the user, a different interface may be used to facilitate the sharing of a image
-            if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop || Gdx.app.getType() == Application.ApplicationType.iOS) {
 
             final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            //Screenshot can be found in the games directory on the phone storage, havent found a way to move it to the gallery for sharing use
             PixmapIO.writePNG(Gdx.files.external("drawbuddytestscreenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
 
             FileHandle file =  Gdx.files.external("drawbuddytestscreenshot.png");
@@ -670,10 +658,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(null);
     }
 
-
-
     public void storeMouseLoc(float delta) {
-
         int currentSize = shapeArr.size();
         Shape temp;
 

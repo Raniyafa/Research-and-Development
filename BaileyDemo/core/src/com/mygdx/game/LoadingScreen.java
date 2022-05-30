@@ -62,11 +62,6 @@ import sun.awt.ExtendedKeyCodes;
             if(timer >= 0.5f){
                 game.setScreen(new GameScreen(game));
             }
-//            Gdx.gl.glClearColor(0, 0, 0.25f, 1);
-//            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//            game.getBatch().begin();
-//            //game.getFont().draw(game.getBatch(), "Loading Match!\nWord Topic: "+game.getGameLobby().getWordTopic(), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2);
-//            game.getBatch().end();
 
             game.getBatch().begin();
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);

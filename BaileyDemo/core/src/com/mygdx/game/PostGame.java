@@ -309,8 +309,6 @@ public class PostGame extends ScreenAdapter {
                         game.getSocket().connect();
                     }
          }
-
-
         shapeRenderer.end();
     }
 

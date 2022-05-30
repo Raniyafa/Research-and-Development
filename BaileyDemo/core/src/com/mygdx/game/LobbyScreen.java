@@ -51,8 +51,6 @@ public class LobbyScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"), Gdx.files.internal("font/dbfont.png"), false);
 
         game.setListener(getListener());
-       // game.getSocket().send("LobbyMessage/CreateLobby/"+game.getPlayerName());
-
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
         stage = new Stage(new ScreenViewport());
 
@@ -88,25 +86,6 @@ public class LobbyScreen extends ScreenAdapter {
         });
         stage.addActor(button);
 
-//        exitLobby = new TextButton("Return to Main Menu", mySkin, "toggle");
-//        exitLobby.setBounds(Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() / 2 + 200, 150, 50);
-//        exitLobby.getLabel().setFontScale(0.6f, 0.6f);
-//        exitLobby.addListener(new InputListener(){
-//
-//            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                exitLobby.setText("Join Lobby");
-//            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                if(game.getSocket().isOpen()) {
-//                    game.setScreen(new HomeScreen(game));
-//                    game.getSocket().send("LobbyMessage/TerminateLobby/" + game.getGameLobby().getLobbyIndex());
-//                }
-//                return true;
-//            }
-//        });
-//        stage.addActor(exitLobby);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -123,7 +102,6 @@ public class LobbyScreen extends ScreenAdapter {
         game.getBatch().begin();
         if(game.getSocket().isOpen()) {
             font.draw( game.getBatch(), game.getGameLobby().getLobbyCode(), Gdx.graphics.getWidth()/2 - 50, Gdx.graphics.getHeight() / 2 - 90);
-            //font.draw( game.getBatch(), "Waiting for other player..\n", 0, Gdx.graphics.getHeight() / 2 - 50);
         }
         else{
             game.setScreen(new HomeScreen(game));
