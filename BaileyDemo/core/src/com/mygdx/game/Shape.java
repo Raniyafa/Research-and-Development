@@ -9,6 +9,8 @@ public class Shape {
     private String colour;
     private int lineNo;
 
+    private boolean myTurn;
+
     public Shape(int x, int y, int width, int height, String type, float[] color, int lineNo){
         rgb = new float[3];
         rgb[0] = color[0];
@@ -22,7 +24,7 @@ public class Shape {
         this.lineNo = lineNo;
     }
 
-    public Shape(int x, int y, int radius, String type, float[] color, int lineNo){
+    public Shape(int x, int y, int radius, String type, float[] color, int lineNo, boolean turn){
         rgb = new float[3];
         rgb[0] = color[0];
         rgb[1] = color[1];
@@ -32,6 +34,7 @@ public class Shape {
         this.radius = radius;
         this.type = type;
         this.lineNo = lineNo;
+        myTurn = turn;
     }
 
     public Shape(int x, int y){
@@ -43,6 +46,7 @@ public class Shape {
         width = 0;
         height = 0;
         corners = 0;
+        myTurn = false;
     }
 
     public Shape(){
@@ -132,5 +136,13 @@ public class Shape {
 
     public void setLineNo(int lineNo) {
         this.lineNo = lineNo;
+    }
+
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
     }
 }

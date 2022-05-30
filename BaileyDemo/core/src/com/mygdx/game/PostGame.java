@@ -64,8 +64,13 @@ public class PostGame extends ScreenAdapter {
     private float heightRatio;
     private float widthRatio;
 
-    public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray) {
+    private float partnerHeightRatio;
+    private float partnerWidthRatio;
+
+    public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray, float[] scaleInfo) {
         shapeArr = shapeArray;
+        partnerWidthRatio = scaleInfo[0];
+        partnerHeightRatio = scaleInfo[1];
         this.game = game;
     }
 
@@ -229,33 +234,81 @@ public class PostGame extends ScreenAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         Shape tempShape = new Shape();
-        //For loop which iterates through the shape array and draws each shape individually
         for (int i = 0; i <= shapeArr.size() - 1; i++) {
             try {
                 //Get reference to shape object then draw the shape to screen
                 Shape drawShape = shapeArr.get(i);
                 shapeRenderer.setColor(drawShape.getRgb()[0], drawShape.getRgb()[1], drawShape.getRgb()[2], 1);
                 String temp = drawShape.getType();
-                //Scale the drawing for different resolutions
-                float drawShapeX = drawShape.getX() * widthRatio;
-                float drawShapeY = drawShape.getY() * heightRatio;
-                float tempShapeX = tempShape.getX() * widthRatio;
-                float tempShapeY = tempShape.getY() * heightRatio;
+
+                float drawShapeX;
+                float drawShapeY;
+                //incoming shapes from phone are being scaled again
+                //if its my turn then dont scale the stuff, if its not my turn then scale the stuff
+                if(drawShape.isMyTurn()) {
+                    drawShapeX = drawShape.getX();
+                    drawShapeY = drawShape.getY();
+                }
+                else{
+                    if(widthRatio > partnerWidthRatio){
+                        drawShapeX = drawShape.getX() / (partnerWidthRatio / widthRatio);
+
+                    }
+                    else {
+                        drawShapeX = drawShape.getX() * widthRatio / partnerWidthRatio;
+                    }
+                    if(heightRatio > partnerHeightRatio){
+                        drawShapeY = drawShape.getY() / (partnerHeightRatio / heightRatio);
+                    }
+                    else {
+                        drawShapeY = drawShape.getY() * (heightRatio / partnerHeightRatio);
+                    }
+                }
+                float tempShapeX;
+                float tempShapeY;
+
+                if(tempShape.isMyTurn()) {
+                    tempShapeX = tempShape.getX();
+                    tempShapeY = tempShape.getY();
+                }
+                else{
+                    if(widthRatio > partnerWidthRatio){
+                        tempShapeX = tempShape.getX() / (partnerWidthRatio / widthRatio);
+
+                    }
+                    else {
+                        tempShapeX = tempShape.getX() * widthRatio / partnerWidthRatio;
+                    }
+                    if(heightRatio > partnerHeightRatio){
+                        tempShapeY = tempShape.getY() / (partnerHeightRatio / heightRatio);
+                    }
+                    else {
+                        tempShapeY = tempShape.getY() * (heightRatio / partnerHeightRatio);
+                    }
+                }
 
                 //Check if current shape is on the same line as the previous shape, if so then connect them with a line
                 if (drawShape.getLineNo() == tempShape.getLineNo()) {
                     if ((!(drawShapeX >= tempShapeX - 5 && drawShapeX <= tempShapeX + 5)) || (!(drawShapeY >= tempShapeY - 5 && drawShapeY <= tempShapeY + 5))) {
-
-                        shapeRenderer.rectLine(tempShapeX, tempShapeY, drawShapeX, drawShapeY, 20);
+                        //Here the 12 value is the line thickness, scaled by the screen res
+                        shapeRenderer.rectLine(tempShapeX, tempShapeY, drawShapeX, drawShapeY, 12 * (widthRatio + heightRatio / 2));
                     }
                 }
                 //Draw the current shape as a circle
-                shapeRenderer.circle(drawShapeX, drawShapeY, 10);
+
+                //here the 6 value is the radius size, scaled by resolution
+                shapeRenderer.circle(drawShapeX, drawShapeY, 6 * (widthRatio + heightRatio / 2));
                 tempShape = drawShape;
             } catch (Exception e) {
                 System.out.println("Null error drawing shapeArr[" + i + "]");
             }
         }
+
+         if(game.getSocket().isClosed()){
+                    if(game.getSocket().isConnecting()){
+                        game.getSocket().connect();
+                    }
+         }
 
 
         shapeRenderer.end();

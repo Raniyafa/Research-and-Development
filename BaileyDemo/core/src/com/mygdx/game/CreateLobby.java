@@ -58,8 +58,8 @@ public class CreateLobby extends ScreenAdapter {
 
     @Override
     public void show(){
-        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-        Gdx.files.internal("font/dbfont.png"), false);
+   //     font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
+      //          Gdx.files.internal("font/dbfont.png"), false);
 
         game.setListener(getListener());
         shapeRenderer = new ShapeRenderer();
@@ -150,7 +150,7 @@ public class CreateLobby extends ScreenAdapter {
 
         ArrayList<String> data = new ArrayList<>() ;
         data.add("Random");
-        FileHandle handle = Gdx.files.local("textfiles/topicwords.txt");
+        FileHandle handle = Gdx.files.internal("textfiles/topicwords.txt");
         String text = handle.readString();
         String wordsArray[] = text.split("\\r?\\n");
         for(String word : wordsArray) {
@@ -207,7 +207,7 @@ public class CreateLobby extends ScreenAdapter {
         //Check if client is disconnected, if so then display error message and attempt to reconnect
         if(game.getSocket().isClosed() && !game.getSocket().isConnecting()){
             game.getSocket().connect();
-            font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+       //     font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
 
         game.getBatch().end();
@@ -248,7 +248,7 @@ public class CreateLobby extends ScreenAdapter {
     public void dispose(){
         game.dispose();
         stage.dispose();
-        font.dispose();
+      //  font.dispose();
         tex.dispose();
         tex2.dispose();
     }

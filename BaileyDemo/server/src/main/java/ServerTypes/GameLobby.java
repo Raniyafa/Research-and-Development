@@ -94,8 +94,8 @@ public class GameLobby {
         String temp = "";
         
         File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
-        // File txt = new File("/home/ec2-user/topicwords.txt");
-       Scanner scan = new Scanner(txt);
+        //File txt = new File("/home/ec2-user/topicwords.txt");
+        Scanner scan = new Scanner(txt);
         ArrayList<String> data = new ArrayList<>() ;
         while(scan.hasNextLine()){
             data.add(scan.nextLine());

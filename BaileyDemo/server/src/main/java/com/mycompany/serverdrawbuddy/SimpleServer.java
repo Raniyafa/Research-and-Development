@@ -182,6 +182,7 @@ public class SimpleServer extends WebSocketServer {
             if(clientMessage[1].matches("CreateLobby")){
                 try {
                     //Creates a lobby and send the lobby info to client after checking that the word is valid
+                    
                     if(checkCustomWord(clientMessage[7])){
                         conn.send(createLobby(conn, clientMessage[6], clientMessage[2], clientMessage[3], clientMessage[4], clientMessage[5], clientMessage[7]));
                     }
@@ -222,11 +223,18 @@ public class SimpleServer extends WebSocketServer {
         //A client will send a packet saying "Ready" after they have received the information for the lobby and have loaded into the game
         //this statement will tell each player that the match is ready to start once the ready counter hits 2
         case "Ready":
+            if(conn.equals(gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1())){
+                gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("ResolutionRatio/"+clientMessage[2]+"/"+clientMessage[3]);
+            }
+            else{
+                gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("ResolutionRatio/"+clientMessage[2]+"/"+clientMessage[3]);
+            }
+            
            gameLobbies.get(Integer.valueOf(clientMessage[1])).increaseReadyCount();
-           if( gameLobbies.get(Integer.valueOf(clientMessage[1])).getReadyCount() == 2){
+            if( gameLobbies.get(Integer.valueOf(clientMessage[1])).getReadyCount() == 2){
                gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer1().send("YourTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).getP2Name());
                gameLobbies.get(Integer.valueOf(clientMessage[1])).getPlayer2().send("PartnerTurn/"+ gameLobbies.get(Integer.valueOf(clientMessage[1])).getP1Name());
-           }
+            }
         break;
         //The client will send a CheckName packet when they attempt to set their user name when first opening the game
         case "CheckName":   
@@ -392,8 +400,12 @@ public class SimpleServer extends WebSocketServer {
     public boolean checkCustomWord(String drawTopic) throws FileNotFoundException{
         String temp = "";
         
+        if(drawTopic.matches("Random")){
+            return true;
+        }
+        
         File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\topicwords.txt");
-        // File txt = new File("/home/ec2-user/topicwords.txt");
+        //File txt = new File("/home/ec2-user/topicwords.txt");
         Scanner scan = new Scanner(txt);
         ArrayList<String> data = new ArrayList<>() ;
         while(scan.hasNextLine()){
@@ -466,7 +478,7 @@ public class SimpleServer extends WebSocketServer {
     private boolean checkName(String name) throws FileNotFoundException{   
         
         //Document file path for EC2 Amazon machine
-        //  File txt = new File("/home/ec2-user/badwords.txt");
+        //File txt = new File("/home/ec2-user/badwords.txt");
 
         //File path if running the server locally
         File txt = new File(System.getProperty("user.dir")+"\\src\\main\\java\\Files\\badwords.txt");

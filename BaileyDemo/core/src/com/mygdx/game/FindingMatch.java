@@ -149,7 +149,6 @@ public class FindingMatch extends ScreenAdapter {
         }
         else if(!game.getSocket().isConnecting()){
             game.setScreen(new HomeScreen(game));
-            //add server code that remove person from queue if dc
         }
         game.getBatch().end();
     }

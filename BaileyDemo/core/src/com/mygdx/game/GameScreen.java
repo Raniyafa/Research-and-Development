@@ -99,13 +99,16 @@ public class GameScreen extends ScreenAdapter {
     private float heightRatio;
     private float widthRatio;
 
+    private float partnerHeightRatio;
+    private float partnerWidthRatio;
+
 
     private int selectedSize = 5;
     private int received = 0;
     private int sent = 0;
     private int lineNo;
 
-    private float emoteY = 75;
+    private float emoteY = Gdx.graphics.getHeight() / 6;
 
     private boolean myTurn = false;
     private boolean gameFinished;
@@ -150,7 +153,7 @@ public class GameScreen extends ScreenAdapter {
                     if (clientMessage[0].matches("NewShapeInfo")) {
                         lineNo = Integer.valueOf(clientMessage[5]);
                         float[] colour = getRGB(clientMessage[4]);
-                        shapeArr.add(new Shape(Integer.valueOf(clientMessage[1]), Integer.valueOf(clientMessage[2]), 10, clientMessage[3], colour, lineNo));
+                        shapeArr.add(new Shape(Integer.valueOf(clientMessage[1]), Integer.valueOf(clientMessage[2]), 10, clientMessage[3], colour, lineNo, myTurn));
                         received++;
 
                     }
@@ -189,7 +192,12 @@ public class GameScreen extends ScreenAdapter {
                         }
 
                         emote.setPosition(195, emoteY);
+
                         emote.setScale(0.75f);
+                    }
+                    else if(clientMessage[0].matches("ResolutionRatio")){
+                        partnerWidthRatio = Float.valueOf(clientMessage[1]);
+                        partnerHeightRatio = Float.valueOf(clientMessage[2]);
                     }
                 }catch(Exception e){
                     System.out.println("Exception in update from server " +e);
@@ -219,12 +227,12 @@ public class GameScreen extends ScreenAdapter {
         batch = new SpriteBatch();
 
         gameMode = game.getGameLobby().getGameMode();
-        System.out.println("gamemode = "+gameMode);
+
         game.setListener(getListener());
 
         float widthSlice = Gdx.graphics.getWidth() / 20;
         heightRatio = Gdx.graphics.getHeight() / 640;
-        widthRatio = Gdx.graphics.getHeight() / 360;
+        widthRatio = Gdx.graphics.getWidth() / 360;
 
         //Font creations
         font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"), Gdx.files.internal("smallfont/smallfont.png"), false);
@@ -246,6 +254,7 @@ public class GameScreen extends ScreenAdapter {
         annoyed = new Texture(Gdx.files.internal("button/emoji/annoyed.png"));
         Texture annoyedButton = new Texture(Gdx.files.internal("button/emoji/annoyed.png"));
         TextureRegion myTextureRegion = new TextureRegion(annoyedButton);
+
         TextureRegionDrawable myTexRegionAnnoyed = new TextureRegionDrawable(myTextureRegion);
         emojiButtons[0] = new ImageButton(myTexRegionAnnoyed); //Set the button up
         emojiButtons[0].setBounds(widthSlice * 10, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
@@ -315,7 +324,6 @@ public class GameScreen extends ScreenAdapter {
 
         //Attach the network listener for this class to the WebSocket
 
-        game.getSocket().send("Ready/"+game.getGameLobby().getLobbyIndex());
         shapeArr = new ArrayList<>(5000);
 
         //Skin created for buttons and UI elements, stage set for this class
@@ -361,6 +369,8 @@ public class GameScreen extends ScreenAdapter {
         });
 
         Gdx.input.setInputProcessor(stage);
+
+        game.getSocket().send("Ready/"+game.getGameLobby().getLobbyIndex()+"/"+String.valueOf(widthRatio)+"/"+String.valueOf(heightRatio));
     }
 
     @Override
@@ -382,6 +392,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
+
         batch.end();
 
         //If the WebSocket is open (connected) then process the game controller logic
@@ -395,7 +406,7 @@ public class GameScreen extends ScreenAdapter {
                         isDrawing = true;
                         lineNo++;
                     }
-                    if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
+                    if (Gdx.input.getY() > Gdx.graphics.getHeight() / 3.6 && Gdx.input.getY() < Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() / 5) && drawTimer >= 0.05f) {
                         storeMouseLoc(delta);
                         drawTimer = 0.0f;
                     }
@@ -422,7 +433,7 @@ public class GameScreen extends ScreenAdapter {
                         lineNo++;
                     }
                     //Check if the input is within the drawing area
-                    if (Gdx.input.getY() > 100.0f && Gdx.input.getY() < Gdx.graphics.getHeight() - 100.0f && drawTimer >= 0.05f) {
+                    if (Gdx.input.getY() > Gdx.graphics.getHeight() / 3.6 && Gdx.input.getY() < Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() / 5) && drawTimer >= 0.05f) {
                         oneLineDrawing = true;
                         storeMouseLoc(delta);
                         drawTimer = 0.0f;
@@ -455,42 +466,89 @@ public class GameScreen extends ScreenAdapter {
                     Shape drawShape = shapeArr.get(i);
                     shapeRenderer.setColor(drawShape.getRgb()[0], drawShape.getRgb()[1], drawShape.getRgb()[2], 1);
                     String temp = drawShape.getType();
-                    //Scale the drawing for different resolutions
-                    float drawShapeX = drawShape.getX() * widthRatio;
-                    float drawShapeY = drawShape.getY() * heightRatio;
-                    float tempShapeX = tempShape.getX() * widthRatio;
-                    float tempShapeY = tempShape.getY() * heightRatio;
+
+                    float drawShapeX;
+                    float drawShapeY;
+                    //incoming shapes from phone are being scaled again
+                    //if its my turn then dont scale the stuff, if its not my turn then scale the stuff
+                    if(drawShape.isMyTurn()) {
+                         drawShapeX = drawShape.getX();
+                         drawShapeY = drawShape.getY();
+                    }
+                    else{
+                        if(widthRatio > partnerWidthRatio){
+                            drawShapeX = drawShape.getX() / (partnerWidthRatio / widthRatio);
+                        }
+                        else {
+                            drawShapeX = drawShape.getX() * widthRatio / partnerWidthRatio;
+                        }
+                        if(heightRatio > partnerHeightRatio){
+                            drawShapeY = drawShape.getY() / (partnerHeightRatio / heightRatio);
+                        }
+                        else {
+                            drawShapeY = drawShape.getY() * (heightRatio / partnerHeightRatio);
+                        }
+                    }
+                    float tempShapeX;
+                    float tempShapeY;
+
+                    if(tempShape.isMyTurn()) {
+                        tempShapeX = tempShape.getX();
+                        tempShapeY = tempShape.getY();
+                    }
+                    else{
+                        if(widthRatio > partnerWidthRatio){
+                            tempShapeX = tempShape.getX() / (partnerWidthRatio / widthRatio);
+                        }
+                        else {
+                            tempShapeX = tempShape.getX() * widthRatio / partnerWidthRatio;
+                        }
+                        if(heightRatio > partnerHeightRatio){
+                            tempShapeY = tempShape.getY() / (partnerHeightRatio / heightRatio);
+                        }
+                        else {
+                            tempShapeY = tempShape.getY() * (heightRatio / partnerHeightRatio);
+                        }
+                    }
 
                     //Check if current shape is on the same line as the previous shape, if so then connect them with a line
                     if (drawShape.getLineNo() == tempShape.getLineNo()) {
                         if ((!(drawShapeX >= tempShapeX - 5 && drawShapeX <= tempShapeX + 5)) || (!(drawShapeY >= tempShapeY - 5 && drawShapeY <= tempShapeY + 5))) {
-
-                            shapeRenderer.rectLine(tempShapeX, tempShapeY, drawShapeX, drawShapeY, 20);
+                            //Here the 12 value is the line thickness, scaled by the screen res
+                            shapeRenderer.rectLine(tempShapeX, tempShapeY, drawShapeX, drawShapeY, 12 * (widthRatio + heightRatio / 2));
                         }
                     }
                     //Draw the current shape as a circle
-                    shapeRenderer.circle(drawShapeX, drawShapeY, 10);
+
+                    //here the 6 value is the radius size, scaled by resolution
+                    shapeRenderer.circle(drawShapeX, drawShapeY, 6 * (widthRatio + heightRatio / 2));
                     tempShape = drawShape;
                 } catch (Exception e) {
                     System.out.println("Null error drawing shapeArr[" + i + "]");
                 }
             }
 
+            shapeRenderer.circle(0f, 0f, 30.0f);
+
             shapeRenderer.end();
 
             game.getBatch().begin();
 
+
+
+
             //If emoteActive then draw the current Emote and keep track of the timer, and opacity
             if (emoteActive) {
-                emote.draw(game.getBatch());
+                // emote.draw(game.getBatch(), );
+                game.getBatch().draw(emote,Gdx.graphics.getWidth() / 2, emoteY,360 * (Gdx.graphics.getWidth() / 360) / 6,640 * (Gdx.graphics.getHeight() / 640) / 12);
                 emoteY += 1.0f;
-                emote.setPosition(195, emoteY);
-                if (emoteY >= 150) {
+
+                if (emoteY >= (Gdx.graphics.getHeight() / 6) * 1.5f) {
                     emoteOpacity = -0.1f;
                     emote.setAlpha(emoteOpacity);
-                    if (emoteY >= 200) {
+                    if (emoteY >= (Gdx.graphics.getHeight() / 6) * 2) {
                         emoteActive = false;
-                        emoteY = 95.0f;
+                        emoteY = Gdx.graphics.getHeight() / 6;
                         emoteOpacity = 1.0f;
                         activeEmote = null;
                     }
@@ -560,6 +618,9 @@ public class GameScreen extends ScreenAdapter {
 
         //If game socket is closed then display that information to the user and attempt to re-connect, also keep track of the time spent disconnecting
         else if(game.getSocket().isClosed()){
+            if(game.getSocket().isConnecting()){
+                game.getSocket().connect();
+            }
             disconnectedTimer += delta;
 
             if(disconnectedTimer >= 5.0f) {
@@ -599,7 +660,8 @@ public class GameScreen extends ScreenAdapter {
 
             game.getSocket().send(encodedfile);
             }
-            game.setScreen(new PostGame(game, shapeArr));
+            float[] scaleInfo = {partnerWidthRatio, partnerHeightRatio};
+            game.setScreen(new PostGame(game, shapeArr, scaleInfo));
         }
     }
 
@@ -613,8 +675,9 @@ public class GameScreen extends ScreenAdapter {
     public void storeMouseLoc(float delta) {
 
         int currentSize = shapeArr.size();
+        Shape temp;
 
-        Shape temp =  (new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()));
+        temp = (new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()));
 
         //Gets the selected colour
         temp.setColour(colour.getSelected());
