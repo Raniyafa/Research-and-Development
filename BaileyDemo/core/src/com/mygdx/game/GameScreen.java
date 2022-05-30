@@ -226,9 +226,9 @@ public class GameScreen extends ScreenAdapter {
         widthRatio = Gdx.graphics.getWidth() / 360;
 
         //Font creations
-        font = new BitmapFont(Gdx.files.internal("smallfont/smallfont.fnt"), Gdx.files.internal("smallfont/smallfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"), Gdx.files.internal("font/dbSmallFont.png"), false);
         font.setColor(Color.BLACK);
-        fontLarge = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
+        fontLarge = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"), Gdx.files.internal("font/dbfont.png"), false);
         fontLarge.setColor(Color.BLACK);
 
         dbfont = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
@@ -382,7 +382,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),640 * (Gdx.graphics.getHeight() / 640));
+        batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
 
         batch.end();
 

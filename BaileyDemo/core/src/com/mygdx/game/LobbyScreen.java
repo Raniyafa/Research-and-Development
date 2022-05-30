@@ -72,8 +72,8 @@ public class LobbyScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 4);
-        button.setSize(240,70);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 2);
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -101,7 +101,7 @@ public class LobbyScreen extends ScreenAdapter {
         stage.draw();
         game.getBatch().begin();
         if(game.getSocket().isOpen()) {
-            font.draw( game.getBatch(), game.getGameLobby().getLobbyCode(), Gdx.graphics.getWidth()/2 - 50, Gdx.graphics.getHeight() / 2 - 90);
+            font.draw( game.getBatch(), game.getGameLobby().getLobbyCode(), (Gdx.graphics.getWidth()/10) * 3.5f, (Gdx.graphics.getHeight() / 20) * 7);
         }
         else{
             game.setScreen(new HomeScreen(game));

@@ -103,7 +103,7 @@ public class HomeScreen extends ScreenAdapter {
         tex = new Texture(Gdx.files.internal("image/Lobby.png"));
         region = new TextureRegion(tex,0,0,750,1334);
         image = new Image(region);
-        image.setPosition(0,0);
+        image.setPosition(0 * (Gdx.graphics.getWidth() / 360),0 * (Gdx.graphics.getHeight() / 640));
         image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
