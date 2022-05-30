@@ -110,9 +110,9 @@ public class HomeScreen extends ScreenAdapter {
 
         //Add Text Field for the Game PIN function
        // final TextField textField = new TextField("Lobby Code:", mySkin);
-        textField.setX(Gdx.graphics.getWidth() / 2 - 100);
+        textField.setX((Gdx.graphics.getWidth() / 10) * 2.5f);
 //        textField.setY(Gdx.graphics.getHeight() / 2 - 100);
-        textField.setY(100);
+        textField.setY((Gdx.graphics.getHeight() / 20) * 3);
         textField.setWidth(200 * (Gdx.graphics.getWidth() / 360));
         textField.setText("");
         textField.setHeight(50 * (Gdx.graphics.getHeight() / 640));
@@ -138,7 +138,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 + 115,Gdx.graphics.getHeight() / 2 + 250);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 8f, (Gdx.graphics.getHeight() / 20) * 17.5f);
         button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -158,7 +158,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 + 50);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 10);
         stage.addActor(button);
         button.setSize(240 * (Gdx.graphics.getWidth() / 360),140 * (Gdx.graphics.getHeight() / 640));
         button.addListener(new ClickListener() {
@@ -179,7 +179,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 50);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 8);
         button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -199,7 +199,7 @@ public class HomeScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 120,Gdx.graphics.getHeight()/2 - 150);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 5);
         button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -249,11 +249,11 @@ public class HomeScreen extends ScreenAdapter {
              //   game.setScreen(new FindingMatch(game));
                 game.setScreen(new QuickPlayMenu(game));
             }
-            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", Gdx.graphics.getWidth() / 2 - 130, Gdx.graphics.getHeight() / 2 + 200);
+            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 16);
         }
         else {
             game.getSocket().connect();
-            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\nATTEMPTING TO RECONNECT..", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\nATTEMPTING TO RECONNECT..", (Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 2);
         }
         game.getBatch().end();
     }

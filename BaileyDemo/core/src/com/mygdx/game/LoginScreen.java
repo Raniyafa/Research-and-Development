@@ -111,8 +111,8 @@ public class LoginScreen extends ScreenAdapter {
 
         //Text field for input the User Name
         final TextField textField = new TextField("Text field", mySkin);
-        textField.setX(Gdx.graphics.getWidth() / 2 - 125);
-        textField.setY(Gdx.graphics.getHeight() / 2 - 50);
+        textField.setX((Gdx.graphics.getWidth() / 10) * 1.6f);
+        textField.setY((Gdx.graphics.getHeight() / 20) * 8);
         textField.setWidth(250 * (Gdx.graphics.getWidth() / 360));
         textField.setText("");
         textField.setHeight(70 * (Gdx.graphics.getHeight() / 640));
@@ -163,7 +163,7 @@ public class LoginScreen extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         button = new ImageButton(up,down);
-        button.setPosition(Gdx.graphics.getWidth() / 2 - 115, Gdx.graphics.getHeight() / 2 - 200);
+        button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 4);
         button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
@@ -221,7 +221,7 @@ public class LoginScreen extends ScreenAdapter {
         //font.draw(game.getBatch(), "If playing on phone,\nuse random name button", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 220);
 
         if(passTimer > 0.0f){
-            smallFont.draw(game.getBatch(), "Inappropriate name detected\n please try again.\n", Gdx.graphics.getWidth() / 2 - 140, Gdx.graphics.getHeight() / 2 - 70);
+            smallFont.draw(game.getBatch(), "Inappropriate name detected\n please try again.\n", (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 7.7f);
             passTimer -= delta;
         }
 
@@ -234,9 +234,10 @@ public class LoginScreen extends ScreenAdapter {
             if(!game.getSocket().isConnecting()) {
                 game.getSocket().connect();
             }
-            font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
-            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
-            font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", (Gdx.graphics.getWidth() / 10) * 0.5f,
+                    (Gdx.graphics.getHeight() / 20) * 10);
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", (Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 2);
+            font.draw(game.getBatch(), game.socketException, (Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 1);
         }
         game.getBatch().end();
     }
