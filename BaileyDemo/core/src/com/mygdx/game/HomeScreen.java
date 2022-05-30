@@ -146,7 +146,7 @@ public class HomeScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingMenu(game));
                 SoundManager.button.play();
-                SoundManager.background.dispose();
+//                SoundManager.background.dispose();
             }
         });
 

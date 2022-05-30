@@ -234,9 +234,9 @@ public class LoginScreen extends ScreenAdapter {
             if(!game.getSocket().isConnecting()) {
                 game.getSocket().connect();
             }
-       //     font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
-            //font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
-         //   font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2 - 200);
+            font.draw(game.getBatch(), game.socketException, Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
         game.getBatch().end();
     }

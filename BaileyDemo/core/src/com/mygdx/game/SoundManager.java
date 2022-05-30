@@ -11,10 +11,10 @@ public class SoundManager {
     public static Sound button;
 
     public static void create() {
-        //Add backgroundmusic.mp3 as the Background Music
+        //Add backgroundmusic.wav as the Background Music
         background = Gdx.audio.newMusic(Gdx.files.internal("Music/backgroundmusic.wav"));
 
-        //Add buttonsound.mp3 as the Button Sound(Sound Effect)
+        //Add buttonsound.wav as the Button Sound(Sound Effect)
         button = Gdx.audio.newSound(Gdx.files.internal("Music/buttonsound.wav"));
     }
 
