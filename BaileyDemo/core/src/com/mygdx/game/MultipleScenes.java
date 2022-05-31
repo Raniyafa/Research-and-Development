@@ -59,8 +59,7 @@ public class MultipleScenes extends Game {
 
         //pc localhost testing
         socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
-
-        socket.setSendGracefully(true);
+        //socket.setSendGracefully(true);
 
         try {
             socket.connect();
