@@ -131,6 +131,8 @@ public class GameScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
+    public String tempString;
+
     public GameScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -162,7 +164,10 @@ public class GameScreen extends ScreenAdapter {
                         turnTimer = 0.0f;
                         myTurn = true;
                         lineNo++;
-                        game.getGameLobby().setPartnerName(clientMessage[1]);
+                        if(game.getGameLobby().getPartnerName().matches("")) {
+                            game.getGameLobby().setPartnerName(clientMessage[1]);
+                        }
+
                     }
                     //Statement to set the partner name when match is started
                     else if (clientMessage[0].matches("PartnerTurn")) {
@@ -645,23 +650,23 @@ public class GameScreen extends ScreenAdapter {
             //Server could interact with image hosting API to host drawing which can be used for social media sharing
             //to be able to directly share the screenshot, interfaces must be added for each platform with sharing functions created for each and depending on which
             //platform is being used the user, a different interface may be used to facilitate the sharing of a image
-            if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop || Gdx.app.getType() == Application.ApplicationType.iOS) {
+          //  if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop || Gdx.app.getType() == Application.ApplicationType.iOS) {
 
-            final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+         //   final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             //Screenshot can be found in the games directory on the phone storage, havent found a way to move it to the gallery for sharing use
-            PixmapIO.writePNG(Gdx.files.external("drawbuddytestscreenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+         //   PixmapIO.writePNG(Gdx.files.external("drawbuddytestscreenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
 
-            FileHandle file =  Gdx.files.external("drawbuddytestscreenshot.png");
+          //  FileHandle file =  Gdx.files.external("drawbuddytestscreenshot.png");
 
-            String encodedfile = null;
+         //   String encodedfile = null;
 
-            byte[] bytes = file.readBytes();
-            encodedfile = Base64Coder.encodeLines(bytes);
-            game.getGameLobby().setImageString(encodedfile);
-            pixmap.dispose();
-
-            game.getSocket().send(encodedfile);
-            }
+         //   byte[] bytes = file.readBytes();
+          //  encodedfile = Base64Coder.encodeLines(bytes);
+          //  game.getGameLobby().setImageString(encodedfile);
+         //   pixmap.dispose();
+//
+         //   game.getSocket().send(encodedfile);
+         //   }
             float[] scaleInfo = {partnerWidthRatio, partnerHeightRatio};
             game.setScreen(new PostGame(game, shapeArr, scaleInfo));
         }
