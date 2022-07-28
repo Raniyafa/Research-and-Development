@@ -50,7 +50,7 @@ public class SimpleServer extends WebSocketServer {
 
     public ArrayList<GameLobby> gameLobbies = new ArrayList<>();
     public ArrayList<Client> gameQueue = new ArrayList<>();
-    public Shape shapeModel = new Shape();
+    //public Shape shapeModel = new Shape();
     public ArrayList<Client> clientList = new ArrayList<>();
 
     //Constructor for the server, uncomment line the below lines if using SSL and you have changed the path for the certificates accordingly
