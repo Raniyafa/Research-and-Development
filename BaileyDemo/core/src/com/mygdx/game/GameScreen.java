@@ -49,7 +49,7 @@ public class GameScreen extends ScreenAdapter {
 
     private BitmapFont font;
     private BitmapFont fontLarge;
-
+    private Shape shapeModel = new Shape();
     private BitmapFont dbfont;
     private BitmapFont dbSmallFont;
 
@@ -123,7 +123,7 @@ public class GameScreen extends ScreenAdapter {
     private Image image;
     private TextureRegion region;
     private SpriteBatch batch;
-
+    private Shape shapeModel1 = new Shape();
     private TextureRegionDrawable up;
     private TextureRegionDrawable down;
     private TextureRegion buttonUp;
@@ -144,7 +144,7 @@ public class GameScreen extends ScreenAdapter {
             @Override
             public boolean onMessage(final WebSocket webSocket, final String packet) {
                 //Network handler for this class, takes messages from the server and uses the information for the game
-                if(!packet.contains("CanvasInfo")) {
+                if (!packet.contains("CanvasInfo")) {
                     Gdx.app.log("WS GameScreen", "Got message: " + packet);
                 }
 
@@ -164,7 +164,7 @@ public class GameScreen extends ScreenAdapter {
                         turnTimer = 0.0f;
                         myTurn = true;
                         lineNo++;
-                        if(game.getGameLobby().getPartnerName().matches("")) {
+                        if (game.getGameLobby().getPartnerName().matches("")) {
                             game.getGameLobby().setPartnerName(clientMessage[1]);
                         }
 
@@ -180,32 +180,28 @@ public class GameScreen extends ScreenAdapter {
                         gameFinished = true;
                     }
                     //Emote message from server, the corresponding emote will be drawn to screen
-                    else if(clientMessage[0].matches("Emote")) {
+                    else if (clientMessage[0].matches("Emote")) {
                         emoteActive = true;
 
-                        if(clientMessage[1].matches("Annoyed")){
+                        if (clientMessage[1].matches("Annoyed")) {
                             emote = new Sprite(annoyed);
-                        }
-                        else if(clientMessage[1].matches("Laugh")){
+                        } else if (clientMessage[1].matches("Laugh")) {
                             emote = new Sprite(laugh);
-                        }
-                        else if(clientMessage[1].matches("Hearteye")){
+                        } else if (clientMessage[1].matches("Hearteye")) {
                             emote = new Sprite(hearteye);
-                        }
-                        else if(clientMessage[1].matches("Sad")){
+                        } else if (clientMessage[1].matches("Sad")) {
                             emote = new Sprite(sad);
                         }
 
                         emote.setPosition(195, emoteY);
 
                         emote.setScale(0.75f);
-                    }
-                    else if(clientMessage[0].matches("ResolutionRatio")){
+                    } else if (clientMessage[0].matches("ResolutionRatio")) {
                         partnerWidthRatio = Float.valueOf(clientMessage[1]);
                         partnerHeightRatio = Float.valueOf(clientMessage[2]);
                     }
-                }catch(Exception e){
-                    System.out.println("Exception in update from server " +e);
+                } catch (Exception e) {
+                    System.out.println("Exception in update from server " + e);
                 }
                 isUpdating = false;
                 return FULLY_HANDLED;
@@ -258,8 +254,8 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!emoteActive)
-                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Annoyed");
+                if (!emoteActive)
+                    game.getSocket().send("GameMessage/Emote/" + game.getGameLobby().getLobbyIndex() + "/Annoyed");
             }
         });
 
@@ -270,14 +266,14 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionHeart = new TextureRegion(hearteyeButton);
         TextureRegionDrawable myTexRegionHeart = new TextureRegionDrawable(myTextureRegionHeart);
         emojiButtons[1] = new ImageButton(myTexRegionHeart); //Set the button up
-        emojiButtons[1].setBounds(widthSlice * 12 , 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
+        emojiButtons[1].setBounds(widthSlice * 12, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[1].addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!emoteActive)
-                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Hearteye");
+                if (!emoteActive)
+                    game.getSocket().send("GameMessage/Emote/" + game.getGameLobby().getLobbyIndex() + "/Hearteye");
             }
         });
         stage.addActor(emojiButtons[1]);
@@ -293,8 +289,8 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!emoteActive)
-                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Laugh");
+                if (!emoteActive)
+                    game.getSocket().send("GameMessage/Emote/" + game.getGameLobby().getLobbyIndex() + "/Laugh");
             }
         });
 
@@ -311,8 +307,8 @@ public class GameScreen extends ScreenAdapter {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!emoteActive)
-                    game.getSocket().send("GameMessage/Emote/"+game.getGameLobby().getLobbyIndex()+"/Sad");
+                if (!emoteActive)
+                    game.getSocket().send("GameMessage/Emote/" + game.getGameLobby().getLobbyIndex() + "/Sad");
             }
         });
 
@@ -320,8 +316,8 @@ public class GameScreen extends ScreenAdapter {
 
         //Attach the network listener for this class to the WebSocket
 
-        shapeArr = new ArrayList<>(5000);
-
+//        shapeArr = new ArrayList<>(5000);
+        shapeArr = new ArrayList<>();
         //Skin created for buttons and UI elements, stage set for this class
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
 
@@ -343,22 +339,21 @@ public class GameScreen extends ScreenAdapter {
 
         //Add Color Button, click it the Color Select Box will show up
         tex2 = new Texture(Gdx.files.internal("button/ColorButton.png"));
-        TextureRegion[][] temp_0 = TextureRegion.split(tex2,85,85);
+        TextureRegion[][] temp_0 = TextureRegion.split(tex2, 85, 85);
         buttonUp = temp_0[0][0];
         buttonDown = temp_0[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
+        button = new ImageButton(up, down);
         button.setPosition(60 * (Gdx.graphics.getWidth() / 360), 45 * (Gdx.graphics.getHeight() / 640));
-        button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
+        button.setSize(30 * (Gdx.graphics.getWidth() / 360), 30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!colour.isVisible()){
+                if (!colour.isVisible()) {
                     colour.setVisible(true);
-                }
-                else{
+                } else {
                     colour.setVisible(false);
                 }
             }
@@ -366,7 +361,7 @@ public class GameScreen extends ScreenAdapter {
 
         Gdx.input.setInputProcessor(stage);
 
-        game.getSocket().send("Ready/"+game.getGameLobby().getLobbyIndex()+"/"+String.valueOf(widthRatio)+"/"+String.valueOf(heightRatio));
+        game.getSocket().send("Ready/" + game.getGameLobby().getLobbyIndex() + "/" + String.valueOf(widthRatio) + "/" + String.valueOf(heightRatio));
     }
 
     @Override
@@ -387,7 +382,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        batch.draw(tex, 0, 0, 360 * (Gdx.graphics.getWidth() / 360), 750 * (Gdx.graphics.getHeight() / 640));
 
         batch.end();
 
@@ -414,7 +409,7 @@ public class GameScreen extends ScreenAdapter {
                 oneLineModeTimer += delta;
 
                 //If the maximum amount of time for the one line mode turn has been reached, then tell server to go to next turn
-                if(oneLineModeTimer > Float.valueOf(game.getGameLobby().getTurnTimer())){
+                if (oneLineModeTimer > Float.valueOf(game.getGameLobby().getTurnTimer())) {
                     oneLineDrawing = false;
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                     myTurn = false;
@@ -436,7 +431,7 @@ public class GameScreen extends ScreenAdapter {
                     }
                 }
                 //Check if current input is on the same line as previous input
-                else if(oneLineDrawing && !Gdx.input.isTouched()){
+                else if (oneLineDrawing && !Gdx.input.isTouched()) {
                     oneLineDrawing = false;
                     game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
                     myTurn = false;
@@ -450,7 +445,7 @@ public class GameScreen extends ScreenAdapter {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             //Draw a cursor to show the current position of the mouse/finger
-            if(!gameFinished) {
+            if (!gameFinished) {
                 shapeRenderer.circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 10.0f);
             }
             Shape tempShape = new Shape();
@@ -470,55 +465,45 @@ public class GameScreen extends ScreenAdapter {
 
                     //incoming shapes from phone are being scaled again
                     //if its my turn then dont scale the stuff, if its not my turn then scale the stuff
-                    if(drawShape.isMyTurn()) {
-                         drawShapeX = drawShape.getX();
-                         drawShapeY = drawShape.getY();
-                    }
-                    else{
-                        if(widthRatio > partnerWidthRatio){
+                    if (drawShape.isMyTurn()) {
+                        drawShapeX = drawShape.getX();
+                        drawShapeY = drawShape.getY();
+                    } else {
+                        if (widthRatio > partnerWidthRatio) {
                             drawShapeX = drawShape.getX() / (partnerWidthRatio / widthRatio);
-                        }
-                        else if (widthRatio < partnerWidthRatio){
+                        } else if (widthRatio < partnerWidthRatio) {
                             drawShapeX = drawShape.getX() * (widthRatio / partnerWidthRatio);
-                        }
-                        else{
+                        } else {
                             drawShapeX = drawShape.getX();
                         }
 
-                        if(heightRatio > partnerHeightRatio){
+                        if (heightRatio > partnerHeightRatio) {
                             drawShapeY = drawShape.getY() / (partnerHeightRatio / heightRatio);
-                        }
-                        else if(heightRatio < partnerHeightRatio){
+                        } else if (heightRatio < partnerHeightRatio) {
                             drawShapeY = drawShape.getY() * (heightRatio / partnerHeightRatio);
-                        }
-                        else{
+                        } else {
                             drawShapeY = drawShape.getY();
                         }
                     }
 
 
-                    if(tempShape.isMyTurn()) {
+                    if (tempShape.isMyTurn()) {
                         tempShapeX = tempShape.getX();
                         tempShapeY = tempShape.getY();
-                    }
-                    else{
-                        if(widthRatio > partnerWidthRatio){
+                    } else {
+                        if (widthRatio > partnerWidthRatio) {
                             tempShapeX = tempShape.getX() / (partnerWidthRatio / widthRatio);
-                        }
-                        else if(widthRatio < partnerWidthRatio){
+                        } else if (widthRatio < partnerWidthRatio) {
                             tempShapeX = tempShape.getX() * (widthRatio / partnerWidthRatio);
-                        }
-                        else{
+                        } else {
                             tempShapeX = tempShape.getX();
                         }
 
-                        if(heightRatio > partnerHeightRatio){
+                        if (heightRatio > partnerHeightRatio) {
                             tempShapeY = tempShape.getY() / (partnerHeightRatio / heightRatio);
-                        }
-                        else if(heightRatio < partnerHeightRatio){
+                        } else if (heightRatio < partnerHeightRatio) {
                             tempShapeY = tempShape.getY() * (heightRatio / partnerHeightRatio);
-                        }
-                        else{
+                        } else {
                             tempShapeY = tempShape.getY();
                         }
                     }
@@ -547,7 +532,7 @@ public class GameScreen extends ScreenAdapter {
             //If emoteActive then draw the current Emote and keep track of the timer, and opacity
             if (emoteActive) {
                 // emote.draw(game.getBatch(), );
-                game.getBatch().draw(emote,Gdx.graphics.getWidth() / 2, emoteY,360 * (Gdx.graphics.getWidth() / 360) / 6,640 * (Gdx.graphics.getHeight() / 640) / 12);
+                game.getBatch().draw(emote, Gdx.graphics.getWidth() / 2, emoteY, 360 * (Gdx.graphics.getWidth() / 360) / 6, 640 * (Gdx.graphics.getHeight() / 640) / 12);
                 emoteY += 1.0f;
 
                 if (emoteY >= (Gdx.graphics.getHeight() / 6) * 1.5f) {
@@ -569,17 +554,16 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_topic = "";
                     String temp_time = "";
-                    if(gameMode.matches("Regular")) {
+                    if (gameMode.matches("Regular")) {
                         //Draw regular game mode UI for when it is my turn
                         temp = game.getPlayerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
-                        temp_time = ""+ (Math.round(turnLength - turnTimer));
-                    }
-                    else{
+                        temp_time = "" + (Math.round(turnLength - turnTimer));
+                    } else {
                         //Draw one-line mode game UI for when it is my turn
                         temp = game.getPlayerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
-                        temp_time = ""+ (Math.round(turnLength - turnTimer));
+                        temp_time = "" + (Math.round(turnLength - turnTimer));
                     }
 
                     dbfont.draw(game.getBatch(), temp, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 18.4f);
@@ -588,7 +572,7 @@ public class GameScreen extends ScreenAdapter {
                     //Uncomment this line if you want to see packet debug info
                     //String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
                     //   font.draw(game.getBatch(), debugInfo, 0, 200);
-                    if(gameMode.matches("Regular")) {
+                    if (gameMode.matches("Regular")) {
                         if (turnTimer >= turnLength) {
                             myTurn = false;
                             game.getSocket().send("TurnFinished/" + game.getGameLobby().getLobbyIndex());
@@ -599,17 +583,16 @@ public class GameScreen extends ScreenAdapter {
                     String temp = "";
                     String temp_topic = "";
                     String temp_time = "";
-                    if(gameMode.matches("Regular")) {
+                    if (gameMode.matches("Regular")) {
                         //Draw regular game mode UI for when it is not my turn
                         temp = game.getGameLobby().getPartnerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
-                        temp_time = ""+ (Math.round(turnLength - turnTimer));
-                    }
-                    else{
+                        temp_time = "" + (Math.round(turnLength - turnTimer));
+                    } else {
                         //Draw one-line mode game UI for when it is not my turn
                         temp = game.getGameLobby().getPartnerName() + "'s turn";
                         temp_topic = game.getGameLobby().getWordTopic();
-                        temp_time = ""+ (Math.round(turnLength - turnTimer));
+                        temp_time = "" + (Math.round(turnLength - turnTimer));
                     }
                     dbfont.draw(game.getBatch(), temp, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 18.4f);
                     dbfont.draw(game.getBatch(), temp_topic, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 16.4f);
@@ -623,18 +606,17 @@ public class GameScreen extends ScreenAdapter {
 
         //If game socket is closed and not connecting, attempt to connect
         //If game socket is closed then display that information to the user and attempt to re-connect, also keep track of the time spent disconnecting
-        else if(game.getSocket().isClosed()){
-            if(game.getSocket().isConnecting()){
+        else if (game.getSocket().isClosed()) {
+            if (game.getSocket().isConnecting()) {
                 game.getSocket().connect();
             }
             disconnectedTimer += delta;
 
-            if(disconnectedTimer >= 5.0f) {
+            if (disconnectedTimer >= 5.0f) {
                 game.setScreen(new HomeScreen(game));
             }
-        }
-        else{
-            if(disconnectedTimer >= 0.0f){
+        } else {
+            if (disconnectedTimer >= 0.0f) {
                 getCanvasUpdates();
             }
         }
@@ -650,23 +632,23 @@ public class GameScreen extends ScreenAdapter {
             //Server could interact with image hosting API to host drawing which can be used for social media sharing
             //to be able to directly share the screenshot, interfaces must be added for each platform with sharing functions created for each and depending on which
             //platform is being used the user, a different interface may be used to facilitate the sharing of a image
-          //  if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop || Gdx.app.getType() == Application.ApplicationType.iOS) {
+            //  if(Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.Desktop || Gdx.app.getType() == Application.ApplicationType.iOS) {
 
-         //   final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            //   final Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             //Screenshot can be found in the games directory on the phone storage, havent found a way to move it to the gallery for sharing use
-         //   PixmapIO.writePNG(Gdx.files.external("drawbuddytestscreenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+            //   PixmapIO.writePNG(Gdx.files.external("drawbuddytestscreenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
 
-          //  FileHandle file =  Gdx.files.external("drawbuddytestscreenshot.png");
+            //  FileHandle file =  Gdx.files.external("drawbuddytestscreenshot.png");
 
-         //   String encodedfile = null;
+            //   String encodedfile = null;
 
-         //   byte[] bytes = file.readBytes();
-          //  encodedfile = Base64Coder.encodeLines(bytes);
-          //  game.getGameLobby().setImageString(encodedfile);
-         //   pixmap.dispose();
+            //   byte[] bytes = file.readBytes();
+            //  encodedfile = Base64Coder.encodeLines(bytes);
+            //  game.getGameLobby().setImageString(encodedfile);
+            //   pixmap.dispose();
 //
-         //   game.getSocket().send(encodedfile);
-         //   }
+            //   game.getSocket().send(encodedfile);
+            //   }
             float[] scaleInfo = {partnerWidthRatio, partnerHeightRatio};
             game.setScreen(new PostGame(game, shapeArr, scaleInfo));
         }
@@ -679,32 +661,37 @@ public class GameScreen extends ScreenAdapter {
 
     public void storeMouseLoc(float delta) {
         int currentSize = shapeArr.size();
-        Shape temp;
-
-        temp = (new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()));
-
+//        Shape temp;
+//        temp = (new Shape(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()));
+        shapeModel.setX(Gdx.input.getX());
+        shapeModel.setY(Gdx.graphics.getHeight() - Gdx.input.getY());
+        shapeModel.setColour(colour.getSelected());
+        shapeModel.setRgb(getRGB(colour.getSelected()));
+        shapeModel.setType(selectedType);
+        shapeModel.setLineNo(lineNo);
+        shapeModel.setRadius(10);
         //Gets the selected colour
-        temp.setColour(colour.getSelected());
-        //Gets the selected colour RGB value
-        temp.setRgb(getRGB(colour.getSelected()));
-        //Gets the selected shape (circle, square, triangle)
-        temp.setType(selectedType);
-
-        temp.setLineNo(lineNo);
-        temp.setRadius(10);
+//        temp.setColour(colour.getSelected());
+//        //Gets the selected colour RGB value
+//        temp.setRgb(getRGB(colour.getSelected()));
+//        //Gets the selected shape (circle, square, triangle)
+//        temp.setType(selectedType);
+//
+//        temp.setLineNo(lineNo);
+//        temp.setRadius(10);
 
         //Sending the new shape to the server to be added to the shared canvas
-        game.getSocket().send("GameMessage/"+"UpdateCanvas/"+String.valueOf(lobbyID)+"/"+game.getAuthCode()+"/"+temp.getType()
-                +  ":" + temp.getColour() + ":" +   temp.getX() + ":" +temp.getY() + ":" + lineNo);
+        game.getSocket().send("GameMessage/" + "UpdateCanvas/" + String.valueOf(lobbyID) + "/" + game.getAuthCode() + "/" + shapeModel.getType()
+                + ":" + shapeModel.getColour() + ":" + shapeModel.getX() + ":" + shapeModel.getY() + ":" + lineNo);
         sent++;
     }
 
-    public void getCanvasUpdates(){
+    public void getCanvasUpdates() {
         //Gets the new shapes from the server that has been added to the shared canvas since the last update call from the client
-         game.getSocket().send("GameMessage/"+"RequestCanvas/"+lobbyID+"/"+game.getAuthCode()+"/"+shapeArr.size());
+        game.getSocket().send("GameMessage/" + "RequestCanvas/" + lobbyID + "/" + game.getAuthCode() + "/" + shapeArr.size());
     }
 
-    public float[] getRGB(String colour){
+    public float[] getRGB(String colour) {
         //Converts a string colour into RGB values
 
         float[] temp = {0.0f, 0.2f, 0.0f};
@@ -738,7 +725,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void dispose(){
+    public void dispose() {
         stage.dispose();
         font.dispose();
         fontLarge.dispose();
