@@ -69,10 +69,11 @@ public class CreateLobby extends ScreenAdapter {
 
         //Add CreateRoom.png as the background
         tex = new Texture(Gdx.files.internal("image/CreateRoom.png"));
-        region = new TextureRegion(tex, 0, 0, 750, 1334);
+//        region = new TextureRegion(tex, 0, 0, 750, 1334);
+        region = new TextureRegion(tex);
         image = new Image(region);
         image.setPosition(0, 0);
-        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
+        image.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(image);
 
         //Add Back Button, click it will move back to Lobby (Home Screen)
