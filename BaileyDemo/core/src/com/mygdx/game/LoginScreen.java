@@ -100,7 +100,8 @@ public class LoginScreen extends ScreenAdapter {
         image = new Image(region);
 
 //        image.setPosition(0, 0);
-        image.setSize(360, 750);
+//        image.setSize(360, 750);
+        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight() );
         stage.addActor(image);
 
         //Play the Background Music and set it into a loop

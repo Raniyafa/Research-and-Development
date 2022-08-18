@@ -57,7 +57,7 @@ public class CreateLobby extends ScreenAdapter {
     }
 
     @Override
-    public void show(){
+    public void show() {
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
                 Gdx.files.internal("font/dbfont.png"), false);
 
@@ -69,27 +69,27 @@ public class CreateLobby extends ScreenAdapter {
 
         //Add CreateRoom.png as the background
         tex = new Texture(Gdx.files.internal("image/CreateRoom.png"));
-        region = new TextureRegion(tex,0,0,750,1334);
+        region = new TextureRegion(tex, 0, 0, 750, 1334);
         image = new Image(region);
-        image.setPosition(0,0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        image.setPosition(0, 0);
+        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
         stage.addActor(image);
 
         //Add Back Button, click it will move back to Lobby (Home Screen)
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
-        TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
+        TextureRegion[][] temp_0 = TextureRegion.split(tex2, 210, 60);
         buttonUp = temp_0[0][0];
         buttonDown = temp_0[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
+        button = new ImageButton(up, down);
         button.setPosition((Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 18);
-        button.setSize(105 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
+        button.setSize(105 * (Gdx.graphics.getWidth() / 360), 30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(game.getSocket().isOpen()) {
+                if (game.getSocket().isOpen()) {
                     game.setScreen(new HomeScreen(game));
                 }
                 SoundManager.button.play();
@@ -98,36 +98,36 @@ public class CreateLobby extends ScreenAdapter {
 
         //Adding Create Button, click it will create a Game Room/Lobby as User required
         tex2 = new Texture(Gdx.files.internal("button/CreateButton.png"));
-        TextureRegion[][] temp_2 = TextureRegion.split(tex2,480,140);
+        TextureRegion[][] temp_2 = TextureRegion.split(tex2, 480, 140);
         buttonUp = temp_2[0][0];
         buttonDown = temp_2[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
+        button = new ImageButton(up, down);
         button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 3);
-        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360), 70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.button.play();
-                if(game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
+                if (game.getSocket().isOpen() && lobbyType.getSelected() != null && lobbyType.getSelected() != "Lobby Type:") {
 
-                    game.getSocket().send("LobbyMessage/CreateLobby/"+lobbyType.getSelected()+"/"+game.getAuthCode()+"/"+round.getSelected()+"/"+time.getSelected()+"/"+game.getPlayerName()+"/"+topicType.getSelected());
+                    game.getSocket().send("LobbyMessage/CreateLobby/" + lobbyType.getSelected() + "/" + game.getAuthCode() + "/" + round.getSelected() + "/" + time.getSelected() + "/" + game.getPlayerName() + "/" + topicType.getSelected());
                 }
             }
         });
 
         //Add Mode Intro Button, takes the player to the game mode info screen
         tex2 = new Texture(Gdx.files.internal("button/infoButton.png"));
-        TextureRegion[][] temp_3 = TextureRegion.split(tex2,50,50);
+        TextureRegion[][] temp_3 = TextureRegion.split(tex2, 50, 50);
         buttonUp = temp_3[0][0];
         buttonDown = temp_3[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
+        button = new ImageButton(up, down);
         button.setPosition((Gdx.graphics.getWidth() / 10) * 7, (Gdx.graphics.getHeight() / 20) * 16);
-        button.setSize(30 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
+        button.setSize(30 * (Gdx.graphics.getWidth() / 360), 30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -146,12 +146,12 @@ public class CreateLobby extends ScreenAdapter {
         lobbyType.setSelected("5");
         stage.addActor(lobbyType);
 
-        ArrayList<String> data = new ArrayList<>() ;
+        ArrayList<String> data = new ArrayList<>();
         data.add("Random");
         FileHandle handle = Gdx.files.internal("textfiles/topicwords.txt");
         String text = handle.readString();
         String wordsArray[] = text.split("\\r?\\n");
-        for(String word : wordsArray) {
+        for (String word : wordsArray) {
             data.add(word);
         }
         String[] simpleArray = data.toArray(new String[]{});
@@ -186,7 +186,7 @@ public class CreateLobby extends ScreenAdapter {
     @Override
     public void render(float delta) {
         //If moveToLobby variable is true then move to the LobbyScreen
-        if(moveToLobby){
+        if (moveToLobby) {
             game.setScreen(new LobbyScreen(game));
         }
 
@@ -203,9 +203,9 @@ public class CreateLobby extends ScreenAdapter {
         game.getBatch().begin();
 
         //Check if client is disconnected, if so then display error message and attempt to reconnect
-        if(game.getSocket().isClosed() && !game.getSocket().isConnecting()){
+        if (game.getSocket().isClosed() && !game.getSocket().isConnecting()) {
             game.getSocket().connect();
-            font.draw( game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
+            font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", Gdx.graphics.getWidth() / 2 - 160, Gdx.graphics.getHeight() / 2);
         }
 
         game.getBatch().end();
@@ -233,17 +233,17 @@ public class CreateLobby extends ScreenAdapter {
         };
     }
 
-    public void CreateLobby(int id, String code){
+    public void CreateLobby(int id, String code) {
         game.setGameLobby(new GameLobby(code, id));
     }
 
     @Override
-    public void hide(){
+    public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
-    public void dispose(){
+    public void dispose() {
         game.dispose();
         stage.dispose();
         font.dispose();
