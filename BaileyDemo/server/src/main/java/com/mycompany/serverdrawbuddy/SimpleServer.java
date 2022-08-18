@@ -153,6 +153,8 @@ public class SimpleServer extends WebSocketServer {
                         shapeModel.setColour(clientMessage2[0]);
                         shapeModel.setLineNo(Integer.valueOf(clientMessage2[4]));
                         lobby.getShapeList().add(shapeModel);
+                        //shape model debug info, comment the line below to close it
+                        System.out.print(shapeModel);
 //                  lobby.getShapeList().add(new Shape(Integer.valueOf(clientMessage2[2]), Integer.valueOf(clientMessage2[3]), clientMessage2[1], clientMessage2[0], Integer.valueOf(clientMessage2[4])));
                         lobby.getPlayer1().send("NewShapeInfo/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
                         lobby.getPlayer2().send("NewShapeInfo/"+clientMessage2[2]+"/"+clientMessage2[3]+"/"+clientMessage2[0]+"/"+clientMessage2[1]+"/"+clientMessage2[4]);
