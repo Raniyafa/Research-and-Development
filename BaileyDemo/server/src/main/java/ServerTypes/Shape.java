@@ -16,6 +16,10 @@ public class Shape {
         this.lineNo = line;
     }
     
+    public Shape(){
+        
+    }
+    
       public int getX() {
         return x;
     }
