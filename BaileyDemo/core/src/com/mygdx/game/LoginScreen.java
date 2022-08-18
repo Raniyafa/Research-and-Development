@@ -70,11 +70,10 @@ public class LoginScreen extends ScreenAdapter {
                 //Below are the handlers for the name validity message from server
 
                 //If pass is received then move to homescreen
-                if(packet.matches("Pass")){
-                      game.setPlayerName(name);
-                      moveToHome = true;
-                }
-                else if(packet.matches("Fail")){
+                if (packet.matches("Pass")) {
+                    game.setPlayerName(name);
+                    moveToHome = true;
+                } else if (packet.matches("Fail")) {
                     passTimer = 5.0f;
                 }
                 return FULLY_HANDLED;
@@ -83,9 +82,9 @@ public class LoginScreen extends ScreenAdapter {
     }
 
     @Override
-    public void show(){
+    public void show() {
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-        Gdx.files.internal("font/dbfont.png"), false);
+                Gdx.files.internal("font/dbfont.png"), false);
         game.setListener(getListener());
 
         smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
@@ -96,10 +95,12 @@ public class LoginScreen extends ScreenAdapter {
 
         //Add HomePage.png as the background
         tex = new Texture(Gdx.files.internal("image/HomePage.png"));
-        region = new TextureRegion(tex,0,0, 750, 1334);
+//        region = new TextureRegion(tex, 0, 0, 750, 1334);
+        region = new TextureRegion(tex);
         image = new Image(region);
-        image.setPosition(0, 0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+
+//        image.setPosition(0, 0);
+        image.setSize(360, 750);
         stage.addActor(image);
 
         //Play the Background Music and set it into a loop
@@ -116,22 +117,23 @@ public class LoginScreen extends ScreenAdapter {
         textField.setText("");
         textField.setHeight(70 * (Gdx.graphics.getHeight() / 640));
         textField.setVisible(true);
-        textField.addListener(new InputListener(){
+        textField.addListener(new InputListener() {
 
             //If user presses enter on the input field then send the name to the server and check if it is valid
             @Override
-            public boolean keyDown (InputEvent event, int keycode) {
-                if(keycode == Input.Keys.ENTER){
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER) {
                     String field = textField.getText();
-                    game.getSocket().send("CheckName/"+field);
+                    game.getSocket().send("CheckName/" + field);
                     name = field;
                 }
                 return false;
 
 
             }
+
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
                 return false;
             }
@@ -139,14 +141,14 @@ public class LoginScreen extends ScreenAdapter {
 
         //Add Start Button, and if click Start Button it will give User a random User Name
         tex2 = new Texture(Gdx.files.internal("button/StartButton.png"));
-        TextureRegion[][] temp_1 = TextureRegion.split(tex2,480,140);
+        TextureRegion[][] temp_1 = TextureRegion.split(tex2, 480, 140);
         buttonUp = temp_1[0][0];
         buttonDown = temp_1[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
+        button = new ImageButton(up, down);
         button.setPosition((Gdx.graphics.getWidth() / 10) * 1.8f, (Gdx.graphics.getHeight() / 20) * 4);
-        button.setSize(240 * (Gdx.graphics.getWidth() / 360),70 * (Gdx.graphics.getHeight() / 640));
+        button.setSize(240 * (Gdx.graphics.getWidth() / 360), 70 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -166,14 +168,13 @@ public class LoginScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        if(moveToHome){
+        if (moveToHome) {
             game.setScreen(new HomeScreen(game));
         }
 
-        if(game.getSocket().isOpen()) {
+        if (game.getSocket().isOpen()) {
             Gdx.gl.glClearColor(0, 0, 0.25f, 1);
-        }
-        else{
+        } else {
             Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -181,20 +182,19 @@ public class LoginScreen extends ScreenAdapter {
 
         game.getBatch().begin();
 
-        if(passTimer > 0.0f){
+        if (passTimer > 0.0f) {
             smallFont.draw(game.getBatch(), "Inappropriate name detected\n please try again.\n", (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 7.7f);
             passTimer -= delta;
         }
 
-        if(game.getSocket().isOpen()) {
+        if (game.getSocket().isOpen()) {
             stage.act();
             stage.draw();
-        }
-        else {
-            if(!game.getSocket().isConnecting()) {
+        } else {
+            if (!game.getSocket().isConnecting()) {
                 game.getSocket().connect();
             }
-            font.draw(game.getBatch(), "No Connection\nURL: "+game.getSocket().getUrl().toString()+"\n"+"State: "+game.getSocket().getState().toString()+"\nAttemping to reconnect", (Gdx.graphics.getWidth() / 10) * 0.5f,
+            font.draw(game.getBatch(), "No Connection\nURL: " + game.getSocket().getUrl().toString() + "\n" + "State: " + game.getSocket().getState().toString() + "\nAttemping to reconnect", (Gdx.graphics.getWidth() / 10) * 0.5f,
                     (Gdx.graphics.getHeight() / 20) * 10);
             font.draw(game.getBatch(), "CONNECTION LOST TO SERVER\n", (Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 2);
             font.draw(game.getBatch(), game.socketException, (Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 1);
@@ -203,12 +203,12 @@ public class LoginScreen extends ScreenAdapter {
     }
 
     @Override
-    public void hide(){
+    public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
-    public void dispose(){
+    public void dispose() {
         stage.dispose();
         mySkin.dispose();
         font.dispose();

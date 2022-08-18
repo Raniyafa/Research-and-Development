@@ -32,7 +32,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.Preferences;
 
-public class modeIntroScreen extends ScreenAdapter{
+public class modeIntroScreen extends ScreenAdapter {
     private MultipleScenes game;
     private Stage stage;
     private Texture tex;
@@ -50,27 +50,28 @@ public class modeIntroScreen extends ScreenAdapter{
     }
 
     @Override
-    public void show(){
+    public void show() {
         stage = new Stage(new ScreenViewport());
 
         //Add modeIntro.png as the background
         tex = new Texture(Gdx.files.internal("image/modeIntro.png"));
-        region = new TextureRegion(tex,0,0,750,1334);
+//        region = new TextureRegion(tex,0,0,750,1334);
+        region = new TextureRegion(tex);
         image = new Image(region);
-        image.setPosition(0,0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        image.setPosition(0, 0);
+        image.setSize(360 * (Gdx.graphics.getWidth() / 360), 750 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(image);
 
         //Add Back Button, click it will move back to Lobby (Home Screen)
         tex2 = new Texture(Gdx.files.internal("button/BackButton.png"));
-        TextureRegion[][] temp_0 = TextureRegion.split(tex2,210,60);
+        TextureRegion[][] temp_0 = TextureRegion.split(tex2, 210, 60);
         buttonUp = temp_0[0][0];
         buttonDown = temp_0[0][1];
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
-        button = new ImageButton(up,down);
+        button = new ImageButton(up, down);
         button.setPosition((Gdx.graphics.getWidth() / 10) * 0.5f, (Gdx.graphics.getHeight() / 20) * 18);
-        button.setSize(105 * (Gdx.graphics.getWidth() / 360),30 * (Gdx.graphics.getHeight() / 640));
+        button.setSize(105 * (Gdx.graphics.getWidth() / 360), 30 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
@@ -83,7 +84,7 @@ public class modeIntroScreen extends ScreenAdapter{
     }
 
     @Override
-    public void render(float delta){
+    public void render(float delta) {
         game.getBatch().begin();
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -93,12 +94,12 @@ public class modeIntroScreen extends ScreenAdapter{
     }
 
     @Override
-    public void hide(){
+    public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
-    public void dispose(){
+    public void dispose() {
         game.dispose();
         stage.dispose();
         tex.dispose();
