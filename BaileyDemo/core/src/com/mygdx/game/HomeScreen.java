@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -15,7 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -59,6 +64,9 @@ public class HomeScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
+    private Viewport viewport;
+    private Camera camera;
+
     public HomeScreen(MultipleScenes game) {
         this.game = game;
     }
@@ -87,13 +95,19 @@ public class HomeScreen extends ScreenAdapter {
 
     @Override
     public void show(){
+
+        //Scale the UI size
+        camera = new PerspectiveCamera();
+        viewport = new FitViewport(360, 640);
+
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
         Gdx.files.internal("font/dbfont.png"), false);
 
         moveToGame = false;
         game.setListener(getListener());
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new StretchViewport(360, 640));
 
         final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
@@ -217,6 +231,10 @@ public class HomeScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
+        //Scale the UI size
+        stage.getViewport().update(360, 640, true);
+
         //Move to create lobby screen if moveToCreateLobby is true
         if(moveToCreateLobby){
             game.setScreen(new CreateLobby(game));

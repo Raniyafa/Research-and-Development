@@ -2,7 +2,9 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,7 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 
@@ -40,6 +45,9 @@ public class LobbyScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
+    private Viewport viewport;
+    private Camera camera;
+
     private boolean moveToGame = false;
 
     public LobbyScreen(MultipleScenes game) {
@@ -48,11 +56,17 @@ public class LobbyScreen extends ScreenAdapter {
 
     @Override
     public void show(){
+
+        //Scale the UI size
+        camera = new PerspectiveCamera();
+        viewport = new FitViewport(360, 640);
+
         font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"), Gdx.files.internal("font/dbfont.png"), false);
 
         game.setListener(getListener());
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new StretchViewport(360, 640));
 
         Gdx.graphics.setWindowedMode(360, 640);
 
@@ -91,6 +105,10 @@ public class LobbyScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
+        //Scale the UI size
+        stage.getViewport().update(360, 640, true);
+
         if (moveToGame) {
             game.setScreen(new LoadingScreen(game));
         }

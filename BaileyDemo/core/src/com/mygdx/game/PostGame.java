@@ -2,8 +2,10 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,7 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 
@@ -67,6 +72,9 @@ public class PostGame extends ScreenAdapter {
     private float partnerHeightRatio;
     private float partnerWidthRatio;
 
+    private Viewport viewport;
+    private Camera camera;
+
     public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray, float[] scaleInfo) {
         shapeArr = shapeArray;
         partnerWidthRatio = scaleInfo[0];
@@ -76,6 +84,10 @@ public class PostGame extends ScreenAdapter {
 
     @Override
     public void show(){
+
+        //Scale the UI size
+        camera = new PerspectiveCamera();
+        viewport = new FitViewport(360, 640);
 
         heightRatio = Gdx.graphics.getHeight() / 640;
         widthRatio = Gdx.graphics.getHeight() / 360;
@@ -96,7 +108,8 @@ public class PostGame extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new StretchViewport(360, 640));
 
         float widthSlice = Gdx.graphics.getWidth() / 20;
 
@@ -213,6 +226,10 @@ public class PostGame extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
+        //Scale the UI size
+        stage.getViewport().update(360, 640, true);
+
         if(moveToMain){
             game.setScreen(new HomeScreen(game));
         }

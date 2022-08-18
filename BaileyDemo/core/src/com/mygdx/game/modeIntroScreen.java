@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,7 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.websocket.WebSocket;
 import com.github.czyzby.websocket.WebSocketAdapter;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -45,13 +50,21 @@ public class modeIntroScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
+    private Viewport viewport;
+    private Camera camera;
+
     public modeIntroScreen(MultipleScenes game) {
         this.game = game;
     }
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        //Scale the UI size
+        camera = new PerspectiveCamera();
+        viewport = new FitViewport(360, 640);
+
+//        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new StretchViewport(360, 640));
 
         //Add modeIntro.png as the background
         tex = new Texture(Gdx.files.internal("image/modeIntro.png"));
@@ -85,6 +98,10 @@ public class modeIntroScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
+        //Scale the UI size
+        stage.getViewport().update(360, 640, true);
+
         game.getBatch().begin();
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

@@ -597,9 +597,11 @@ public class GameScreen extends ScreenAdapter {
                     dbfont.draw(game.getBatch(), temp, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 18.4f);
                     dbfont.draw(game.getBatch(), temp_topic, (Gdx.graphics.getWidth() / 10) * 1, (Gdx.graphics.getHeight() / 20) * 16.4f);
                     dbSmallFont.draw(game.getBatch(), temp_time, (Gdx.graphics.getWidth() / 10) * 8.6f, (Gdx.graphics.getHeight() / 20) * 16.2f);
+
+                    //Spirit ArrayList Test
                     //Uncomment this line if you want to see packet debug info
-                    //String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                    //   font.draw(game.getBatch(), debugInfo, 0, 200);
+                    String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+                       font.draw(game.getBatch(), debugInfo, 0, 200);
                 }
             }
         }
