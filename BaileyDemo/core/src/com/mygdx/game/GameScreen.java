@@ -232,11 +232,11 @@ public class GameScreen extends ScreenAdapter {
         fontLarge = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"), Gdx.files.internal("font/dbfont.png"), false);
         fontLarge.setColor(Color.BLACK);
 
-        dbfont = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-                Gdx.files.internal("font/dbfont.png"), false);
+        dbfont = new BitmapFont(Gdx.files.internal("font/dbFontM.fnt"),
+                Gdx.files.internal("font/dbFontM.png"), false);
         dbfont.setColor(Color.BLACK);
-        dbSmallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
-                Gdx.files.internal("font/dbSmallFont.png"), false);
+        dbSmallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFontM.fnt"),
+                Gdx.files.internal("font/dbSmallFontM.png"), false);
         dbSmallFont.setColor(Color.BLACK);
 
         shapeRenderer = new ShapeRenderer();
@@ -379,7 +379,7 @@ public class GameScreen extends ScreenAdapter {
 
         turnTimer += delta;
 
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClearColor(244/255.0f, 188/255.0f, 65/255.0f, 0.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(tex, 0, 0, 360 * (Gdx.graphics.getWidth() / 360), 750 * (Gdx.graphics.getHeight() / 640));
@@ -600,8 +600,8 @@ public class GameScreen extends ScreenAdapter {
 
                     //Spirit ArrayList Test
                     //Uncomment this line if you want to see packet debug info
-                    String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
-                       font.draw(game.getBatch(), debugInfo, 0, 200);
+//                    String debugInfo = "\nReceived: " + received + "\nSent: " + sent + "\nDrawn amount = :" + drawnAmount;
+//                       font.draw(game.getBatch(), debugInfo, 0, 200);
                 }
             }
         }

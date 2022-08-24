@@ -2,6 +2,7 @@
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font: {
 		file: font-export.fnt
+		scaledSize: 58
 	}
 	title: {
 		file: font-title-export.fnt

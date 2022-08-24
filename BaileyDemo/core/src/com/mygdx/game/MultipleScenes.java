@@ -55,10 +55,10 @@ public class MultipleScenes extends Game {
         //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("52.62.8.106", 8080));
 
         //android testing
-        //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("127.0.0.1", 8080));
+        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("10.0.2.2", 8080));
 
         //pc localhost testing
-        socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
+        //socket = WebSockets.newSocket(WebSockets.toWebSocketUrl("localhost", 8080));
         //socket.setSendGracefully(true);
 
         try {

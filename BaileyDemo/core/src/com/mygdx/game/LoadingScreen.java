@@ -40,8 +40,8 @@ import sun.awt.ExtendedKeyCodes;
         private Image image;
         private TextureRegion region;
 
-        private Viewport viewport;
-        private Camera camera;
+//        private Viewport viewport;
+//        private Camera camera;
 
         public LoadingScreen(MultipleScenes game) {
             this.game = game;
@@ -51,18 +51,20 @@ import sun.awt.ExtendedKeyCodes;
         public void show(){
 
             //Scale the UI size
-            camera = new PerspectiveCamera();
-            viewport = new FitViewport(360, 640);
+//            camera = new PerspectiveCamera();
+//            viewport = new FitViewport(360, 640);
 
-//            stage = new Stage(new ScreenViewport());
-            stage = new Stage(new StretchViewport(360, 640));
+            stage = new Stage(new ScreenViewport());
+//            stage = new Stage(new StretchViewport(360, 640));
 
             //Add loading.png as the background
             tex = new Texture(Gdx.files.internal("image/loading.png"));
-            region = new TextureRegion(tex,0,0,750,1334);
+//            region = new TextureRegion(tex,0,0,750,1334);
+            region = new TextureRegion(tex);
             image = new Image(region);
             image.setPosition(0,0);
-            image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+//            image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+            image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
             stage.addActor(image);
         }
 
@@ -70,7 +72,7 @@ import sun.awt.ExtendedKeyCodes;
         public void render(float delta) {
 
             //Scale the UI size
-            stage.getViewport().update(360, 640, true);
+//            stage.getViewport().update(360, 640, true);
 
             if(!game.getSocket().isOpen()){
                 game.setScreen(new HomeScreen(game));

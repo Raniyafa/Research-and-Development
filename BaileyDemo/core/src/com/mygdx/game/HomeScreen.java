@@ -64,8 +64,8 @@ public class HomeScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
-    private Viewport viewport;
-    private Camera camera;
+//    private Viewport viewport;
+//    private Camera camera;
 
     public HomeScreen(MultipleScenes game) {
         this.game = game;
@@ -97,17 +97,17 @@ public class HomeScreen extends ScreenAdapter {
     public void show(){
 
         //Scale the UI size
-        camera = new PerspectiveCamera();
-        viewport = new FitViewport(360, 640);
+//        camera = new PerspectiveCamera();
+//        viewport = new FitViewport(360, 640);
 
-        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-        Gdx.files.internal("font/dbfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbFontM.fnt"),
+        Gdx.files.internal("font/dbFontM.png"), false);
 
         moveToGame = false;
         game.setListener(getListener());
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-//        stage = new Stage(new ScreenViewport());
-        stage = new Stage(new StretchViewport(360, 640));
+        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new StretchViewport(360, 640));
 
         final TextField textField = new TextField("Lobby Code:", mySkin);
         textField.setX(Gdx.graphics.getWidth() / 2 - 100);
@@ -115,10 +115,12 @@ public class HomeScreen extends ScreenAdapter {
 
         //Add Lobby.png as the background
         tex = new Texture(Gdx.files.internal("image/Lobby.png"));
-        region = new TextureRegion(tex,0,0,750,1334);
+//        region = new TextureRegion(tex,0,0,750,1334);
+        region = new TextureRegion(tex);
         image = new Image(region);
-        image.setPosition(0 * (Gdx.graphics.getWidth() / 360),0 * (Gdx.graphics.getHeight() / 640));
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+//        image.setPosition(0 * (Gdx.graphics.getWidth() / 360),0 * (Gdx.graphics.getHeight() / 640));
+//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
         stage.addActor(image);
 
         //Add Text Field for the Game PIN function
@@ -233,7 +235,7 @@ public class HomeScreen extends ScreenAdapter {
     public void render(float delta) {
 
         //Scale the UI size
-        stage.getViewport().update(360, 640, true);
+//        stage.getViewport().update(360, 640, true);
 
         //Move to create lobby screen if moveToCreateLobby is true
         if(moveToCreateLobby){
@@ -257,7 +259,7 @@ public class HomeScreen extends ScreenAdapter {
             if (moveToMatchmaking) {
                 game.setScreen(new QuickPlayMenu(game));
             }
-            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 16);
+            font.draw(game.getBatch(), "Hello "+game.getPlayerName()+"!", (Gdx.graphics.getWidth() / 10) * 1.5f, (Gdx.graphics.getHeight() / 20) * 18);
         }
         else {
             if(!game.getSocket().isConnecting()) {

@@ -45,8 +45,8 @@ public class FindingMatch extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
-    private Viewport viewport;
-    private Camera camera;
+//    private Viewport viewport;
+//    private Camera camera;
 
     private boolean standardMode;
 
@@ -84,12 +84,12 @@ public class FindingMatch extends ScreenAdapter {
     public void show(){
 
         //Scale the UI size
-        camera = new PerspectiveCamera();
-        viewport = new FitViewport(360, 640);
+//        camera = new PerspectiveCamera();
+//        viewport = new FitViewport(360, 640);
 
         //Creating the font
-        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-        Gdx.files.internal("font/dbfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbFontM.fnt"),
+        Gdx.files.internal("font/dbFontM.png"), false);
 
         //Send packet to server that requests for the player to be added to the game queue
         if(standardMode){
@@ -105,15 +105,17 @@ public class FindingMatch extends ScreenAdapter {
 
         //Creating stage and setting the skin for the UI
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-//        stage = new Stage(new ScreenViewport());
-        stage = new Stage(new StretchViewport(360, 640));
+        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new StretchViewport(360, 640));
 
         //Add waiting2.png as the background
         tex = new Texture(Gdx.files.internal("image/waiting2.png"));
-        region = new TextureRegion(tex,0,0,750,1334);
+//        region = new TextureRegion(tex,0,0,750,1334);
+        region = new TextureRegion(tex);
         image = new Image(region);
         image.setPosition(0,0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
         stage.addActor(image);
 
         //Adding Cancel Button to replace ExitButton below
@@ -147,7 +149,7 @@ public class FindingMatch extends ScreenAdapter {
     public void render(float delta) {
 
         //Scale the UI size
-        stage.getViewport().update(360, 640, true);
+//        stage.getViewport().update(360, 640, true);
 
         //If a match is found then switch to the loading screen
         if(matchFound){

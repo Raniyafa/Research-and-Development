@@ -72,8 +72,8 @@ public class PostGame extends ScreenAdapter {
     private float partnerHeightRatio;
     private float partnerWidthRatio;
 
-    private Viewport viewport;
-    private Camera camera;
+//    private Viewport viewport;
+//    private Camera camera;
 
     public PostGame(MultipleScenes game, ArrayList<Shape> shapeArray, float[] scaleInfo) {
         shapeArr = shapeArray;
@@ -86,18 +86,18 @@ public class PostGame extends ScreenAdapter {
     public void show(){
 
         //Scale the UI size
-        camera = new PerspectiveCamera();
-        viewport = new FitViewport(360, 640);
+//        camera = new PerspectiveCamera();
+//        viewport = new FitViewport(360, 640);
 
         heightRatio = Gdx.graphics.getHeight() / 640;
         widthRatio = Gdx.graphics.getHeight() / 360;
 
-        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-                Gdx.files.internal("font/dbfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbFontM.fnt"),
+                Gdx.files.internal("font/dbFontM.png"), false);
         font.setColor(Color.BLACK);
 
-        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
-                Gdx.files.internal("font/dbSmallFont.png"), false);
+        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFontM.fnt"),
+                Gdx.files.internal("font/dbSmallFontM.png"), false);
         smallFont.setColor(Color.BLACK);
 
         //Adding Background (new) - Add gameFinish.png as the background
@@ -108,8 +108,8 @@ public class PostGame extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-//        stage = new Stage(new ScreenViewport());
-        stage = new Stage(new StretchViewport(360, 640));
+        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new StretchViewport(360, 640));
 
         float widthSlice = Gdx.graphics.getWidth() / 20;
 
@@ -228,13 +228,13 @@ public class PostGame extends ScreenAdapter {
     public void render(float delta) {
 
         //Scale the UI size
-        stage.getViewport().update(360, 640, true);
+//        stage.getViewport().update(360, 640, true);
 
         if(moveToMain){
             game.setScreen(new HomeScreen(game));
         }
         game.getBatch().begin();
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClearColor(244/255.0f, 188/255.0f, 65/255.0f, 0.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(tex,0,0,360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));

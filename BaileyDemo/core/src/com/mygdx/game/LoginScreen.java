@@ -55,8 +55,8 @@ public class LoginScreen extends ScreenAdapter {
     private Texture tex2;
     private ImageButton button;
 
-    private Viewport viewport;
-    private Camera camera;
+//    private Viewport viewport;
+//    private Camera camera;
 
     public LoginScreen(MultipleScenes game) {
         this.game = game;
@@ -93,19 +93,19 @@ public class LoginScreen extends ScreenAdapter {
     public void show() {
 
         //Scale the UI size
-        camera = new PerspectiveCamera();
-        viewport = new FitViewport(360, 640);
+//        camera = new PerspectiveCamera();
+//        viewport = new FitViewport(360, 640);
 
-        font = new BitmapFont(Gdx.files.internal("font/dbfont.fnt"),
-                Gdx.files.internal("font/dbfont.png"), false);
+        font = new BitmapFont(Gdx.files.internal("font/dbFontM.fnt"),
+                Gdx.files.internal("font/dbFontM.png"), false);
         game.setListener(getListener());
 
-        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFont.fnt"),
-                Gdx.files.internal("font/dbSmallFont.png"), false);
+        smallFont = new BitmapFont(Gdx.files.internal("font/dbSmallFontM.fnt"),
+                Gdx.files.internal("font/dbSmallFontM.png"), false);
 
         Skin mySkin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
-//        stage = new Stage(new ScreenViewport());
-        stage = new Stage(new StretchViewport(360, 640));
+        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new StretchViewport(360, 640));
 
         //Add HomePage.png as the background
         tex = new Texture(Gdx.files.internal("image/HomePage.png"));
@@ -115,7 +115,7 @@ public class LoginScreen extends ScreenAdapter {
 
 //        image.setPosition(0, 0);
 //        image.setSize(360, 750);
-        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight() );
+        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
         stage.addActor(image);
 
         //Play the Background Music and set it into a loop
@@ -185,7 +185,7 @@ public class LoginScreen extends ScreenAdapter {
     public void render(float delta) {
 
         //Scale the UI size
-        stage.getViewport().update(360, 640, true);
+//        stage.getViewport().update(360, 640, true);
 
         if (moveToHome) {
             game.setScreen(new HomeScreen(game));

@@ -63,8 +63,8 @@ public class SettingMenu extends ScreenAdapter {
     private ImageButton soundEffectButton_On;
     private ImageButton soundEffectButton_Off;
 
-    private Viewport viewport;
-    private Camera camera;
+//    private Viewport viewport;
+//    private Camera camera;
 
     public SettingMenu(MultipleScenes game) {
         this.game = game;
@@ -76,19 +76,21 @@ public class SettingMenu extends ScreenAdapter {
     public void show() {
 
         //Scale the UI size
-        camera = new PerspectiveCamera();
-        viewport = new FitViewport(360, 640);
+//        camera = new PerspectiveCamera();
+//        viewport = new FitViewport(360, 640);
 
-//        stage = new Stage(new ScreenViewport());
-        stage = new Stage(new StretchViewport(360, 640));
+        stage = new Stage(new ScreenViewport());
+//        stage = new Stage(new StretchViewport(360, 640));
         skin = new Skin(Gdx.files.internal("plain-james/skin/plain-james-ui.json"));
 
         //Add setting.png as the background
         tex = new Texture(Gdx.files.internal("image/setting.png"));
-        region = new TextureRegion(tex,0,0,750,1334);
+//        region = new TextureRegion(tex,0,0,750,1334);
+        region = new TextureRegion(tex);
         image = new Image(region);
         image.setPosition(0,0);
-        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+//        image.setSize(360 * (Gdx.graphics.getWidth() / 360),750 * (Gdx.graphics.getHeight() / 640));
+        image.setSize(Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
         stage.addActor(image);
 
         //Add Back Button, click it will move back to Lobby (Home Screen)
@@ -138,7 +140,7 @@ public class SettingMenu extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         backgroundMusicButton_On = new ImageButton(up,down);
-        backgroundMusicButton_On.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 10);
+        backgroundMusicButton_On.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 8);
         backgroundMusicButton_On.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(backgroundMusicButton_On);
         backgroundMusicButton_On.setVisible(false);
@@ -160,7 +162,7 @@ public class SettingMenu extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         backgroundMusicButton_Off = new ImageButton(up,down);
-        backgroundMusicButton_Off.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 10);
+        backgroundMusicButton_Off.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 8);
         backgroundMusicButton_Off.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(backgroundMusicButton_Off);
         backgroundMusicButton_Off.setVisible(true);
@@ -182,7 +184,7 @@ public class SettingMenu extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         soundEffectButton_On = new ImageButton(up,down);
-        soundEffectButton_On.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 5);
+        soundEffectButton_On.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 4);
         soundEffectButton_On.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(soundEffectButton_On);
         soundEffectButton_On.setVisible(false);
@@ -203,7 +205,7 @@ public class SettingMenu extends ScreenAdapter {
         up = new TextureRegionDrawable(buttonUp);
         down = new TextureRegionDrawable(buttonDown);
         soundEffectButton_Off = new ImageButton(up,down);
-        soundEffectButton_Off.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 5);
+        soundEffectButton_Off.setPosition((Gdx.graphics.getWidth() / 10) * 5, (Gdx.graphics.getHeight() / 20) * 4);
         soundEffectButton_Off.setSize(100 * (Gdx.graphics.getWidth() / 360),100 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(soundEffectButton_Off);
         soundEffectButton_Off.setVisible(true);
@@ -224,7 +226,7 @@ public class SettingMenu extends ScreenAdapter {
     public void render(float delta){
 
         //Scale the UI size
-        stage.getViewport().update(360, 640, true);
+//        stage.getViewport().update(360, 640, true);
 
         game.getBatch().begin();
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
