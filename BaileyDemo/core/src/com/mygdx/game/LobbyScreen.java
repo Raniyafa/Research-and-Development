@@ -122,7 +122,7 @@ public class LobbyScreen extends ScreenAdapter {
         stage.draw();
         game.getBatch().begin();
         if(game.getSocket().isOpen()) {
-            font.draw( game.getBatch(), game.getGameLobby().getLobbyCode(), (Gdx.graphics.getWidth()/10) * 3.5f, (Gdx.graphics.getHeight() / 20) * 7);
+            font.draw( game.getBatch(), game.getGameLobby().getLobbyCode(), (Gdx.graphics.getWidth()/10) * 4, (Gdx.graphics.getHeight() / 20) * 6);
         }
         else{
             game.setScreen(new HomeScreen(game));
