@@ -249,7 +249,7 @@ public class GameScreen extends ScreenAdapter {
 
         TextureRegionDrawable myTexRegionAnnoyed = new TextureRegionDrawable(myTextureRegion);
         emojiButtons[0] = new ImageButton(myTexRegionAnnoyed); //Set the button up
-        emojiButtons[0].setBounds(widthSlice * 10, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
+        emojiButtons[0].setBounds(widthSlice * 10, 80, 60 * (Gdx.graphics.getWidth() / 360), 60 * (Gdx.graphics.getHeight() / 640));
         emojiButtons[0].addListener(new ClickListener() {
 
             @Override
@@ -266,7 +266,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionHeart = new TextureRegion(hearteyeButton);
         TextureRegionDrawable myTexRegionHeart = new TextureRegionDrawable(myTextureRegionHeart);
         emojiButtons[1] = new ImageButton(myTexRegionHeart); //Set the button up
-        emojiButtons[1].setBounds(widthSlice * 12, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
+        emojiButtons[1].setBounds(widthSlice * 12, 80, 60 * (Gdx.graphics.getWidth() / 360), 60 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[1].addListener(new ClickListener() {
 
@@ -283,7 +283,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionLaugh = new TextureRegion(laughButton);
         TextureRegionDrawable myTexRegionLaugh = new TextureRegionDrawable(myTextureRegionLaugh);
         emojiButtons[2] = new ImageButton(myTexRegionLaugh); //Set the button up
-        emojiButtons[2].setBounds(widthSlice * 14, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
+        emojiButtons[2].setBounds(widthSlice * 14, 80, 60 * (Gdx.graphics.getWidth() / 360), 60 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[2].addListener(new ClickListener() {
 
@@ -301,7 +301,7 @@ public class GameScreen extends ScreenAdapter {
         TextureRegion myTextureRegionSad = new TextureRegion(sad);
         TextureRegionDrawable myTexRegionSad = new TextureRegionDrawable(myTextureRegionSad);
         emojiButtons[3] = new ImageButton(myTexRegionSad); //Set the button up
-        emojiButtons[3].setBounds(widthSlice * 16, 50, 35 * (Gdx.graphics.getWidth() / 360), 35 * (Gdx.graphics.getHeight() / 640));
+        emojiButtons[3].setBounds(widthSlice * 16, 80, 60 * (Gdx.graphics.getWidth() / 360), 60 * (Gdx.graphics.getHeight() / 640));
 
         emojiButtons[3].addListener(new ClickListener() {
 
@@ -333,7 +333,7 @@ public class GameScreen extends ScreenAdapter {
         colour = new SelectBox<String>(mySkin);
         colour.setItems("Black", "Green", "Blue", "Yellow", "Red");
         colour.setName("Pencil Colour");
-        colour.setBounds(35, 50, 90 * (Gdx.graphics.getWidth() / 360), 80 * (Gdx.graphics.getHeight() / 640));
+        colour.setBounds(60, 130, 90 * (Gdx.graphics.getWidth() / 360), 80 * (Gdx.graphics.getHeight() / 640));
         stage.addActor(colour);
         colour.setVisible(false);
 
